@@ -1,0 +1,40 @@
+{
+  "project_info": {
+    "project_number": "454715312422",
+    "firebase_url": "https://strikeplate-app.firebaseio.com",
+    "project_id": "strikeplate-app",
+    "storage_bucket": "strikeplate-app.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:454715312422:android:7189d899876660232b19e7",
+        "android_client_info": {
+          "package_name": "ca.strikeplate.droid"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "454715312422-cu2b2sbvpvdc5mbb8ged775j5849m0e5.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyD3RRh06uxon95hYkjqlw62KktqIt4jiLw"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "454715312422-cu2b2sbvpvdc5mbb8ged775j5849m0e5.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}

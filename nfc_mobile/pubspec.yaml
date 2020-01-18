@@ -27,6 +27,12 @@ dependencies:
   # The following adds the NFC reading library, 'nfc_in_flutter' to this package.
   nfc_in_flutter: ^2.0.3
 
+  # Firebase Auth for authentication through the Firebase framework
+  firebase_auth: ^0.15.3+1
+
+  # Cloud Firestore for using Firestore database in the cloud
+  cloud_firestore: ^0.13.0+1
+
 dev_dependencies:
   flutter_test:
     sdk: flutter
