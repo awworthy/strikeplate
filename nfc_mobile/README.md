@@ -12,11 +12,13 @@
 
 ### Other Acknowledgements
 - Font design
+
 font name: Now-Thin
 font author: Hanken Design Co.
 font author site: https://hanken.co/
 
 - Icon design
+
 icon designer: Scott Lewis
 icon designer link: /iconify
 

@@ -205,15 +205,13 @@ packages:
       url: "https://pub.dartlang.org"
     source: hosted
     version: "2.4.0"
-  plugin_platform_interface:
-    dependency: "direct overridden"
+  provider:
+    dependency: "direct main"
     description:
-      path: "packages/plugin_platform_interface"
-      ref: fix-platform-interface-token
-      resolved-ref: "0ea0d193e98751c280b2684ccb6c542191c62ac5"
-      url: "https://github.com/buntagonalprism/plugins.git"
-    source: git
-    version: "1.0.0"
+      name: provider
+      url: "https://pub.dartlang.org"
+    source: hosted
+    version: "3.2.0"
   quiver:
     dependency: transitive
     description:

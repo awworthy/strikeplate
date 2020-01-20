@@ -1,5 +1,6 @@
+import 'dart:html';
+
 import 'package:flutter/material.dart';
-import 'package:nfc_mobile/theme.dart';
 
 class CustomAppBar extends StatelessWidget implements PreferredSizeWidget {
 
@@ -12,9 +13,8 @@ class CustomAppBar extends StatelessWidget implements PreferredSizeWidget {
   Widget build(BuildContext context) {
     return AppBar(
       elevation: 0.0,
-      title: Text(title, style: appBarTextStyle,),
+      title: Text(title),
       centerTitle: true,
-      backgroundColor: mainColor,
       actions: <Widget>[
         Padding(
           padding: const EdgeInsets.fromLTRB(0, 10, 120, 10),
