@@ -15,9 +15,15 @@ class CustomAppBar extends StatelessWidget implements PreferredSizeWidget {
       title: Text(title, style: appBarTextStyle,),
       centerTitle: true,
       backgroundColor: mainColor,
+      actions: <Widget>[
+        Padding(
+          padding: const EdgeInsets.fromLTRB(0, 10, 120, 10),
+          child: Image.asset('assets/profile_clipped.png'),
+        )
+      ],
     );
   }
 
   @override
-  Size get preferredSize => Size.fromHeight(100.0);
+  Size get preferredSize => Size.fromHeight(50.0);
 }
