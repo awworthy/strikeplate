@@ -66,20 +66,23 @@ class Home extends StatelessWidget {
                   ),
                 ]
               ),
-              Padding( 
-                padding: EdgeInsets.fromLTRB(10, 10, 10, 10),
-                child: DropdownButtonFormField(
-                  decoration: textInputDecoration,
-                  value: buildings[0],
-                  items: buildings.map((building) {
-                    return DropdownMenuItem(
-                      value: building,
-                      child: Text('$building')
-                    );
-                  }).toList(), 
-                  onChanged: (String value) { 
-                    //this will change the value for rooms displayed in the next child  
-                  },
+              ConstrainedBox(
+                constraints: BoxConstraints(maxWidth: 240.0),
+                child: Padding( 
+                  padding: EdgeInsets.fromLTRB(10, 10, 10, 10),
+                  child: DropdownButtonFormField(
+                    decoration: textInputDecoration,
+                    value: buildings[0],
+                    items: buildings.map((building) {
+                      return DropdownMenuItem(
+                        value: building,
+                        child: Text('$building')
+                      );
+                    }).toList(), 
+                    onChanged: (String value) { 
+                      //this will change the value for rooms displayed in the next child  
+                    },
+                  ),
                 ),
               ),
             ]
