@@ -10,86 +10,94 @@ class Home extends StatelessWidget {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: CustomAppBar(title: 'Strikeplate',),
-      body: Row(
-        mainAxisAlignment: MainAxisAlignment.center,
-        children: <Widget>[
-          Column(
-            children: <Widget>[
-              Row(
-                children: <Widget>[
-                  Padding(
-                    padding: EdgeInsets.fromLTRB(0, 40, 0, 0),
-                    child: Text('Name: ',
-                    style: TextStyle(
-                      fontWeight: FontWeight.bold,
-                      letterSpacing: 1
-                    )),
-                  ),
-                  Padding(
-                    padding: EdgeInsets.fromLTRB(0, 40, 0, 0),
-                    child: Text('Shea Odland',
+      body: Container(
+        decoration: BoxDecoration(
+          gradient: LinearGradient(
+            begin: Alignment.topLeft,
+            end: Alignment.bottomRight,
+            colors: [purpleColor, blueColor]
+          )
+        ),
+        child: Row(
+          mainAxisAlignment: MainAxisAlignment.center,
+          children: <Widget>[
+            Column(
+              children: <Widget>[
+                Row(
+                  children: <Widget>[
+                    Padding(
+                      padding: EdgeInsets.fromLTRB(0, 40, 0, 0),
+                      child: Text('Name: ',
+                      style: TextStyle(
+                        fontWeight: FontWeight.bold,
+                        letterSpacing: 1
+                      )),
                     ),
-                  ),
-                ]
-              ),
-              Row(
-                children: <Widget>[
-                  Padding(
-                    padding: EdgeInsets.fromLTRB(0, 20, 0, 0),
-                    child: Text('Company: ',
-                    style: TextStyle(
-                      fontWeight: FontWeight.bold,
-                      letterSpacing: 1
-                    )),
-                  ),
-                  Padding(
-                    padding: EdgeInsets.fromLTRB(0, 20, 0, 0),
-                    child: Text('MacEwan University',
+                    Padding(
+                      padding: EdgeInsets.fromLTRB(0, 40, 0, 0),
+                      child: Text('Shea Odland',
+                      ),
                     ),
-                  ),
-                ]
-              ),
-              Row(
-                children: <Widget>[
-                  Padding(
-                    padding: EdgeInsets.fromLTRB(0, 20, 0, 0),
-                    child: Text('Title: ',
-                    style: TextStyle(
-                      fontWeight: FontWeight.bold,
-                      letterSpacing: 1
-                    )),
-                  ),
-                  Padding(
-                    padding: EdgeInsets.fromLTRB(0, 20, 0, 0),
-                    child: Text('Student',
+                  ]
+                ),
+                Row(
+                  children: <Widget>[
+                    Padding(
+                      padding: EdgeInsets.fromLTRB(0, 20, 0, 0),
+                      child: Text('Company: ',
+                      style: TextStyle(
+                        fontWeight: FontWeight.bold,
+                        letterSpacing: 1
+                      )),
                     ),
-                  ),
-                ]
-              ),
-              ConstrainedBox(
-                constraints: BoxConstraints(maxWidth: 240.0),
-                child: Padding( 
-                  padding: EdgeInsets.fromLTRB(10, 10, 10, 10),
-                  child: DropdownButtonFormField(
-                    decoration: textInputDecoration,
-                    value: buildings[0],
-                    items: buildings.map((building) {
-                      return DropdownMenuItem(
-                        value: building,
-                        child: Text('$building')
-                      );
-                    }).toList(), 
-                    onChanged: (String newValue) {
-                      //this will change the value for rooms displayed in the next child
+                    Padding(
+                      padding: EdgeInsets.fromLTRB(0, 20, 0, 0),
+                      child: Text('MacEwan University',
+                      ),
+                    ),
+                  ]
+                ),
+                Row(
+                  children: <Widget>[
+                    Padding(
+                      padding: EdgeInsets.fromLTRB(0, 20, 0, 0),
+                      child: Text('Title: ',
+                      style: TextStyle(
+                        fontWeight: FontWeight.bold,
+                        letterSpacing: 1
+                      )),
+                    ),
+                    Padding(
+                      padding: EdgeInsets.fromLTRB(0, 20, 0, 0),
+                      child: Text('Student',
+                      ),
+                    ),
+                  ]
+                ),
+                ConstrainedBox(
+                  constraints: BoxConstraints(maxWidth: 240.0),
+                  child: Padding( 
+                    padding: EdgeInsets.fromLTRB(10, 10, 10, 10),
+                    child: DropdownButtonFormField(
+                      decoration: textInputDecoration,
+                      value: buildings[0],
+                      items: buildings.map((building) {
+                        return DropdownMenuItem(
+                          value: building,
+                          child: Text('$building')
+                        );
+                      }).toList(), 
+                      onChanged: (String newValue) {
+                        //this will change the value for rooms displayed in the next child
 
-                    },
+                      },
+                    ),
                   ),
                 ),
-              ),
-            ]
-          ),
-          
-        ]
+              ]
+            ),
+          ]
+        ),
       )
     );
   }
