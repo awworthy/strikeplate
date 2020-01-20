@@ -4,7 +4,7 @@ import 'package:nfc_mobile/shared/constants.dart';
 
 class Home extends StatelessWidget {
 
-  final List<String> buildings = ['building1', 'building2'];
+  final List<String> buildings = ['Building 1', 'Building 2'];
 
   @override
   Widget build(BuildContext context) {
@@ -66,22 +66,26 @@ class Home extends StatelessWidget {
                   ),
                 ]
               ),
-              // Padding( 
-              //   padding: EdgeInsets.fromLTRB(10, 10, 10, 10),
-              //   child: DropdownButtonFormField(
-              //     decoration: textInputDecoration,
-              //     value: buildings[0],
-              //     items: buildings.map((building) {
-              //       return DropdownMenuItem(
-              //         value: building,
-              //         child: Text('$building')
-              //       );
-              //     }).toList(), 
-              //     onChanged: (String value) { 
-              //       //this will change the value for rooms displayed in the next child  
-              //     },
-              //   ),
-              // ),
+              ConstrainedBox(
+                constraints: BoxConstraints(maxWidth: 240.0),
+                child: Padding( 
+                  padding: EdgeInsets.fromLTRB(10, 10, 10, 10),
+                  child: DropdownButtonFormField(
+                    decoration: textInputDecoration,
+                    value: buildings[0],
+                    items: buildings.map((building) {
+                      return DropdownMenuItem(
+                        value: building,
+                        child: Text('$building')
+                      );
+                    }).toList(), 
+                    onChanged: (String newValue) {
+                      //this will change the value for rooms displayed in the next child
+
+                    },
+                  ),
+                ),
+              ),
             ]
           ),
           

@@ -73,6 +73,13 @@ flutter:
         - asset: assets/fonts/Quicksand-Regular.ttf
         - asset: assets/fonts/Quicksand-Bold.ttf
           weight: 700
+    - family: Now
+      fonts:
+        - asset: assets/fonts/now/Now-Thin.otf
+          weight: 200
+        - asset: assets/fonts/now/Now-Light.otf
+        - asset: assets/fonts/now/Now-Bold.otf
+          weight: 700
 
   # For details regarding fonts from package dependencies,
   # see https://flutter.dev/custom-fonts/#from-packages
