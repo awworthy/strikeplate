@@ -4,7 +4,7 @@ import 'package:nfc_mobile/shared/constants.dart';
 
 class Home extends StatelessWidget {
 
-  final List<String> buildings = ['building1', 'building2'];
+  final List<String> buildings = ['Building 1', 'Building 2'];
 
   @override
   Widget build(BuildContext context) {
@@ -79,8 +79,9 @@ class Home extends StatelessWidget {
                         child: Text('$building')
                       );
                     }).toList(), 
-                    onChanged: (String value) { 
-                      //this will change the value for rooms displayed in the next child  
+                    onChanged: (String newValue) {
+                      //this will change the value for rooms displayed in the next child
+
                     },
                   ),
                 ),
