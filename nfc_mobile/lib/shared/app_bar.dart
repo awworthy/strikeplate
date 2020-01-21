@@ -34,7 +34,7 @@ class LogoIcon extends StatelessWidget {
         onTap: () {
           print('Logo Icon pressed');
         },
-        child: Image(image: AssetImage('assets/profile.png')),
+        child: Image(image: AssetImage('assets/profile_gold.png')),
       ),
       padding: const EdgeInsets.all(10),
     );
