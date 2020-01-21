@@ -2,6 +2,8 @@ import 'package:flutter/material.dart';
 import 'package:nfc_in_flutter/nfc_in_flutter.dart';
 import 'package:nfc_mobile/shared/app_bar.dart';
 import 'package:nfc_mobile/screens/home/home.dart';
+import 'package:nfc_mobile/shared/constants.dart';
+import 'package:nfc_mobile/sidebar/sidebar_layout.dart';
 
 void main() => runApp(NFCApp());
 
@@ -10,8 +12,10 @@ class NFCApp extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
+      debugShowCheckedModeBanner: false,
       theme: ThemeData(
-        primaryColor: Color(0xFFEADEFA),
+        scaffoldBackgroundColor: Colors.white,
+        primaryColor: Colors.white, //Color(0xFFEADEFA), << was here
         // canvasColor: Color(0xff1536f1),
         accentColor: Color(0xffbd16d2),
 
@@ -23,7 +27,7 @@ class NFCApp extends StatelessWidget {
           body1: TextStyle(fontSize: 14.0,),
         ),
       ),
-      home: Home()
+      home: SideBarLayout(), //Home() << was here
     );
   }
 }
