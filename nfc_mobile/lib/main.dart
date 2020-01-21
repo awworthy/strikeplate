@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:nfc_in_flutter/nfc_in_flutter.dart';
+import 'package:nfc_mobile/screens/admin/admin_adduser.dart';
 import 'package:nfc_mobile/shared/app_bar.dart';
 import 'package:nfc_mobile/screens/home/home.dart';
 
@@ -23,7 +24,8 @@ class NFCApp extends StatelessWidget {
           body1: TextStyle(fontSize: 14.0,),
         ),
       ),
-      home: Home()
+      //home: Home()
+      home: AdminAddUser()
     );
   }
 }
