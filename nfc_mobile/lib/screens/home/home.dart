@@ -23,6 +23,9 @@ class Home extends StatelessWidget {
           children: <Widget>[
             Column(
               children: <Widget>[
+                Container(
+                  height: 50,
+                ),
                 Row(
                   children: <Widget>[
                     Padding(
@@ -30,12 +33,16 @@ class Home extends StatelessWidget {
                       child: Text('Name: ',
                       style: TextStyle(
                         fontWeight: FontWeight.bold,
+                        color: Colors.white,
                         letterSpacing: 1
                       )),
                     ),
                     Padding(
                       padding: EdgeInsets.fromLTRB(0, 40, 0, 0),
                       child: Text('Shea Odland',
+                      style: TextStyle(
+                        color: Colors.white
+                        )
                       ),
                     ),
                   ]
@@ -47,12 +54,16 @@ class Home extends StatelessWidget {
                       child: Text('Company: ',
                       style: TextStyle(
                         fontWeight: FontWeight.bold,
+                        color: Colors.white,
                         letterSpacing: 1
                       )),
                     ),
                     Padding(
                       padding: EdgeInsets.fromLTRB(0, 20, 0, 0),
                       child: Text('MacEwan University',
+                        style: TextStyle(
+                        color: Colors.white
+                        )
                       ),
                     ),
                   ]
@@ -64,36 +75,46 @@ class Home extends StatelessWidget {
                       child: Text('Title: ',
                       style: TextStyle(
                         fontWeight: FontWeight.bold,
+                        color: Colors.white,
                         letterSpacing: 1
                       )),
                     ),
                     Padding(
                       padding: EdgeInsets.fromLTRB(0, 20, 0, 0),
                       child: Text('Student',
+                      style: TextStyle(
+                        color: Colors.white
+                      ),
                       ),
                     ),
                   ]
                 ),
+                // ConstrainedBox(
+                //   constraints: BoxConstraints(maxWidth: 240.0),
+                //   child: Padding( 
+                //     padding: EdgeInsets.fromLTRB(10, 10, 10, 10),
+                //     child: DropdownButtonFormField(
+                //       decoration: textInputDecoration,
+                //       value: buildings[0],
+                //       items: buildings.map((building) {
+                //         return DropdownMenuItem(
+                //           value: building,
+                //           child: Text('$building')
+                //         );
+                //       }).toList(), 
+                //       onChanged: (String newValue) {
+                //         //this will change the value for rooms displayed in the next child
+
+                //       },
+                //     ),
+                //   ),
+                // ),
+                Container(
+                  height: 100,
+                ),
                 ConstrainedBox(
                   constraints: BoxConstraints(maxWidth: 240.0),
-                  child: Padding( 
-                    padding: EdgeInsets.fromLTRB(10, 10, 10, 10),
-                    child: DropdownButtonFormField(
-                      decoration: textInputDecoration,
-                      value: buildings[0],
-                      items: buildings.map((building) {
-                        return DropdownMenuItem(
-                          value: building,
-                          child: Text('$building')
-                        );
-                      }).toList(), 
-                      onChanged: (String newValue) {
-                        //this will change the value for rooms displayed in the next child
-
-                      },
-                    ),
-                  ),
-                ),
+                  child: Image.asset('assets/lock_button.png'))
               ]
             ),
           ]
