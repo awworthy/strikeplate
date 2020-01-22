@@ -1,8 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:nfc_mobile/shared/app_bar.dart';
 import 'package:nfc_mobile/shared/constants.dart';
+import 'package:nfc_mobile/bloc/navigation_bloc/navigation_bloc.dart';
 
-class Home extends StatelessWidget {
+class Home extends StatelessWidget with NavigationStates {
 
   final List<String> buildings = ['Building 1', 'Building 2'];
 
@@ -12,11 +13,7 @@ class Home extends StatelessWidget {
       appBar: CustomAppBar(title: 'Strikeplate',),
       body: Container(
         decoration: BoxDecoration(
-          gradient: LinearGradient(
-            begin: Alignment.topCenter,
-            end: Alignment.bottomCenter,
-            colors: [secondaryBG, mainBG]
-          )
+          gradient: backgroundGradient,
         ),
         child: Row(
           mainAxisAlignment: MainAxisAlignment.center,

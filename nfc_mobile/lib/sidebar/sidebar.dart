@@ -1,7 +1,8 @@
 import 'dart:async';
 
 import 'package:flutter/material.dart';
-import 'package:flutter/semantics.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:nfc_mobile/bloc/navigation_bloc/navigation_bloc.dart';
 import 'package:nfc_mobile/shared/constants.dart';
 import 'package:rxdart/rxdart.dart';
 import 'package:nfc_mobile/sidebar/menu_item.dart';
@@ -99,10 +100,18 @@ class _SideBarState extends State<SideBar> with SingleTickerProviderStateMixin<S
                       MenuItem(
                         icon: Icons.home,
                         title: 'Home',
+                        onTap: () {
+                          onIconPressed();
+                          BlocProvider.of<NavigationBloc>(context).add(NavigationEvents.HomeClickedEvent);
+                        }
                       ),
                       MenuItem(
                         icon: Icons.person,
                         title: 'My Account',
+                          onTap: () {
+                            onIconPressed();
+                            BlocProvider.of<NavigationBloc>(context).add(NavigationEvents.AccountClickedEvent);
+                          }
                       ),
                       Divider(
                         height: 64.0,
@@ -114,6 +123,10 @@ class _SideBarState extends State<SideBar> with SingleTickerProviderStateMixin<S
                       MenuItem(
                         icon: Icons.settings,
                         title: 'Settings',
+                          onTap: () {
+                            onIconPressed();
+                            BlocProvider.of<NavigationBloc>(context).add(NavigationEvents.SettingsClickedEvent);
+                          }
                       ),
                     ],
                   )

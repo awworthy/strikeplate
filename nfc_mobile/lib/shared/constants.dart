@@ -16,6 +16,11 @@ Color mainBG = Color(0xff050819);
 Color secondaryBG = Color(0xff262537);
 Color tertiaryBG = Color(0xff201e33);
 Color sideBarColour = tertiaryBG;
+LinearGradient backgroundGradient = LinearGradient(
+    begin: Alignment.topCenter,
+    end: Alignment.bottomCenter,
+    colors: [secondaryBG, mainBG]
+);
 Color mainFG = Color(0xffffd717);
 Color secondaryFG = Colors.yellowAccent;
 

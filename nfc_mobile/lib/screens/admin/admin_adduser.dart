@@ -1,8 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:nfc_mobile/shared/app_bar.dart';
 import 'package:nfc_mobile/shared/constants.dart';
+import 'package:nfc_mobile/bloc/navigation_bloc/navigation_bloc.dart';
 
-class AdminAddUser extends StatefulWidget {
+class AdminAddUser extends StatefulWidget with NavigationStates {
   @override
   _AdminAddUserState createState() => _AdminAddUserState();
 }
@@ -16,11 +17,7 @@ class _AdminAddUserState extends State<AdminAddUser> {
       ),
       body: Container(
         decoration: BoxDecoration(
-          gradient: LinearGradient(
-            begin: Alignment.topLeft,
-            end: Alignment.bottomRight,
-            colors: [purpleColor, blueColor]
-          )
+          gradient: backgroundGradient,
         ),
         child: Row(
           children: <Widget>[
