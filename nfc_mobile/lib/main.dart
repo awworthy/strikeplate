@@ -30,8 +30,8 @@ class NFCApp extends StatelessWidget {
         ),
       ),
       //home: Home()
-      //home: AdminAddUser()
-      home: Loading()
+      home: AdminAddUser()
+      //home: Loading()
       //home: SideBarLayout(), //Home() << was here
     );
   }
