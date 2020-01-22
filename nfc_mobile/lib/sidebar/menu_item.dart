@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-
+import 'package:nfc_mobile/shared/constants.dart';
 
 class MenuItem extends StatelessWidget {
 
@@ -17,7 +17,7 @@ class MenuItem extends StatelessWidget {
         children: <Widget>[
           Icon(
             icon,
-            color: Colors.cyan,
+            color: mainFG,
             size: 25,
           ),
           SizedBox(width: 20,),
@@ -25,7 +25,7 @@ class MenuItem extends StatelessWidget {
           style: TextStyle(
             fontWeight: FontWeight.w300,
             fontSize: 20,
-            color: Colors.white,
+            color: secondaryFG,
           ))
         ],
       ),

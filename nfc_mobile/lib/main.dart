@@ -15,9 +15,6 @@ class NFCApp extends StatelessWidget {
       debugShowCheckedModeBanner: false,
       theme: ThemeData(
         scaffoldBackgroundColor: Colors.white,
-        primaryColor: Colors.white, //Color(0xFFEADEFA), << was here
-        // canvasColor: Color(0xff1536f1),
-        accentColor: Color(0xffbd16d2),
 
         fontFamily: 'Now',
 
