@@ -11,8 +11,18 @@ const textInputDecoration = InputDecoration(
   ),
 );
 
-Color blueColor = Color(0xff1536f1);
-Color purpleColor = Color(0xffbd16d2);
+// Primary Colors for general use go here
+Color mainBG = Color(0xff050819);
+Color secondaryBG = Color(0xff262537);
+Color tertiaryBG = Color(0xff201e33);
+Color sideBarColour = tertiaryBG;
+LinearGradient backgroundGradient = LinearGradient(
+    begin: Alignment.topCenter,
+    end: Alignment.bottomCenter,
+    colors: [secondaryBG, mainBG]
+);
+Color mainFG = Color(0xffffd717);
+Color secondaryFG = Colors.yellowAccent;
 
 class User extends StatelessWidget {
   final String username;

@@ -8,11 +8,7 @@ class Loading extends StatelessWidget {
   Widget build(BuildContext context) {
     return Container(
       decoration: BoxDecoration(
-          gradient: LinearGradient(
-            begin: Alignment.topLeft,
-            end: Alignment.bottomRight,
-            colors: [purpleColor, blueColor]
-          )
+          gradient: backgroundGradient
         ),
       child: Center(
         child: SpinKitRipple(

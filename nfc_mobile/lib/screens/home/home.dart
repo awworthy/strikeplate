@@ -1,8 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:nfc_mobile/shared/app_bar.dart';
 import 'package:nfc_mobile/shared/constants.dart';
+import 'package:nfc_mobile/bloc/navigation_bloc/navigation_bloc.dart';
 
-class Home extends StatelessWidget {
+class Home extends StatelessWidget with NavigationStates {
 
   final List<String> buildings = ['Building 1', 'Building 2'];
 
@@ -12,11 +13,7 @@ class Home extends StatelessWidget {
       appBar: CustomAppBar(title: 'Strikeplate',),
       body: Container(
         decoration: BoxDecoration(
-          gradient: LinearGradient(
-            begin: Alignment.topLeft,
-            end: Alignment.bottomRight,
-            colors: [purpleColor, blueColor]
-          )
+          gradient: backgroundGradient,
         ),
         child: Row(
           mainAxisAlignment: MainAxisAlignment.center,
@@ -33,7 +30,7 @@ class Home extends StatelessWidget {
                       child: Text('Name: ',
                       style: TextStyle(
                         fontWeight: FontWeight.bold,
-                        color: Colors.white,
+                        color: mainFG,
                         letterSpacing: 1
                       )),
                     ),
@@ -41,7 +38,7 @@ class Home extends StatelessWidget {
                       padding: EdgeInsets.fromLTRB(0, 40, 0, 0),
                       child: Text('Shea Odland',
                       style: TextStyle(
-                        color: Colors.white
+                        color: secondaryFG
                         )
                       ),
                     ),
@@ -54,7 +51,7 @@ class Home extends StatelessWidget {
                       child: Text('Company: ',
                       style: TextStyle(
                         fontWeight: FontWeight.bold,
-                        color: Colors.white,
+                        color: mainFG,
                         letterSpacing: 1
                       )),
                     ),
@@ -62,7 +59,7 @@ class Home extends StatelessWidget {
                       padding: EdgeInsets.fromLTRB(0, 20, 0, 0),
                       child: Text('MacEwan University',
                         style: TextStyle(
-                        color: Colors.white
+                        color: secondaryFG
                         )
                       ),
                     ),
@@ -75,7 +72,7 @@ class Home extends StatelessWidget {
                       child: Text('Title: ',
                       style: TextStyle(
                         fontWeight: FontWeight.bold,
-                        color: Colors.white,
+                        color: mainFG,
                         letterSpacing: 1
                       )),
                     ),
@@ -83,7 +80,7 @@ class Home extends StatelessWidget {
                       padding: EdgeInsets.fromLTRB(0, 20, 0, 0),
                       child: Text('Student',
                       style: TextStyle(
-                        color: Colors.white
+                        color: secondaryFG
                       ),
                       ),
                     ),

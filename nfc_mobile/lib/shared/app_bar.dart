@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:nfc_mobile/shared/constants.dart';
 
 class CustomAppBar extends StatelessWidget implements PreferredSizeWidget {
 
@@ -10,9 +11,10 @@ class CustomAppBar extends StatelessWidget implements PreferredSizeWidget {
   @override
   Widget build(BuildContext context) {
     return AppBar(
-      elevation: 1.0,
+      elevation: 0.0,
       title: Text(title),
       centerTitle: true,
+      backgroundColor: secondaryBG,
       leading: LogoIcon(),
       /*actions: <Widget>[
         Padding(
@@ -36,7 +38,7 @@ class LogoIcon extends StatelessWidget {
         },
         child: Image(image: AssetImage('assets/profile_gold.png')),
       ),
-      padding: const EdgeInsets.all(10),
+      padding: const EdgeInsets.fromLTRB(20, 10, 10, 10),
     );
   }
 }
