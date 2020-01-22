@@ -36,6 +36,9 @@ dependencies:
   # Cloud Firestore for using Firestore database in the cloud
   cloud_firestore: ^0.13.0+1
 
+  # This is for the sidebar menu:
+  rxdart: ^0.23.1
+
 dev_dependencies:
   flutter_test:
     sdk: flutter
