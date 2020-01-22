@@ -1,9 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:nfc_mobile/shared/app_bar.dart';
 import 'package:nfc_mobile/shared/constants.dart';
-import 'package:nfc_mobile/bloc/navigation_bloc/navigation_bloc.dart';
+import 'package:nfc_mobile/shared/drawer.dart';
 
-class AdminAddUser extends StatefulWidget with NavigationStates {
+class AdminAddUser extends StatefulWidget{
   @override
   _AdminAddUserState createState() => _AdminAddUserState();
 }
@@ -12,9 +12,8 @@ class _AdminAddUserState extends State<AdminAddUser> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: CustomAppBar(
-        title: 'Strikeplate'
-      ),
+      appBar: CustomAppBar(title: 'Strikeplate',),
+      drawer: makeDrawer(context),
       body: Container(
         decoration: BoxDecoration(
           gradient: backgroundGradient,
