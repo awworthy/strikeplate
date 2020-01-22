@@ -13,15 +13,18 @@ class CustomAppBar extends StatelessWidget implements PreferredSizeWidget {
     return AppBar(
       elevation: 0.0,
       title: Text(title),
+      textTheme: TextTheme(
+        title: TextStyle(fontSize: 36.0, fontWeight: FontWeight.w200, color: mainFG),
+      ),
       centerTitle: true,
       backgroundColor: secondaryBG,
-      leading: LogoIcon(),
-      /*actions: <Widget>[
+      iconTheme: new IconThemeData(color: mainFG),
+      actions: <Widget>[
         Padding(
-          padding: const EdgeInsets.fromLTRB(0, 10, 120, 10),
-          child: Image.asset('assets/profile_clipped.png'),
+          padding: const EdgeInsets.fromLTRB(0, 10, 10, 10),
+          child: Image.asset('assets/profile_gold.png'),
         )
-      ],*/
+      ],
     );
   }
   @override
@@ -38,7 +41,7 @@ class LogoIcon extends StatelessWidget {
         },
         child: Image(image: AssetImage('assets/profile_gold.png')),
       ),
-      padding: const EdgeInsets.fromLTRB(20, 10, 10, 10),
+      padding: const EdgeInsets.fromLTRB(10, 10, 10, 10),
     );
   }
 }
