@@ -13,9 +13,9 @@ class Home extends StatelessWidget {
       body: Container(
         decoration: BoxDecoration(
           gradient: LinearGradient(
-            begin: Alignment.topLeft,
-            end: Alignment.bottomRight,
-            colors: [purpleColor, blueColor]
+            begin: Alignment.topCenter,
+            end: Alignment.bottomCenter,
+            colors: [secondaryBG, mainBG]
           )
         ),
         child: Row(
@@ -33,7 +33,7 @@ class Home extends StatelessWidget {
                       child: Text('Name: ',
                       style: TextStyle(
                         fontWeight: FontWeight.bold,
-                        color: Colors.white,
+                        color: mainFG,
                         letterSpacing: 1
                       )),
                     ),
@@ -41,7 +41,7 @@ class Home extends StatelessWidget {
                       padding: EdgeInsets.fromLTRB(0, 40, 0, 0),
                       child: Text('Shea Odland',
                       style: TextStyle(
-                        color: Colors.white
+                        color: secondaryFG
                         )
                       ),
                     ),
@@ -54,7 +54,7 @@ class Home extends StatelessWidget {
                       child: Text('Company: ',
                       style: TextStyle(
                         fontWeight: FontWeight.bold,
-                        color: Colors.white,
+                        color: mainFG,
                         letterSpacing: 1
                       )),
                     ),
@@ -62,7 +62,7 @@ class Home extends StatelessWidget {
                       padding: EdgeInsets.fromLTRB(0, 20, 0, 0),
                       child: Text('MacEwan University',
                         style: TextStyle(
-                        color: Colors.white
+                        color: secondaryFG
                         )
                       ),
                     ),
@@ -75,7 +75,7 @@ class Home extends StatelessWidget {
                       child: Text('Title: ',
                       style: TextStyle(
                         fontWeight: FontWeight.bold,
-                        color: Colors.white,
+                        color: mainFG,
                         letterSpacing: 1
                       )),
                     ),
@@ -83,7 +83,7 @@ class Home extends StatelessWidget {
                       padding: EdgeInsets.fromLTRB(0, 20, 0, 0),
                       child: Text('Student',
                       style: TextStyle(
-                        color: Colors.white
+                        color: secondaryFG
                       ),
                       ),
                     ),

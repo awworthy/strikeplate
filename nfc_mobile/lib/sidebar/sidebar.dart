@@ -68,22 +68,23 @@ class _SideBarState extends State<SideBar> with SingleTickerProviderStateMixin<S
               Expanded(
                 child: Container(
                   padding: const EdgeInsets.symmetric(horizontal: 20),
-                  color: blueColor,
+                  color: sideBarColour,
                   child: Column(
                     children: <Widget>[
                       SizedBox(height: 100, ),
                       ListTile(
                         title: Text(user.username,
-                          style: TextStyle(color: Colors.white, fontSize: 20, fontWeight: FontWeight.w800),
+                          style: TextStyle(color: mainFG, fontSize: 20, fontWeight: FontWeight.w500),
                         ),
                         subtitle: Text(user.email + '\n' + user.institution,
-                          style: TextStyle(color: Colors.lightBlueAccent, fontSize: 15, fontWeight: FontWeight.w800),
+                          style: TextStyle(color: secondaryFG, fontSize: 15, fontWeight: FontWeight.w300),
                         ),
                         isThreeLine: true,
                         leading: CircleAvatar(
+                          backgroundColor: secondaryBG,
                           child: Icon(
                             Icons.perm_identity,
-                            color: Colors.white,
+                            color: mainFG,
                           ),
                           radius: 40,
                         ),
@@ -129,12 +130,12 @@ class _SideBarState extends State<SideBar> with SingleTickerProviderStateMixin<S
                     child: Container(
                         width: 35,
                         height: 110,
-                        color: blueColor,
+                        color: sideBarColour,
                         alignment: Alignment.centerLeft,
                         child: AnimatedIcon(
                           progress: _animationController.view,
                           icon: AnimatedIcons.menu_close,
-                          color: Colors.lightBlueAccent,
+                          color: secondaryFG,
                           size: 25,
 
                         )
