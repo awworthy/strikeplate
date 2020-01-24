@@ -35,5 +35,34 @@
 
   <!-- Initialize Firebase -->
   <script src="/__/firebase/init.js"></script>
+
+  <!-- The core Firebase JS SDK is always required and must be listed first -->
+<script src="https://www.gstatic.com/firebasejs/7.7.0/firebase-app.js"></script>
+<script src="https://www.gstatic.com/firebasejs/7.7.0/firebase-app.js"></script>
+<script src="https://www.gstatic.com/firebasejs/7.7.0/firebase-firestore.js"></script>
+<script src="https://www.gstatic.com/firebasejs/7.7.0/firebase-auth.js"></script>
+<script src="https://www.gstatic.com/firebasejs/7.7.0/firebase-storage.js"></script>
+<script defer src="main.dart.js" type="application/javascript"></script>
+
+<!-- TODO: Add SDKs for Firebase products that you want to use
+     https://firebase.google.com/docs/web/setup#available-libraries -->
+<script src="https://www.gstatic.com/firebasejs/7.7.0/firebase-analytics.js"></script>
+
+<script>
+  // Your web app's Firebase configuration
+  var firebaseConfig = {
+    apiKey: "AIzaSyAbx8ftCh6_QKZWK_AOJZAfC5H_5s2ryDY",
+    authDomain: "strikeplate-app.firebaseapp.com",
+    databaseURL: "https://strikeplate-app.firebaseio.com",
+    projectId: "strikeplate-app",
+    storageBucket: "strikeplate-app.appspot.com",
+    messagingSenderId: "454715312422",
+    appId: "1:454715312422:web:1e1316b7560cc9892b19e7",
+    measurementId: "G-C2Q1S6JMYC"
+  };
+  // Initialize Firebase
+  firebase.initializeApp(firebaseConfig);
+  firebase.analytics();
+</script>
 </body>
 </html>
