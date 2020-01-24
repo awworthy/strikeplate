@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:nfc_mobile/screens/home_page.dart';
+import 'package:nfc_mobile/screens/wrapper.dart';
 import 'package:nfc_mobile/shared/constants.dart';
 
 void main() => runApp(NFCApp());
@@ -23,7 +24,8 @@ class NFCApp extends StatelessWidget {
       ),
       //home: AdminAddUser()
       //home: Loading()
-      home: HomePage(),
+      //home: HomePage(),
+      home: Wrapper()
     );
   }
 }

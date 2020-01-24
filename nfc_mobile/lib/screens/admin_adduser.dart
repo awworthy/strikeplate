@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:nfc_mobile/shared/app_bar.dart';
 import 'package:nfc_mobile/shared/constants.dart';
 import 'package:nfc_mobile/shared/drawer.dart';
+import 'package:nfc_mobile/services/auth.dart';
 
 class AdminAddUser extends StatefulWidget{
   @override
@@ -9,6 +10,15 @@ class AdminAddUser extends StatefulWidget{
 }
 
 class _AdminAddUserState extends State<AdminAddUser> {
+  
+  final AuthService _auth = AuthService();
+
+  // text field state
+  String firstName = '';
+  String lastName = '';
+  String email = '';
+  String title = '';
+  
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -51,7 +61,10 @@ class _AdminAddUserState extends State<AdminAddUser> {
                               child: ConstrainedBox(
                                 constraints: BoxConstraints(maxWidth: 200, maxHeight: 30),
                                 child: TextFormField(
-                                decoration: textInputDecoration,
+                                  decoration: textInputDecoration,
+                                  onChanged: (val) {
+                                    
+                                  },
                                 ),
                               ),
                             ),
