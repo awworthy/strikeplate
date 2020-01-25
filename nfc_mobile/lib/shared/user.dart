@@ -1,6 +1,6 @@
-class User {
+class UserClass {
 
   final String uid;
 
-  User({ this.uid});
+  UserClass({ this.uid});
 }

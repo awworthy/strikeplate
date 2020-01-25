@@ -7,7 +7,8 @@ class Settings extends StatelessWidget{
   Widget build(BuildContext context) {
     return Scaffold(
         appBar: CustomAppBar(title: 'Strikeplate',),
-        drawer: makeDrawer(context),
-        body: Container());
+        drawer: MakeDrawer(),
+        body: Container()
+      );
   }
 }
