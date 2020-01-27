@@ -1,7 +1,6 @@
 import 'dart:async';
 
 import 'package:flutter/material.dart';
-import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:nfc_mobile/shared/constants.dart';
 import 'package:rxdart/rxdart.dart';
 import 'package:nfc_mobile/sidebar/menu_item.dart';
