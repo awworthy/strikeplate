@@ -166,10 +166,10 @@ class _AdminAddUserState extends State<AdminAddUser> {
                                 color: Colors.black
                               ),),
                               onPressed: () async { 
-                                print(firstName);
-                                print(lastName);                              
-                                print(email);
-                                print(compName); 
+                                // print(firstName);
+                                // print(lastName);                              
+                                // print(email);
+                                // print(compName); 
                               },
                             )
                           ),
