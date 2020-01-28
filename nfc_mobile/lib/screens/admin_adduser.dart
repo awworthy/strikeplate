@@ -17,13 +17,13 @@ class _AdminAddUserState extends State<AdminAddUser> {
   String firstName = '';
   String lastName = '';
   String email = '';
-  String title = '';
+  String compName = '';
   
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: CustomAppBar(title: 'Strikeplate',),
-      drawer: makeDrawer(context),
+      drawer: MakeDrawer(),
       body: Container(
         decoration: BoxDecoration(
           gradient: backgroundGradient,
@@ -63,7 +63,7 @@ class _AdminAddUserState extends State<AdminAddUser> {
                                 child: TextFormField(
                                   decoration: textInputDecoration,
                                   onChanged: (val) {
-                                    
+                                    setState(() => firstName = val);
                                   },
                                 ),
                               ),
@@ -77,7 +77,10 @@ class _AdminAddUserState extends State<AdminAddUser> {
                               child: ConstrainedBox(
                                 constraints: BoxConstraints(maxWidth: 200, maxHeight: 30),
                                 child: TextFormField(
-                                decoration: textInputDecoration,
+                                  decoration: textInputDecoration,
+                                  onChanged: (val) {
+                                    setState(() => email = val);
+                                  },
                                 ),
                               ),
                             ),
@@ -100,10 +103,13 @@ class _AdminAddUserState extends State<AdminAddUser> {
                                 constraints: BoxConstraints(maxWidth: 200, maxHeight: 30),
                                 child: TextFormField(
                                 decoration: textInputDecoration,
+                                onChanged: (val) {
+                                    setState(() => lastName = val);
+                                  },
                                 ),
                               ),
                             ),
-                            Text('Title: ',
+                            Text('Company: ',
                             style: TextStyle(
                               color: Colors.white
                             ),),
@@ -113,6 +119,9 @@ class _AdminAddUserState extends State<AdminAddUser> {
                                 constraints: BoxConstraints(maxWidth: 200, maxHeight: 30),
                                 child: TextFormField(
                                 decoration: textInputDecoration,
+                                onChanged: (val) {
+                                    setState(() => compName = val);
+                                  },
                                 ),
                               ),
                             )
@@ -156,8 +165,11 @@ class _AdminAddUserState extends State<AdminAddUser> {
                               style: TextStyle(
                                 color: Colors.black
                               ),),
-                              onPressed: () { 
-                         
+                              onPressed: () async { 
+                                // print(firstName);
+                                // print(lastName);                              
+                                // print(email);
+                                // print(compName); 
                               },
                             )
                           ),

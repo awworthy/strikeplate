@@ -4,16 +4,16 @@ import 'package:nfc_mobile/shared/constants.dart';
 import 'package:nfc_mobile/shared/drawer.dart';
 import 'package:nfc_mobile/shared/loading.dart';
 
-class SignIn extends StatefulWidget {
+class RegAdmin extends StatefulWidget {
 
   final Function toggleView;
-  SignIn({ this.toggleView });
+  RegAdmin({ this.toggleView });
 
   @override
-  _SignInState createState() => _SignInState();
+  _RegAdminState createState() => _RegAdminState();
 }
 
-class _SignInState extends State<SignIn> {
+class _RegAdminState extends State<RegAdmin> {
 
   final AuthService _auth = AuthService();
   final _formKey = GlobalKey<FormState>();
@@ -41,7 +41,7 @@ class _SignInState extends State<SignIn> {
           child: RaisedButton(  
             color: Colors.transparent,
             child: Text(
-              'Register',
+              'Sign In',
               style: TextStyle(color: Colors.yellow)
             ),
             onPressed: ()  {
@@ -68,8 +68,8 @@ class _SignInState extends State<SignIn> {
               Column(
                 mainAxisAlignment: MainAxisAlignment.center,
                 children: <Widget>[
-                  Text('Please sign in to Strikeplate',
-                  style: TextStyle(
+                  Text('Please sign up to Strikeplate',
+                    style: TextStyle(
                     color: Colors.white,
                     fontSize: 20
                   ),),
@@ -79,31 +79,34 @@ class _SignInState extends State<SignIn> {
                     child: TextFormField(
                       validator: (val) => val.isEmpty ? 'Enter an email' : null,
                       style: TextStyle(
-                        color: Colors.white),
+                        color: Colors.white
+                        ),
                       decoration: textInputDecoration.copyWith(
                         hintText: 'email', 
                         hintStyle: TextStyle(
                           fontStyle: FontStyle.italic,
-                          color: Colors.white54),
+                          color: Colors.white54
                         ),
+                      ),
                       onChanged: (val) {
                         setState(() => email = val);
                       },
                     ),
                   ),
-                  SizedBox(height: 20, width: 50,),
+                  SizedBox(height: 20,),
                   SizedBox(
                     height: 50, width: 300,
-                      child: TextFormField(
+                    child: TextFormField(
                       validator: (val) => val.length < 6 ? 'Enter a password 6+ chars long' : null,
                       style: TextStyle(
                         color: Colors.white),
-                      decoration: textInputDecoration.copyWith(
-                        hintText: 'password', 
-                        hintStyle: TextStyle(
-                          fontStyle: FontStyle.italic,
-                          color: Colors.white54),
-                        ),
+                        decoration: textInputDecoration.copyWith(
+                          hintText: 'password', 
+                          hintStyle: TextStyle(
+                            fontStyle: FontStyle.italic,
+                            color: Colors.white54
+                            ),
+                          ),
                       obscureText: true,
                       onChanged: (val) {
                         setState(() => password = val);
@@ -114,21 +117,22 @@ class _SignInState extends State<SignIn> {
                   RaisedButton(
                     color: Colors.yellow,
                     child: Text(
-                      'Sign In',
+                      'Register',
                       style: TextStyle(color: Colors.black)
                     ),
                     onPressed: () async {
                       if (_formKey.currentState.validate()) {
-                        setState (() => loading = true);
-                        dynamic result = await _auth.signInWithEmailandPassword(email, password);
+                        setState(() => loading = true);
+                        dynamic result = await _auth.registerWithEmailandPassword(email, password);
                         if(result == null) {
-                          setState(() {
-                          error = 'Could not sign in with those credentials';
-                          loading = false;
-                        });
+                          setState(() { 
+                            error = 'Please supply a valid email';
+                            loading = false;
+                          });
+                        }
                       }
                     }
-                    }),
+                  ),
                   SizedBox(height: 12),
                     Text(
                       error,
