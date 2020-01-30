@@ -1,8 +1,6 @@
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:nfc_mobile/services/database.dart';
 import 'package:nfc_mobile/shared/user.dart';
-import 'package:firebase/firebase.dart' as fb; 
-import 'package:firebase/firestore.dart' as fs;
 
 class AuthService {
 
@@ -49,15 +47,8 @@ class AuthService {
     try {
       AuthResult result = await _auth.createUserWithEmailAndPassword(email: email, password: password);
       FirebaseUser user = result.user;
-      print('1');
-      print(user.toString());
       // create a new document for the user with the uid
-      //await DatabaseService(uid: user.uid).updateUsersData('First Name', 'Last Name', email, 'Company', 'A-101', true); 
-      final fs.Firestore firestore = fb.firestore();
-      firestore.collection('users').doc(user.uid).collection('userData').add({'Name': 'Admin'});
-      //firestore.collection('users').add({'First Name': 'Admin'});
-      print('2');
-      print(user.toString());
+      await DatabaseService(uid: user.uid).updateUsersData('First Name', 'Last Name', email, 'Company', 'A-101', true); 
       return _userFromFirebaseUser(user); 
     } catch (e) {
       print("register error = " + e.toString());
