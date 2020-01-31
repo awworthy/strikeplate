@@ -11,7 +11,7 @@ class HomePage extends StatelessWidget {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: CustomAppBar(title: 'Strikeplate',),
-      drawer: makeDrawer(context),
+      drawer: MakeDrawer(),
       body: Container(
         decoration: BoxDecoration(
           gradient: backgroundGradient,
