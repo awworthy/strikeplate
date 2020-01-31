@@ -123,7 +123,7 @@ class _RegAdminState extends State<RegAdmin> {
                     onPressed: () async {
                       if (_formKey.currentState.validate()) {
                         setState(() => loading = true);
-                        dynamic result = await _auth.registerWithEmailandPassword(email, password);
+                        dynamic result = await _auth.registerAdminWithEmailandPassword(email, password);
                         if(result == null) {
                           setState(() { 
                             error = 'Please supply a valid email';
