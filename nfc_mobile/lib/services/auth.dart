@@ -43,12 +43,27 @@ class AuthService {
 
   // register with email and password
 
-  Future registerWithEmailandPassword(String email, String password) async {
+  Future registerAdminWithEmailandPassword(String email, String password) async {
     try {
       AuthResult result = await _auth.createUserWithEmailAndPassword(email: email, password: password);
       FirebaseUser user = result.user;
       // create a new document for the user with the uid
-      await DatabaseService(uid: user.uid).updateUsersData('First Name', 'Last Name', email, 'Company', 'A-101', true); 
+      await DatabaseService(uid: user.uid).updateAdminData('First Name', 'Last Name', email, 'Company', 'A-101', true); 
+      return _userFromFirebaseUser(user); 
+    } catch (e) {
+      print("register error = " + e.toString());
+      return null;
+    }
+  }
+
+    // register with email and password
+
+  Future registerNewUser(String email, String password, String firstName, String lastName, String company, String rooms) async {
+    try {
+      AuthResult result = await _auth.createUserWithEmailAndPassword(email: email, password: password);
+      FirebaseUser user = result.user;
+      // create a new document for the user with the uid
+      await DatabaseService(uid: user.uid).updateUsersData(password, firstName, lastName, email, company, rooms, false); 
       return _userFromFirebaseUser(user); 
     } catch (e) {
       print("register error = " + e.toString());
