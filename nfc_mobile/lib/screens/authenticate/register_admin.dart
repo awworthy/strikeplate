@@ -45,6 +45,7 @@ class _RegAdminState extends State<RegAdmin> {
                     color: Colors.black,
                     fontStyle: FontStyle.normal),
                   decoration: InputDecoration(
+                    hintText: "Enter a valid email address",
                     filled: true,
                     fillColor: Colors.white
                   ),
@@ -56,6 +57,7 @@ class _RegAdminState extends State<RegAdmin> {
                 TextFormField(
                   validator: (val) => val.length < 6 ? 'Enter a password 6+ chars long' : null,
                   decoration: InputDecoration(
+                    hintText: 'Enter password',
                     filled: true,
                     fillColor: Colors.white
                     
