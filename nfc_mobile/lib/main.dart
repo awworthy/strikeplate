@@ -1,5 +1,4 @@
 import 'package:flutter/material.dart';
-import 'package:nfc_mobile/screens/home_page.dart';
 import 'package:nfc_mobile/screens/wrapper.dart';
 import 'package:nfc_mobile/services/auth.dart';
 import 'package:nfc_mobile/shared/constants.dart';
@@ -20,10 +19,10 @@ class NFCApp extends StatelessWidget {
           scaffoldBackgroundColor: sideBarColour,
           fontFamily: 'Now',
           textTheme: TextTheme(
-            headline: TextStyle(fontSize: 72.0, fontWeight: FontWeight.w200),
-            title: TextStyle(fontSize: 36.0, fontWeight: FontWeight.bold, color: secondaryFG),
-            body1: TextStyle(fontSize: 14.0, color: secondaryFG),
-            subhead: TextStyle(fontSize: 16.0, fontWeight: FontWeight.w200, color: secondaryFG)
+            headline5: TextStyle(fontSize: 72.0, fontWeight: FontWeight.w200),
+            headline6: TextStyle(fontSize: 36.0, fontWeight: FontWeight.bold, color: secondaryFG),
+            bodyText2: TextStyle(fontSize: 14.0, color: secondaryFG),
+            subtitle1: TextStyle(fontSize: 16.0, fontWeight: FontWeight.w200, color: secondaryFG)
           ),
         ),
         //home: AdminAddUser()
