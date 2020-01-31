@@ -121,16 +121,16 @@ class _RegAdminState extends State<RegAdmin> {
                       style: TextStyle(color: Colors.black)
                     ),
                     onPressed: () async {
-                      if (_formKey.currentState.validate()) {
-                        setState(() => loading = true);
-                        dynamic result = await _auth.registerAdminWithEmailandPassword(email, password);
-                        if(result == null) {
-                          setState(() { 
-                            error = 'Please supply a valid email';
-                            loading = false;
-                          });
-                        }
-                      }
+                      // if (_formKey.currentState.validate()) {
+                      //   setState(() => loading = true);
+                      //   dynamic result = await _auth.registerAdminWithEmailandPassword(email, password);
+                      //   if(result == null) {
+                      //     setState(() { 
+                      //       error = 'Please supply a valid email';
+                      //       loading = false;
+                      //     });
+                      //   }
+                      // }
                     }
                   ),
                   SizedBox(height: 12),
