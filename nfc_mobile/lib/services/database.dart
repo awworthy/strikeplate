@@ -2,6 +2,9 @@
 import 'package:firebase/firebase.dart' as fb; 
 import 'package:firebase/firestore.dart' as fs;
 
+// look up if firebase has SAML
+// look up Shlag
+
 class DatabaseService {
 
   final String uid;
