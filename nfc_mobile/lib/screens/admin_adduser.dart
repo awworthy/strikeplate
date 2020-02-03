@@ -186,17 +186,17 @@ class _AdminAddUserState extends State<AdminAddUser> {
                                   color: Colors.black
                                 ),),
                                 onPressed: () async {
-                                  if (_formKey.currentState.validate()) {
-                                    password = Password().createCryptoRandomString().toString();
-                                    setState(() => loading = true);
-                                    dynamic result = await _auth.registerNewUser(email, password, firstName, lastName, compName, rooms);
-                                    if(result == null) {
-                                      setState(() { 
-                                        error = 'Please supply a valid email';
-                                        loading = false;
-                                      });
-                                    }
-                                  }
+                                  // if (_formKey.currentState.validate()) {
+                                  //   password = Password().createCryptoRandomString().toString();
+                                  //   setState(() => loading = true);
+                                  //   dynamic result = await _auth.registerNewUser(email, password, firstName, lastName, compName, rooms);
+                                  //   if(result == null) {
+                                  //     setState(() { 
+                                  //       error = 'Please supply a valid email';
+                                  //       loading = false;
+                                  //     });
+                                  //  }
+                                //  }
                                 }
                               )
                             ),
