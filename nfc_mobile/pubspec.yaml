@@ -37,8 +37,12 @@ dependencies:
   # Cloud Firestore for using Firestore database in the cloud
   cloud_firestore: ^0.13.0+1
 
-  # This is for the sidebar menu:
-  flutter_bloc: ^2.1.1
+  # for read-write to disk
+  shared_preferences: ^0.5.6+1
+
+  # for cryptography
+  pointycastle: ^1.0.2
+  asn1lib: ^0.6.0
 
 
 dev_dependencies:
