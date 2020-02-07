@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:nfc_mobile/services/nfc_exchange.dart';
 import 'package:nfc_mobile/shared/app_bar.dart';
 import 'package:nfc_mobile/shared/constants.dart';
 import 'package:nfc_mobile/shared/drawer.dart';
@@ -110,9 +111,12 @@ class HomePage extends StatelessWidget {
                 Container(
                   height: 100,
                 ),
-                ConstrainedBox(
-                  constraints: BoxConstraints(maxWidth: 240.0),
-                  child: Image.asset('assets/lock_button.png'))
+                GestureDetector(
+                  // onTap: return NFCReader() in a pop up window, adjust the way it looks later,
+                  child: ConstrainedBox(
+                    constraints: BoxConstraints(maxWidth: 240.0),
+                    child: Image.asset('assets/lock_button.png')),
+                ),
               ]
             ),
           ]
