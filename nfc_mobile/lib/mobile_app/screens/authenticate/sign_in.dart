@@ -1,8 +1,8 @@
-import 'package:nfc_mobile/services/auth.dart';
+import 'package:nfc_mobile/mobile_app/services/auth.dart';
 import 'package:flutter/material.dart';
-import 'package:nfc_mobile/shared/constants.dart';
-import 'package:nfc_mobile/shared/drawer.dart';
-import 'package:nfc_mobile/shared/loading.dart';
+import 'package:nfc_mobile/mobile_app/shared/constants.dart';
+import 'package:nfc_mobile/mobile_app/shared/drawer.dart';
+import 'package:nfc_mobile/mobile_app/shared/loading.dart';
 
 class SignIn extends StatefulWidget {
 

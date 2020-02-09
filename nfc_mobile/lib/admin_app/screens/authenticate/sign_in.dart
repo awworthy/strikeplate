@@ -1,19 +1,18 @@
-import 'package:nfc_mobile/services/auth.dart';
+import 'package:nfc_mobile/admin_app/services/auth.dart';
 import 'package:flutter/material.dart';
-import 'package:nfc_mobile/shared/constants.dart';
-import 'package:nfc_mobile/shared/drawer.dart';
-import 'package:nfc_mobile/shared/loading.dart';
+import 'package:nfc_mobile/admin_app/shared/constants.dart';
+import 'package:nfc_mobile/admin_app/shared/loading.dart';
 
-class RegAdmin extends StatefulWidget {
+class SignIn extends StatefulWidget {
 
   final Function toggleView;
-  RegAdmin({ this.toggleView });
+  SignIn({ this.toggleView });
 
   @override
-  _RegAdminState createState() => _RegAdminState();
+  _SignInState createState() => _SignInState();
 }
 
-class _RegAdminState extends State<RegAdmin> {
+class _SignInState extends State<SignIn> {
 
   final AuthService _auth = AuthService();
   final _formKey = GlobalKey<FormState>();
@@ -41,7 +40,7 @@ class _RegAdminState extends State<RegAdmin> {
           child: RaisedButton(  
             color: Colors.transparent,
             child: Text(
-              'Sign In',
+              'Register',
               style: TextStyle(color: Colors.yellow)
             ),
             onPressed: ()  {
@@ -55,7 +54,6 @@ class _RegAdminState extends State<RegAdmin> {
           ),
         ],
       ),
-      drawer: MakeDrawer(),
       body: Container(
         decoration: BoxDecoration(
           gradient: backgroundGradient,
@@ -68,8 +66,8 @@ class _RegAdminState extends State<RegAdmin> {
               Column(
                 mainAxisAlignment: MainAxisAlignment.center,
                 children: <Widget>[
-                  Text('Please sign up to Strikeplate',
-                    style: TextStyle(
+                  Text('Please sign in to Strikeplate',
+                  style: TextStyle(
                     color: Colors.white,
                     fontSize: 20
                   ),),
@@ -79,34 +77,31 @@ class _RegAdminState extends State<RegAdmin> {
                     child: TextFormField(
                       validator: (val) => val.isEmpty ? 'Enter an email' : null,
                       style: TextStyle(
-                        color: Colors.white
-                        ),
+                        color: Colors.white),
                       decoration: textInputDecoration.copyWith(
                         hintText: 'email', 
                         hintStyle: TextStyle(
                           fontStyle: FontStyle.italic,
-                          color: Colors.white54
+                          color: Colors.white54),
                         ),
-                      ),
                       onChanged: (val) {
                         setState(() => email = val);
                       },
                     ),
                   ),
-                  SizedBox(height: 20,),
+                  SizedBox(height: 20, width: 50,),
                   SizedBox(
                     height: 50, width: 300,
-                    child: TextFormField(
+                      child: TextFormField(
                       validator: (val) => val.length < 6 ? 'Enter a password 6+ chars long' : null,
                       style: TextStyle(
                         color: Colors.white),
-                        decoration: textInputDecoration.copyWith(
-                          hintText: 'password', 
-                          hintStyle: TextStyle(
-                            fontStyle: FontStyle.italic,
-                            color: Colors.white54
-                            ),
-                          ),
+                      decoration: textInputDecoration.copyWith(
+                        hintText: 'password', 
+                        hintStyle: TextStyle(
+                          fontStyle: FontStyle.italic,
+                          color: Colors.white54),
+                        ),
                       obscureText: true,
                       onChanged: (val) {
                         setState(() => password = val);
@@ -117,22 +112,21 @@ class _RegAdminState extends State<RegAdmin> {
                   RaisedButton(
                     color: Colors.yellow,
                     child: Text(
-                      'Register',
+                      'Sign In',
                       style: TextStyle(color: Colors.black)
                     ),
                     onPressed: () async {
-                      // if (_formKey.currentState.validate()) {
-                      //   setState(() => loading = true);
-                      //   dynamic result = await _auth.registerAdminWithEmailandPassword(email, password);
-                      //   if(result == null) {
-                      //     setState(() { 
-                      //       error = 'Please supply a valid email';
-                      //       loading = false;
-                      //     });
-                      //   }
-                      // }
+                      if (_formKey.currentState.validate()) {
+                        setState (() => loading = true);
+                        dynamic result = await _auth.signInWithEmailandPassword(email, password);
+                        if(result == null) {
+                          setState(() {
+                          error = 'Could not sign in with those credentials';
+                          loading = false;
+                        });
+                      }
                     }
-                  ),
+                    }),
                   SizedBox(height: 12),
                     Text(
                       error,

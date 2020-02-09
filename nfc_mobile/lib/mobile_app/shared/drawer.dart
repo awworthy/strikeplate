@@ -1,9 +1,8 @@
 import 'package:flutter/material.dart';
-import 'package:nfc_mobile/screens/admin_adduser.dart';
-import 'package:nfc_mobile/screens/home_page.dart';
-import 'package:nfc_mobile/screens/settings.dart';
-import 'package:nfc_mobile/services/auth.dart';
-import 'package:nfc_mobile/shared/constants.dart';
+import 'package:nfc_mobile/mobile_app/screens/homepage.dart';
+import 'package:nfc_mobile/mobile_app/screens/settings.dart';
+import 'package:nfc_mobile/mobile_app/services/auth.dart';
+import 'package:nfc_mobile/mobile_app/shared/constants.dart';
 
 class MakeDrawer extends StatelessWidget {
 
@@ -59,10 +58,10 @@ class MakeDrawer extends StatelessWidget {
                     title: Text('Account Setup'),
                     leading: new Icon(Icons.person_add),
                     onTap: () {
-                      Navigator.of(context).pop();
-                      Navigator.of(context).push(
-                          new MaterialPageRoute(builder: (BuildContext context) => new AdminAddUser())
-                      );
+                      // Navigator.of(context).pop();
+                      // Navigator.of(context).push(
+                      //     new MaterialPageRoute(builder: (BuildContext context) => new AdminAddUser())
+                      // );
                     }
                 ),
                 new Divider(
