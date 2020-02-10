@@ -4,8 +4,8 @@ import 'dart:typed_data';
 import 'package:flutter/material.dart';
 import 'package:flutter_spinkit/flutter_spinkit.dart';
 import 'package:nfc_in_flutter/nfc_in_flutter.dart';
-import 'package:nfc_mobile/services/storage.dart';
-import 'package:nfc_mobile/shared/constants.dart';
+import 'package:nfc_mobile/admin_app/services/storage.dart';
+import 'package:nfc_mobile/admin_app/shared/constants.dart';
 import 'package:pointycastle/export.dart';
 
 class NFCAuth {

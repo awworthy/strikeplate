@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:nfc_mobile/shared/constants.dart';
+import 'package:nfc_mobile/mobile_app/shared/constants.dart';
 
 class CustomAppBar extends StatelessWidget implements PreferredSizeWidget {
 
