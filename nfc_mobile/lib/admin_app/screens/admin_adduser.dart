@@ -1,10 +1,9 @@
 import 'package:flutter/material.dart';
-import 'package:nfc_mobile/shared/app_bar.dart';
-import 'package:nfc_mobile/shared/constants.dart';
-import 'package:nfc_mobile/shared/drawer.dart';
-import 'package:nfc_mobile/services/auth.dart';
-import 'package:nfc_mobile/shared/loading.dart';
-import 'package:nfc_mobile/shared/passwordGen.dart';
+import 'package:nfc_mobile/admin_app/shared/app_bar.dart';
+import 'package:nfc_mobile/admin_app/shared/constants.dart';
+import 'package:nfc_mobile/admin_app/services/auth.dart';
+// import 'package:nfc_mobile/admin_app/shared/loading.dart';
+// import 'package:nfc_mobile/admin_app/shared/passwordGen.dart';
 
 class AdminAddUser extends StatefulWidget{
 
@@ -34,7 +33,6 @@ class _AdminAddUserState extends State<AdminAddUser> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: CustomAppBar(title: 'Strikeplate',),
-      drawer: MakeDrawer(),
       body: Container(
         decoration: BoxDecoration(
           gradient: backgroundGradient,
