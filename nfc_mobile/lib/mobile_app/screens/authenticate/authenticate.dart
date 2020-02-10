@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
-import 'package:nfc_mobile/screens/authenticate/register_admin.dart';
-import 'package:nfc_mobile/screens/authenticate/sign_in.dart';
+import 'package:nfc_mobile/mobile_app/screens/authenticate/register.dart';
+import 'package:nfc_mobile/mobile_app/screens/authenticate/sign_in.dart';
 
 class Authenticate extends StatefulWidget {
   @override
