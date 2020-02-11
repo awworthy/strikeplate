@@ -29,7 +29,7 @@ class HomePage extends StatelessWidget {
                   children: <Widget>[
                     Padding(
                       padding: EdgeInsets.fromLTRB(0, 40, 0, 0),
-                      child: Text('Name: ',
+                      child: Text('Step One: ',
                       style: TextStyle(
                         fontWeight: FontWeight.bold,
                         color: mainFG,
@@ -38,7 +38,7 @@ class HomePage extends StatelessWidget {
                     ),
                     Padding(
                       padding: EdgeInsets.fromLTRB(0, 40, 0, 0),
-                      child: Text('Shea Odland',
+                      child: Text('Tap button below',
                       style: TextStyle(
                         color: secondaryFG
                         )
@@ -50,7 +50,7 @@ class HomePage extends StatelessWidget {
                   children: <Widget>[
                     Padding(
                       padding: EdgeInsets.fromLTRB(0, 20, 0, 0),
-                      child: Text('Company: ',
+                      child: Text('Step Two: ',
                       style: TextStyle(
                         fontWeight: FontWeight.bold,
                         color: mainFG,
@@ -59,7 +59,7 @@ class HomePage extends StatelessWidget {
                     ),
                     Padding(
                       padding: EdgeInsets.fromLTRB(0, 20, 0, 0),
-                      child: Text('MacEwan University',
+                      child: Text('Place phone on Strikplate',
                         style: TextStyle(
                         color: secondaryFG
                         )
@@ -71,7 +71,7 @@ class HomePage extends StatelessWidget {
                   children: <Widget>[
                     Padding(
                       padding: EdgeInsets.fromLTRB(0, 20, 0, 0),
-                      child: Text('Title: ',
+                      child: Text('Step Three: ',
                       style: TextStyle(
                         fontWeight: FontWeight.bold,
                         color: mainFG,
@@ -80,7 +80,7 @@ class HomePage extends StatelessWidget {
                     ),
                     Padding(
                       padding: EdgeInsets.fromLTRB(0, 20, 0, 0),
-                      child: Text('Student',
+                      child: Text('Enter room',
                       style: TextStyle(
                         color: secondaryFG
                       ),
