@@ -121,8 +121,8 @@ class _SignInState extends State<SignIn> {
                         dynamic result = await _auth.signInWithEmailandPassword(email, password);
                         if(result == null) {
                           setState(() {
-                          error = 'Could not sign in with those credentials';
                           loading = false;
+                          error = 'Could not sign in with those credentials';
                         });
                       }
                     }
