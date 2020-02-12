@@ -1,7 +1,7 @@
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:nfc_mobile/mobile_app/services/database.dart';
 // import 'package:nfc_mobile/services/database.dart';
-import 'package:nfc_mobile/mobile_app/shared/user.dart';
+import 'package:nfc_mobile/shared/user.dart';
 
 class AuthService {
 
