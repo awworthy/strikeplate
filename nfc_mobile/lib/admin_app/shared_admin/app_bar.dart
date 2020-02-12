@@ -1,7 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:nfc_mobile/admin_app/screens/admin_adduser.dart';
+import 'package:nfc_mobile/admin_app/screens/rooms_tab.dart';
 import 'package:nfc_mobile/admin_app/services/auth.dart';
-import 'package:nfc_mobile/admin_app/shared/constants.dart';
+import 'package:nfc_mobile/shared/constants.dart';
 
 class CustomAppBar extends StatelessWidget implements PreferredSizeWidget {
 
@@ -55,7 +56,7 @@ class CustomAppBar extends StatelessWidget implements PreferredSizeWidget {
             children: [
               Icon(Icons.notifications),
               AdminAddUser(),
-              Icon(Icons.add_location)
+              Rooms()
             ]),
         )
       ),

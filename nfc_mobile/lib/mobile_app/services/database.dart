@@ -1,5 +1,5 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
-import 'package:nfc_mobile/mobile_app/shared/user.dart';
+import 'package:nfc_mobile/shared/user.dart';
 
 // look up if firebase has SAML
 // look up Shlag

@@ -1,8 +1,8 @@
 import 'package:nfc_mobile/mobile_app/services/auth.dart';
 import 'package:flutter/material.dart';
-import 'package:nfc_mobile/mobile_app/shared/constants.dart';
-import 'package:nfc_mobile/mobile_app/shared/drawer.dart';
-import 'package:nfc_mobile/mobile_app/shared/loading.dart';
+import 'package:nfc_mobile/shared/constants.dart';
+// import 'package:nfc_mobile/mobile_app/shared/drawer.dart';
+import 'package:nfc_mobile/shared/loading.dart';
 
 class RegAdmin extends StatefulWidget {
 
@@ -36,27 +36,15 @@ class _RegAdminState extends State<RegAdmin> {
       backgroundColor: secondaryBG,
       iconTheme: new IconThemeData(color: mainFG),
       actions: <Widget>[
-        SizedBox(
-          height: 11,
-          child: RaisedButton(  
-            color: Colors.transparent,
-            child: Text(
-              'Sign In',
-              style: TextStyle(color: Colors.yellow)
-            ),
-            onPressed: ()  {
-              widget.toggleView();
-            }
-          ),
-        ),
         Padding(
           padding: const EdgeInsets.fromLTRB(0, 10, 10, 10),
           child: Image.asset('assets/profile_gold.png'),
           ),
         ],
       ),
-      drawer: MakeDrawer(),
+      //drawer: MakeDrawer(),
       body: Container(
+        height: MediaQuery.of(context).size.height,
         decoration: BoxDecoration(
           gradient: backgroundGradient,
         ),
@@ -75,7 +63,7 @@ class _RegAdminState extends State<RegAdmin> {
                   ),),
                   SizedBox(height: 20,),
                   SizedBox(
-                    height: 50, width: 300,
+                    height: 50, width: MediaQuery.of(context).size.width * .8,
                     child: TextFormField(
                       validator: (val) => val.isEmpty ? 'Enter an email' : null,
                       style: TextStyle(
@@ -95,7 +83,7 @@ class _RegAdminState extends State<RegAdmin> {
                   ),
                   SizedBox(height: 20,),
                   SizedBox(
-                    height: 50, width: 300,
+                    height: 50, width: MediaQuery.of(context).size.width * .8,
                     child: TextFormField(
                       validator: (val) => val.length < 6 ? 'Enter a password 6+ chars long' : null,
                       style: TextStyle(
@@ -132,6 +120,38 @@ class _RegAdminState extends State<RegAdmin> {
                       //   }
                       // }
                     }
+                  ),
+                  SizedBox(height: MediaQuery.of(context).size.height * .1),
+                  Text(
+                    error,
+                    style: TextStyle(
+                      color: Colors.red, fontSize: 14
+                    ),
+                  ),
+                  Align(
+                    alignment: FractionalOffset.bottomCenter,
+                    child: Container(
+                      child: Column(
+                        children: <Widget>[
+                          Text("Already registered?",
+                            style: TextStyle(
+                              fontStyle: FontStyle.italic,
+                              color: Colors.yellow[200]
+                            ),
+                          ),
+                          RaisedButton(  
+                            color: Colors.yellow,
+                            child: Text(
+                              'Sign In',
+                              style: TextStyle(color: Colors.black)
+                            ),
+                            onPressed: ()  {
+                              widget.toggleView();
+                            }
+                          ),
+                        ],
+                      ),
+                    ),
                   ),
                   SizedBox(height: 12),
                     Text(
