@@ -3,9 +3,9 @@ import 'package:nfc_mobile/mobile_app/services/database.dart';
 import 'package:nfc_mobile/mobile_app/screens/homepage.dart';
 import 'package:nfc_mobile/mobile_app/screens/settings.dart';
 import 'package:nfc_mobile/mobile_app/services/auth.dart';
-import 'package:nfc_mobile/mobile_app/shared/constants.dart';
-import 'package:nfc_mobile/mobile_app/shared/loading.dart';
-import 'package:nfc_mobile/mobile_app/shared/user.dart';
+import 'package:nfc_mobile/shared/constants.dart';
+import 'package:nfc_mobile/shared/loading.dart';
+import 'package:nfc_mobile/shared/user.dart';
 import 'package:provider/provider.dart';
 
 class MakeDrawer extends StatelessWidget {

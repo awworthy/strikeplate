@@ -1,7 +1,6 @@
 import 'package:firebase_auth/firebase_auth.dart';
-// import 'package:nfc_mobile/admin_app/services/database.dart';
-import 'package:nfc_mobile/admin_app/shared/user.dart';
-
+import 'package:nfc_mobile/admin_app/services/database.dart';
+import 'package:nfc_mobile/shared/user.dart';
 class AuthService {
 
   final FirebaseAuth _auth = FirebaseAuth.instance;
@@ -30,7 +29,7 @@ class AuthService {
 
   // sign in with email and password
 
-    Future signInWithEmailandPassword(String email, String password) async {
+  Future signInWithEmailandPassword(String email, String password) async {
     try {
       AuthResult result = await _auth.signInWithEmailAndPassword(email: email, password: password);
       FirebaseUser user = result.user;
@@ -43,33 +42,31 @@ class AuthService {
 
   // register with email and password
 
-  // Future registerAdminWithEmailandPassword(String email, String password) async {
-  //   try {
-  //     AuthResult result = await _auth.createUserWithEmailAndPassword(email: email, password: password);
-  //     FirebaseUser user = result.user;
-  //     // create a new document for the user with the uid
-  //     await DatabaseService(uid: user.uid).updateAdminData('First Name', 'Last Name', email, 'Company', 'A-101', true); 
-  //     return _userFromFirebaseUser(user); 
-  //   } catch (e) {
-  //     print("register error = " + e.toString());
-  //     return null;
-  //   }
-  // }
-
-    // register with email and password
-
   // Future registerNewUser(String email, String password, String firstName, String lastName, String company, String rooms) async {
   //   try {
   //     AuthResult result = await _auth.createUserWithEmailAndPassword(email: email, password: password);
   //     FirebaseUser user = result.user;
   //     // create a new document for the user with the uid
-  //     await DatabaseService(uid: user.uid).updateUsersData(password, firstName, lastName, email, company, rooms, false); 
+  //     await DatabaseService(uid: user.uid).updateUserData(firstName, lastName, email, company, rooms, false); 
   //     return _userFromFirebaseUser(user); 
   //   } catch (e) {
   //     print("register error = " + e.toString());
   //     return null;
   //   }
   // }
+
+  Future registerNewAdmin(String email, String password, String firstName, String lastName, String company, String rooms) async {
+    try {
+      AuthResult result = await _auth.createUserWithEmailAndPassword(email: email, password: password);
+      FirebaseUser user = result.user;
+      // create a new document for the user with the uid
+      await DatabaseService(uid: user.uid).updateUserData(firstName, lastName, email, company, rooms, true); 
+      return _userFromFirebaseUser(user); 
+    } catch (e) {
+      print("register error = " + e.toString());
+      return null;
+    }
+  }
 
   // sign out
 
