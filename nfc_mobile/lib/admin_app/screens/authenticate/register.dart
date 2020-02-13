@@ -1,7 +1,8 @@
 import 'package:nfc_mobile/admin_app/services/auth.dart';
 import 'package:flutter/material.dart';
-import 'package:nfc_mobile/admin_app/shared/constants.dart';
-import 'package:nfc_mobile/admin_app/shared/loading.dart';
+import 'package:nfc_mobile/shared/constants.dart';
+import 'package:nfc_mobile/shared/loading.dart';
+import '../../responsive_widget.dart';
 
 class RegAdmin extends StatefulWidget {
 
@@ -14,13 +15,7 @@ class RegAdmin extends StatefulWidget {
 
 class _RegAdminState extends State<RegAdmin> {
 
-  final AuthService _auth = AuthService();
-  final _formKey = GlobalKey<FormState>();
   bool loading = false;
-
-  String email = '';
-  String password = '';
-  String error = '';
 
   @override
   Widget build(BuildContext context) {
@@ -54,92 +49,382 @@ class _RegAdminState extends State<RegAdmin> {
           ),
         ],
       ),
-      body: Container(
-        decoration: BoxDecoration(
-          gradient: backgroundGradient,
+      body: SingleChildScrollView(
+        child: ResponsiveWidget(
+          largeScreen: RegFormLarge(),
+          smallScreen: RegFormSmall() 
         ),
-        child: Form(
-          key: _formKey,
-          child: Row(
-            mainAxisAlignment: MainAxisAlignment.center,
-            children: <Widget>[
-              Column(
+      ),
+    );
+  }
+}
+
+class RegFormLarge extends StatefulWidget {
+  @override
+  _RegFormLargeState createState() => _RegFormLargeState();
+}
+
+class _RegFormLargeState extends State<RegFormLarge> {
+  final AuthService _auth = AuthService();
+  final _formKey = GlobalKey<FormState>();
+    final TextEditingController _pass = TextEditingController();
+  final TextEditingController _confirmPass = TextEditingController();
+  bool loading = false;
+
+  // text field state
+  String firstName = '';
+  String lastName = '';
+  String email = '';
+  String password = '';
+  String compName = '';
+  String rooms = '';
+  String error = '';
+  @override
+  Widget build(BuildContext context) {
+    return Container(
+      height: MediaQuery.of(context).size.height,
+      decoration: BoxDecoration(
+        gradient: backgroundGradient,
+      ),
+      child: Padding(
+        padding: const EdgeInsets.all(24.0),
+        child: Column(
+          children: <Widget>[
+            Text('Please sign up to Strikeplate',
+              style: TextStyle(
+              color: Colors.white,
+              fontSize: 20
+            ),),
+            Form(
+              key: _formKey,
+              child: Row(
                 mainAxisAlignment: MainAxisAlignment.center,
                 children: <Widget>[
-                  Text('Please sign up to Strikeplate',
-                    style: TextStyle(
-                    color: Colors.white,
-                    fontSize: 20
-                  ),),
-                  SizedBox(height: 20,),
-                  SizedBox(
-                    height: 50, width: 300,
-                    child: TextFormField(
-                      validator: (val) => val.isEmpty ? 'Enter an email' : null,
-                      style: TextStyle(
-                        color: Colors.white
-                        ),
-                      decoration: textInputDecoration.copyWith(
-                        hintText: 'email', 
-                        hintStyle: TextStyle(
-                          fontStyle: FontStyle.italic,
-                          color: Colors.white54
-                        ),
-                      ),
-                      onChanged: (val) {
-                        setState(() => email = val);
-                      },
-                    ),
-                  ),
-                  SizedBox(height: 20,),
-                  SizedBox(
-                    height: 50, width: 300,
-                    child: TextFormField(
-                      validator: (val) => val.length < 6 ? 'Enter a password 6+ chars long' : null,
-                      style: TextStyle(
-                        color: Colors.white),
-                        decoration: textInputDecoration.copyWith(
-                          hintText: 'password', 
-                          hintStyle: TextStyle(
-                            fontStyle: FontStyle.italic,
-                            color: Colors.white54
-                            ),
+                  Padding(
+                    padding: const EdgeInsets.all(8.0),
+                    child: Column(
+                      children: <Widget>[
+                        SizedBox(height: 10,),
+                        SizedBox(
+                          height: 50, width: 300,
+                          child: TextFormField(
+                            validator: (val) => val.isEmpty ? 'Enter your first name' : null,
+                            style: TextStyle(
+                              color: Colors.white),
+                              decoration: textInputDecoration.copyWith(
+                                hintText: 'first name', 
+                                hintStyle: TextStyle(
+                                  fontStyle: FontStyle.italic,
+                                  color: Colors.white54
+                                  ),
+                                ),
+                            onChanged: (val) {
+                              setState(() => firstName = val);
+                            },
                           ),
-                      obscureText: true,
-                      onChanged: (val) {
-                        setState(() => password = val);
-                      },
+                        ),
+                        SizedBox(height: 10,),
+                        SizedBox(
+                          height: 50, width: 300,
+                          child: TextFormField(
+                            validator: (val) => val.isEmpty ? 'Enter your last name' : null,
+                            style: TextStyle(
+                              color: Colors.white),
+                              decoration: textInputDecoration.copyWith(
+                                hintText: 'last name', 
+                                hintStyle: TextStyle(
+                                  fontStyle: FontStyle.italic,
+                                  color: Colors.white54
+                                  ),
+                                ),
+                            onChanged: (val) {
+                              setState(() => lastName = val);
+                            },
+                          ),
+                        ),
+                        SizedBox(height: 10,),
+                        SizedBox(
+                          height: 50, width: 300,
+                          child: TextFormField(
+                            validator: (val) => val.isEmpty ? 'Enter an email' : null,
+                            style: TextStyle(
+                              color: Colors.white
+                              ),
+                            decoration: textInputDecoration.copyWith(
+                              hintText: 'email', 
+                              hintStyle: TextStyle(
+                                fontStyle: FontStyle.italic,
+                                color: Colors.white54
+                              ),
+                            ),
+                            onChanged: (val) {
+                              setState(() => email = val);
+                            },
+                          ),
+                        ),
+                      ],
                     ),
                   ),
-                  SizedBox(height: 20,),
-                  RaisedButton(
-                    color: Colors.yellow,
-                    child: Text(
-                      'Register',
-                      style: TextStyle(color: Colors.black)
+                  Padding(
+                    padding: const EdgeInsets.all(8.0),
+                    child: Column(
+                      children: <Widget>[
+                        SizedBox(height: 10,),
+                        SizedBox(
+                          height: 50, width: 300,
+                          child: TextFormField(
+                            controller: _pass,
+                            validator: (val) => val.length < 6 ? 'Enter a password 6+ chars long' : null,
+                            style: TextStyle(
+                              color: Colors.white),
+                              decoration: textInputDecoration.copyWith(
+                                hintText: 'password', 
+                                hintStyle: TextStyle(
+                                  fontStyle: FontStyle.italic,
+                                  color: Colors.white54
+                                  ),
+                                ),
+                            obscureText: true,
+                            onChanged: (val) {
+                              setState(() => password = val);
+                            },
+                          ),
+                        ),
+                        SizedBox(height: 10,),
+                        SizedBox(
+                          height: 50, width: 300,
+                          child: TextFormField(
+                            controller: _confirmPass,
+                            validator: (val) => val == _pass.text ? null : 'Passwords do not match',
+                            style: TextStyle(
+                              color: Colors.white),
+                              decoration: textInputDecoration.copyWith(
+                                hintText: 'confirm password', 
+                                hintStyle: TextStyle(
+                                  fontStyle: FontStyle.italic,
+                                  color: Colors.white54
+                                  ),
+                                ),
+                            obscureText: true,
+                            onChanged: (val) {
+                              setState(() => password = val);
+                            },
+                          ),
+                        ),
+                        SizedBox(height: 10,),
+                        RaisedButton(
+                          color: Colors.yellow,
+                          child: Text(
+                            'Register',
+                            style: TextStyle(color: Colors.black)
+                            ),
+                          onPressed: () async {
+                            if (_formKey.currentState.validate()) {
+                              setState(() => loading = true);
+                              dynamic result = await _auth.registerNewAdmin(email, password, firstName, lastName, null, null);
+                              if(result == null) {
+                                setState(() { 
+                                  error = 'Please supply a valid email';
+                                  loading = false;
+                                });
+                              }
+                            }
+                          }
+                        ),
+                      ],
                     ),
-                    onPressed: () async {
-                      // if (_formKey.currentState.validate()) {
-                      //   setState(() => loading = true);
-                      //   dynamic result = await _auth.registerAdminWithEmailandPassword(email, password);
-                      //   if(result == null) {
-                      //     setState(() { 
-                      //       error = 'Please supply a valid email';
-                      //       loading = false;
-                      //     });
-                      //   }
-                      // }
-                    }
                   ),
                   SizedBox(height: 12),
                     Text(
                       error,
                       style: TextStyle(color: Colors.red, fontSize: 14),
-                    )
+                    ),
                 ],
               ),
-            ],
-          ),
+            ),
+          ],
+        ),
+      ),
+    );
+  }
+}
+
+class RegFormSmall extends StatefulWidget {
+  @override
+  _RegFormSmallState createState() => _RegFormSmallState();
+}
+
+class _RegFormSmallState extends State<RegFormSmall> {
+
+  final AuthService _auth = AuthService();
+  final _formKey = GlobalKey<FormState>();
+  final TextEditingController _pass = TextEditingController();
+  final TextEditingController _confirmPass = TextEditingController();
+  bool loading = false;
+
+  // text field state
+  String firstName = '';
+  String lastName = '';
+  String email = '';
+  String password = '';
+  String compName = '';
+  String error = '';
+
+  @override
+  Widget build(BuildContext context) {
+    return Container(
+      height: MediaQuery.of(context).size.height,
+      decoration: BoxDecoration(
+        gradient: backgroundGradient,
+      ),
+      child: Padding(
+        padding: const EdgeInsets.all(24.0),
+        child: Column(
+          children: <Widget>[
+            Text('Please sign up to Strikeplate',
+              style: TextStyle(
+              color: Colors.white,
+              fontSize: 20
+            ),),
+            Form(
+              key: _formKey,
+              child: Row(
+                mainAxisAlignment: MainAxisAlignment.center,
+                children: <Widget>[
+                  Column(
+                    children: <Widget>[
+                      SizedBox(height: 10,),
+                      SizedBox(
+                        height: 50, width: MediaQuery.of(context).size.width *0.8,
+                        child: TextFormField(
+                          validator: (val) => val.isEmpty ? 'Enter your first name' : null,
+                          style: TextStyle(
+                            color: Colors.white),
+                            decoration: textInputDecoration.copyWith(
+                              hintText: 'first name', 
+                              hintStyle: TextStyle(
+                                fontStyle: FontStyle.italic,
+                                color: Colors.white54
+                                ),
+                              ),
+                          onChanged: (val) {
+                            setState(() => firstName = val);
+                          },
+                        ),
+                      ),
+                      SizedBox(height: 10,),
+                      SizedBox(
+                        height: 50, width: MediaQuery.of(context).size.width *0.8,
+                        child: TextFormField(
+                          validator: (val) => val.isEmpty ? 'Enter your last name' : null,
+                          style: TextStyle(
+                            color: Colors.white),
+                            decoration: textInputDecoration.copyWith(
+                              hintText: 'last name', 
+                              hintStyle: TextStyle(
+                                fontStyle: FontStyle.italic,
+                                color: Colors.white54
+                                ),
+                              ),
+                          onChanged: (val) {
+                            setState(() => lastName = val);
+                          },
+                        ),
+                      ),
+                      SizedBox(height: 10,),
+                      SizedBox(
+                        height: 50, width: MediaQuery.of(context).size.width *0.8,
+                        child: TextFormField(
+                          validator: (val) => val.isEmpty ? 'Enter an email' : null,
+                          style: TextStyle(
+                            color: Colors.white
+                            ),
+                          decoration: textInputDecoration.copyWith(
+                            hintText: 'email', 
+                            hintStyle: TextStyle(
+                              fontStyle: FontStyle.italic,
+                              color: Colors.white54
+                            ),
+                          ),
+                          onChanged: (val) {
+                            setState(() => email = val);
+                          },
+                        ),
+                      ),
+                      SizedBox(height: 10,),
+                      SizedBox(
+                        height: 50, width: MediaQuery.of(context).size.width *0.8,
+                        child: TextFormField(
+                          controller: _pass,
+                          validator: (val) => val.length < 6 ? 'Enter a password 6+ chars long' : null,
+                          style: TextStyle(
+                            color: Colors.white),
+                            decoration: textInputDecoration.copyWith(
+                              hintText: 'password', 
+                              hintStyle: TextStyle(
+                                fontStyle: FontStyle.italic,
+                                color: Colors.white54
+                                ),
+                              ),
+                          obscureText: true,
+                          onChanged: (val) {
+                            setState(() => password = val);
+                          },
+                        ),
+                      ),
+                      SizedBox(height: 10,),
+                      SizedBox(
+                        height: 50, width: MediaQuery.of(context).size.width *0.8,
+                        child: TextFormField(
+                          controller: _confirmPass,
+                          validator: (val) => val == _pass.text ? null : 'Passwords do not match',
+                          style: TextStyle(
+                            color: Colors.white),
+                            decoration: textInputDecoration.copyWith(
+                              hintText: 'confirm password', 
+                              hintStyle: TextStyle(
+                                fontStyle: FontStyle.italic,
+                                color: Colors.white54
+                                ),
+                              ),
+                          obscureText: true,
+                          onChanged: (val) {
+                            setState(() => password = val);
+                          },
+                        ),
+                      ),
+                      SizedBox(height: 10,),
+                      RaisedButton(
+                        color: Colors.yellow,
+                        child: Text(
+                          'Register',
+                          style: TextStyle(color: Colors.black)
+                          ),
+                        onPressed: () async {
+                          if (_formKey.currentState.validate()) {
+                            setState(() => loading = true);
+                            dynamic result = await _auth.registerNewAdmin(email, password, firstName, lastName, null, null);
+                            if(result == null) {
+                              setState(() { 
+                                error = 'Please supply a valid email';
+                                loading = false;
+                              });
+                            }
+                          }
+                        }
+                      ),
+                    ],
+                  ),
+                SizedBox(height: 20,),  
+                SizedBox(height: 12),
+                  Text(
+                    error,
+                    style: TextStyle(color: Colors.red, fontSize: 14),
+                  ),
+                ],
+              ),
+            ),
+          ],
         ),
       ),
     );
