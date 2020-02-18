@@ -5,11 +5,11 @@ class AuthService {
 
   final FirebaseAuth _auth = FirebaseAuth.instance;
 
-  UserClass _userFromFirebaseUser(FirebaseUser user) {
-    return user != null ? UserClass(uid: user.uid) : null;
+  User _userFromFirebaseUser(FirebaseUser user) {
+    return user != null ? User(uid: user.uid) : null;
   }
 
-  Stream<UserClass> get user {
+  Stream<User> get user {
     return _auth.onAuthStateChanged.map(_userFromFirebaseUser);
   }
   
@@ -60,7 +60,7 @@ class AuthService {
       AuthResult result = await _auth.createUserWithEmailAndPassword(email: email, password: password);
       FirebaseUser user = result.user;
       // create a new document for the user with the uid
-      await DatabaseService(uid: user.uid).updateUserData(firstName, lastName, email, company, rooms, true); 
+      await DatabaseService(id: user.uid).updateUserData(firstName, lastName, email, company, rooms, true); 
       return _userFromFirebaseUser(user); 
     } catch (e) {
       print("register error = " + e.toString());

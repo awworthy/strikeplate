@@ -53,112 +53,115 @@ class _RegAdminState extends State<RegAdmin> {
           child: Row(
             mainAxisAlignment: MainAxisAlignment.center,
             children: <Widget>[
-              Column(
-                mainAxisAlignment: MainAxisAlignment.center,
-                children: <Widget>[
-                  Text('Please sign up to Strikeplate',
-                    style: TextStyle(
-                    color: Colors.white,
-                    fontSize: 20
-                  ),),
-                  SizedBox(height: 20,),
-                  SizedBox(
-                    height: 50, width: MediaQuery.of(context).size.width * .8,
-                    child: TextFormField(
-                      validator: (val) => val.isEmpty ? 'Enter an email' : null,
+              SingleChildScrollView(
+                scrollDirection: Axis.vertical,
+                  child: Column(
+                  mainAxisAlignment: MainAxisAlignment.center,
+                  children: <Widget>[
+                    Text('Please sign up to Strikeplate',
                       style: TextStyle(
-                        color: Colors.white
-                        ),
-                      decoration: textInputDecoration.copyWith(
-                        hintText: 'email', 
-                        hintStyle: TextStyle(
-                          fontStyle: FontStyle.italic,
-                          color: Colors.white54
-                        ),
-                      ),
-                      onChanged: (val) {
-                        setState(() => email = val);
-                      },
-                    ),
-                  ),
-                  SizedBox(height: 20,),
-                  SizedBox(
-                    height: 50, width: MediaQuery.of(context).size.width * .8,
-                    child: TextFormField(
-                      validator: (val) => val.length < 6 ? 'Enter a password 6+ chars long' : null,
-                      style: TextStyle(
-                        color: Colors.white),
+                      color: Colors.white,
+                      fontSize: 20
+                    ),),
+                    SizedBox(height: 20,),
+                    SizedBox(
+                      height: 50, width: MediaQuery.of(context).size.width * .8,
+                      child: TextFormField(
+                        validator: (val) => val.isEmpty ? 'Enter an email' : null,
+                        style: TextStyle(
+                          color: Colors.white
+                          ),
                         decoration: textInputDecoration.copyWith(
-                          hintText: 'password', 
+                          hintText: 'email', 
                           hintStyle: TextStyle(
                             fontStyle: FontStyle.italic,
                             color: Colors.white54
-                            ),
                           ),
-                      obscureText: true,
-                      onChanged: (val) {
-                        setState(() => password = val);
-                      },
-                    ),
-                  ),
-                  SizedBox(height: 20,),
-                  RaisedButton(
-                    color: Colors.yellow,
-                    child: Text(
-                      'Register',
-                      style: TextStyle(color: Colors.black)
-                    ),
-                    onPressed: () async {
-                      // if (_formKey.currentState.validate()) {
-                      //   setState(() => loading = true);
-                      //   dynamic result = await _auth.registerAdminWithEmailandPassword(email, password);
-                      //   if(result == null) {
-                      //     setState(() { 
-                      //       error = 'Please supply a valid email';
-                      //       loading = false;
-                      //     });
-                      //   }
-                      // }
-                    }
-                  ),
-                  SizedBox(height: MediaQuery.of(context).size.height * .1),
-                  Text(
-                    error,
-                    style: TextStyle(
-                      color: Colors.red, fontSize: 14
-                    ),
-                  ),
-                  Align(
-                    alignment: FractionalOffset.bottomCenter,
-                    child: Container(
-                      child: Column(
-                        children: <Widget>[
-                          Text("Already registered?",
-                            style: TextStyle(
-                              fontStyle: FontStyle.italic,
-                              color: Colors.yellow[200]
-                            ),
-                          ),
-                          RaisedButton(  
-                            color: Colors.yellow,
-                            child: Text(
-                              'Sign In',
-                              style: TextStyle(color: Colors.black)
-                            ),
-                            onPressed: ()  {
-                              widget.toggleView();
-                            }
-                          ),
-                        ],
+                        ),
+                        onChanged: (val) {
+                          setState(() => email = val);
+                        },
                       ),
                     ),
-                  ),
-                  SizedBox(height: 12),
+                    SizedBox(height: 20,),
+                    SizedBox(
+                      height: 50, width: MediaQuery.of(context).size.width * .8,
+                      child: TextFormField(
+                        validator: (val) => val.length < 6 ? 'Enter a password 6+ chars long' : null,
+                        style: TextStyle(
+                          color: Colors.white),
+                          decoration: textInputDecoration.copyWith(
+                            hintText: 'password', 
+                            hintStyle: TextStyle(
+                              fontStyle: FontStyle.italic,
+                              color: Colors.white54
+                              ),
+                            ),
+                        obscureText: true,
+                        onChanged: (val) {
+                          setState(() => password = val);
+                        },
+                      ),
+                    ),
+                    SizedBox(height: 20,),
+                    RaisedButton(
+                      color: Colors.yellow,
+                      child: Text(
+                        'Register',
+                        style: TextStyle(color: Colors.black)
+                      ),
+                      onPressed: () async {
+                        if (_formKey.currentState.validate()) {
+                          setState(() => loading = true);
+                          dynamic result = await _auth.registerNewUser(email, password, 'bob', 'whatevs', 'strikeplate', null);
+                          if(result == null) {
+                            setState(() { 
+                              error = 'Please supply a valid email';
+                              loading = false;
+                            });
+                          }
+                        }
+                      }
+                    ),
+                    SizedBox(height: MediaQuery.of(context).size.height * .1),
                     Text(
                       error,
-                      style: TextStyle(color: Colors.red, fontSize: 14),
-                    )
-                ],
+                      style: TextStyle(
+                        color: Colors.red, fontSize: 14
+                      ),
+                    ),
+                    Align(
+                      alignment: FractionalOffset.bottomCenter,
+                      child: Container(
+                        child: Column(
+                          children: <Widget>[
+                            Text("Already registered?",
+                              style: TextStyle(
+                                fontStyle: FontStyle.italic,
+                                color: Colors.yellow[200]
+                              ),
+                            ),
+                            RaisedButton(  
+                              color: Colors.yellow,
+                              child: Text(
+                                'Sign In',
+                                style: TextStyle(color: Colors.black)
+                              ),
+                              onPressed: ()  {
+                                widget.toggleView();
+                              }
+                            ),
+                          ],
+                        ),
+                      ),
+                    ),
+                    SizedBox(height: 12),
+                      Text(
+                        error,
+                        style: TextStyle(color: Colors.red, fontSize: 14),
+                      )
+                  ],
+                ),
               ),
             ],
           ),
