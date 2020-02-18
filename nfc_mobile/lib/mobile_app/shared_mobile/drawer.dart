@@ -15,7 +15,7 @@ class MakeDrawer extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
 
-    UserClass user = Provider.of<UserClass>(context);
+    User user = Provider.of<User>(context);
 
     return StreamBuilder<UserData>(
       stream: DatabaseService(uid: user.uid).userData,

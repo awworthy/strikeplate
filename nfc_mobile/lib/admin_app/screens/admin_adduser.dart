@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
-//import 'package:nfc_mobile/admin_app/shared/app_bar.dart';
+// import 'package:nfc_mobile/admin_app/shared/app_bar.dart';
 import 'package:nfc_mobile/shared/constants.dart';
-// import 'package:nfc_mobile/admin_app/services/auth.dart';
+import 'package:nfc_mobile/admin_app/services/auth.dart';
 // import 'package:nfc_mobile/admin_app/shared/loading.dart';
 // import 'package:nfc_mobile/admin_app/shared/passwordGen.dart';
 
@@ -16,7 +16,7 @@ class AdminAddUser extends StatefulWidget{
 
 class _AdminAddUserState extends State<AdminAddUser> {
   
-  //final AuthService _auth = AuthService();
+  final AuthService _auth = AuthService();
   final _formKey = GlobalKey<FormState>();
   bool loading = false;
 
@@ -185,16 +185,15 @@ class _AdminAddUserState extends State<AdminAddUser> {
                                 ),),
                                 onPressed: () async {
                                   // if (_formKey.currentState.validate()) {
-                                  //   password = Password().createCryptoRandomString().toString();
                                   //   setState(() => loading = true);
-                                  //   dynamic result = await _auth.registerNewUser(email, password, firstName, lastName, compName, rooms);
+                                  //   dynamic result = await _auth.registerNewAdmin(email, password, firstName, lastName, compName, rooms);
                                   //   if(result == null) {
                                   //     setState(() { 
                                   //       error = 'Please supply a valid email';
                                   //       loading = false;
                                   //     });
-                                  //  }
-                                //  }
+                                  //   }
+                                  // }
                                 }
                               )
                             ),
