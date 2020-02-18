@@ -51,108 +51,116 @@ class _SignInState extends State<SignIn> {
         ),
         child: Form(
           key: _formKey,
-          child: Column(
+          child: Row(
             mainAxisAlignment: MainAxisAlignment.center,
             children: <Widget>[
-              Text('Please sign in to Strikeplate',
-              style: TextStyle(
-                color: Colors.white,
-                fontSize: 20
-              ),),
-              SizedBox(height: 20,),
-              SizedBox(
-                height: 50, width: MediaQuery.of(context).size.width * .8,
-                child: TextFormField(
-                  validator: (val) => val.isEmpty ? 'Enter an email' : null,
-                  style: TextStyle(
-                    color: Colors.white),
-                  decoration: textInputDecoration.copyWith(
-                    hintText: 'email', 
-                    hintStyle: TextStyle(
-                      fontStyle: FontStyle.italic,
-                      color: Colors.white54),
-                    ),
-                  onChanged: (val) {
-                    setState(() => email = val);
-                  },
-                ),
-              ),
-              SizedBox(height: 20),
-              SizedBox(
-                height: 50, width: MediaQuery.of(context).size.width * .8,
-                child: TextFormField(
-                  validator: (val) => val.length < 6 ? 'Enter a password 6+ chars long' : null,
-                  style: TextStyle(
-                    color: Colors.white),
-                  decoration: textInputDecoration.copyWith(
-                    hintText: 'password', 
-                    hintStyle: TextStyle(
-                      fontStyle: FontStyle.italic,
-                      color: Colors.white54),
-                    ),
-                  obscureText: true,
-                  onChanged: (val) {
-                    setState(() => password = val);
-                  },
-                ),
-              ),
-              SizedBox(height: 20,),
-              RaisedButton(
-                color: Colors.yellow,
-                child: Text(
-                  'Sign In',
-                  style: TextStyle(color: Colors.black)
-                ),
-                onPressed: () async {
-                  if (_formKey.currentState.validate()) {
-                    setState (() => loading = true);
-                    dynamic result = await _auth.signInWithEmailandPassword(email, password);
-                    if(result == null) {
-                      setState(() {
-                      error = 'Could not sign in with those credentials';
-                      loading = false;
-                    });
-                  }
-                }
-              }
-            ),
-            SizedBox(height: MediaQuery.of(context).size.height * .1),
-            Text(
-              error,
-              style: TextStyle(
-                color: Colors.red, fontSize: 14
-              ),
-            ),
-            Align(
-              alignment: FractionalOffset.bottomCenter,
-              child: Container(
-                child: Column(
+              SingleChildScrollView(
+                scrollDirection: Axis.vertical,
+                  child: Column(
+                  mainAxisAlignment: MainAxisAlignment.center,
                   children: <Widget>[
-                    Text("Not registered?",
-                      style: TextStyle(
-                        fontStyle: FontStyle.italic,
-                        color: Colors.yellow[200]
+                    Text('Please sign in to Strikeplate',
+                    style: TextStyle(
+                      color: Colors.white,
+                      fontSize: 20
+                    ),),
+                    SizedBox(height: 20,),
+                    SizedBox(
+                      height: 50, width: MediaQuery.of(context).size.width * .8,
+                      child: TextFormField(
+                        validator: (val) => val.isEmpty ? 'Enter an email' : null,
+                        style: TextStyle(
+                          color: Colors.white),
+                        decoration: textInputDecoration.copyWith(
+                          hintText: 'email', 
+                          hintStyle: TextStyle(
+                            fontStyle: FontStyle.italic,
+                            color: Colors.white54),
+                          ),
+                        onChanged: (val) {
+                          setState(() => email = val);
+                        },
                       ),
                     ),
-                    RaisedButton(  
+                    SizedBox(height: 20),
+                    SizedBox(
+                      height: 50, width: MediaQuery.of(context).size.width * .8,
+                      child: TextFormField(
+                        validator: (val) => val.length < 6 ? 'Enter a password 6+ chars long' : null,
+                        style: TextStyle(
+                          color: Colors.white),
+                        decoration: textInputDecoration.copyWith(
+                          hintText: 'password', 
+                          hintStyle: TextStyle(
+                            fontStyle: FontStyle.italic,
+                            color: Colors.white54),
+                          ),
+                        obscureText: true,
+                        onChanged: (val) {
+                          setState(() => password = val);
+                        },
+                      ),
+                    ),
+                    SizedBox(height: 20,),
+                    RaisedButton(
                       color: Colors.yellow,
                       child: Text(
-                        'Register',
+                        'Sign In',
                         style: TextStyle(color: Colors.black)
                       ),
-                      onPressed: ()  {
-                        widget.toggleView();
+                      onPressed: () async {
+                        if (_formKey.currentState.validate()) {
+                          setState (() => loading = true);
+                          dynamic result = await _auth.signInWithEmailandPassword(email, password);
+                          if(result == null) {
+                            setState(() {
+                            error = 'Could not sign in with those credentials';
+                            loading = false;
+                          });
+                        }
                       }
+                    }
+                  ),
+                  SizedBox(height: MediaQuery.of(context).size.height * .1),
+                  Text(
+                    error,
+                    style: TextStyle(
+                      color: Colors.red, fontSize: 14
                     ),
+                  ),
+                  Align(
+                    alignment: FractionalOffset.bottomCenter,
+                    child: Container(
+                      child: Column(
+                        children: <Widget>[
+                          Text("Not registered?",
+                            style: TextStyle(
+                              fontStyle: FontStyle.italic,
+                              color: Colors.yellow[200]
+                            ),
+                          ),
+                          RaisedButton(  
+                            color: Colors.yellow,
+                            child: Text(
+                              'Register',
+                              style: TextStyle(color: Colors.black)
+                            ),
+                            onPressed: ()  {
+                              widget.toggleView();
+                            }
+                          ),
+                        ],
+                      ),
+                    ),
+                  ),
+                  SizedBox(height: 12),
+                    Text(
+                      error,
+                      style: TextStyle(color: Colors.red, fontSize: 14),
+                    )
                   ],
                 ),
               ),
-            ),
-            SizedBox(height: 12),
-              Text(
-                error,
-                style: TextStyle(color: Colors.red, fontSize: 14),
-              )
             ],
           ),
         ),

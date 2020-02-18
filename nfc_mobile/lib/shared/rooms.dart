@@ -1,3 +1,5 @@
+import 'package:cloud_firestore/cloud_firestore.dart';
+
 class Room {
 
   final String rid;
@@ -23,11 +25,19 @@ class Building {
 
 }
 
-class BuildingData {
+class BuildingRooms {
 
-  final String bName;
-  final List<Room> rooms;
+  final List<String> rooms;
 
-  BuildingData({ this.bName, this.rooms});
+  BuildingRooms({ this.rooms});
+
+}
+
+class RoomLogs {
+
+  final Map history;
+  final List<Timestamp> timesEntered;
+
+  RoomLogs({ this.history, this.timesEntered });
 
 }
