@@ -14,7 +14,7 @@ class NFCApp extends StatelessWidget {
     return StreamProvider<UserClass>.value(
       value: AuthService().user,
       child: MaterialApp(
-        debugShowCheckedModeBanner: false,
+        debugShowCheckedModeBanner: false, 
         theme: ThemeData(
           scaffoldBackgroundColor: sideBarColour,
           fontFamily: 'Now',

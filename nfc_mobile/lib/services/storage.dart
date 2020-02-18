@@ -10,8 +10,8 @@ import 'package:shared_preferences/shared_preferences.dart';
 // main function to generate asymmetric keys for cryptography
 AsymmetricKeyPair<PublicKey, PrivateKey> getRSAKeyPair(
     SecureRandom secureRandom) {
-  var RSAParameters = new RSAKeyGeneratorParameters(BigInt.from(65537), 2048, 5);
-  var parameters = new ParametersWithRandom(RSAParameters, secureRandom);
+  var rsaParameters = new RSAKeyGeneratorParameters(BigInt.from(65537), 2048, 5);
+  var parameters = new ParametersWithRandom(rsaParameters, secureRandom);
   var keyGenerator = new RSAKeyGenerator();
   keyGenerator.init(parameters);
   return keyGenerator.generateKeyPair();
@@ -49,7 +49,7 @@ class Storage{
   // Load the stored key from memory, load null if nonexistent in memory
   _loadPublicKey() async {
     SharedPreferences prefs = await SharedPreferences.getInstance();
-    _publicKey = (prefs.getString(publicKeyName) ?? null);
+    _publicKey = (prefs.getString(publicKeyName)  );
   }
 
   _loadPrivateKey() async {

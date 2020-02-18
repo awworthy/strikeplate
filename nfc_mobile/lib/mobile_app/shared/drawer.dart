@@ -5,7 +5,7 @@ import 'package:nfc_mobile/mobile_app/screens/settings.dart';
 import 'package:nfc_mobile/mobile_app/services/auth.dart';
 import 'package:nfc_mobile/mobile_app/shared/constants.dart';
 import 'package:nfc_mobile/mobile_app/shared/loading.dart';
-import 'package:nfc_mobile/mobile_app/shared/user.dart';
+import 'package:nfc_mobile/shared/user.dart';
 import 'package:provider/provider.dart';
 
 class MakeDrawer extends StatelessWidget {
@@ -20,7 +20,7 @@ class MakeDrawer extends StatelessWidget {
     return StreamBuilder<UserData>(
       stream: DatabaseService(uid: user.uid).userData,
       builder: (context, snapshot) {
-        if(snapshot.hasData) {
+        if (snapshot.hasData) {
           UserData userData = snapshot.data;
           print(userData.name);
           return Drawer(
