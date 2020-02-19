@@ -9,6 +9,10 @@ Storage storage = Storage();
 class StorageTest extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
+    String pubKey = storage.getPublicKey();
+    if (pubKey == null) {
+      pubKey = 'hello';
+    }
     return Scaffold(
       appBar: CustomAppBar(title: 'Strikeplate'),
       drawer: MakeDrawer(),
@@ -26,17 +30,20 @@ class StorageTest extends StatelessWidget {
                   padding: EdgeInsets.fromLTRB(0, 40, 0, 0),
                   child: Text('Storage Test',
                   style: TextStyle(
-                      fontWeight: FontWeight.bold,
-                      color: mainFG,
+                    fontWeight: FontWeight.bold,
+                    color: mainFG,
                   )),
                 ),
+                /*
                 Padding(
                   padding: EdgeInsets.fromLTRB(0, 40, 0, 0),
-                  child: Text(storage.getPublicKey(),
+                  child: Text(pubKey.toString(),
                   style: TextStyle(
                       color: mainFG,
                   )),
                 ),
+
+                 */
                 FloatingActionButton(onPressed: null)
               ],
             )
