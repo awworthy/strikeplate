@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:nfc_mobile/mobile_app/services/auth.dart';
-import 'file:///C:/Users/User/Documents/C496/project/nfc_mobile/lib/mobile_app/services/storagetest.dart';
+//import 'file:///C:/Users/User/Documents/C496/project/nfc_mobile/lib/mobile_app/services/storagetest.dart';
 import 'package:nfc_mobile/shared/constants.dart';
 import 'package:provider/provider.dart';
 import 'package:nfc_mobile/shared/user.dart';
@@ -28,7 +28,7 @@ class NFCApp extends StatelessWidget {
           //home: AdminAddUser(),
           //home: Loading(),
           //home: HomePage(),
-          home: StorageTest(),
+          //home: StorageTest(),
       ),
     );
   }

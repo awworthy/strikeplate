@@ -60,7 +60,7 @@ class AuthService {
       AuthResult result = await _auth.createUserWithEmailAndPassword(email: email, password: password);
       FirebaseUser user = result.user;
       // create a new document for the user with the uid
-      await DatabaseService(id: user.uid).updateUserData(firstName, lastName, email, company, rooms, true); 
+      await DatabaseService(userID: user.uid).updateUserData(firstName, lastName, email, company, rooms, true); 
       return _userFromFirebaseUser(user); 
     } catch (e) {
       print("register error = " + e.toString());

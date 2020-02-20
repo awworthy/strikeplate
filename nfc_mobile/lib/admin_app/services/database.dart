@@ -7,17 +7,19 @@ import 'package:nfc_mobile/shared/user.dart';
 
 class DatabaseService {
 
-  final String id;
-  final String id2;
+  final String adminID;
+  final String userID;
   final String date;
-  DatabaseService({ this.id, this.id2, this.date });
+  final String buildingID;
+  final String roomID;
+  DatabaseService({ this.adminID, this.userID, this.date, this.buildingID, this.roomID });
 
   //final fs.Firestore userCollection = fb.firestore();
   final CollectionReference userCollection = Firestore.instance.collection('users');
   final CollectionReference roomCollection = Firestore.instance.collection('buildings');
 
   Future<void> updateUserData(String firstName, String lastName, String email, String company, String rooms, bool isAdmin) async {
-    return await userCollection.document(id).setData({
+    return await userCollection.document(userID).setData({
       'firstName': firstName,
       'lastName': lastName,
       'email' : email,
@@ -30,7 +32,7 @@ class DatabaseService {
   // user data from snapshots
   UserData _userDataFromSnapshot(DocumentSnapshot snapshot) {
     return UserData(
-      uid: id,
+      uid: userID,
       buildings: snapshot.data['buildings'],
       name: snapshot.data['firstName'] + " " + snapshot.data['lastName'],
       email: snapshot.data['email'],
@@ -40,7 +42,7 @@ class DatabaseService {
 
     // get user doc stream
   Stream<UserData> get userData {
-    return userCollection.document(id).snapshots()
+    return userCollection.document(userID).snapshots()
       .map(_userDataFromSnapshot);
   }
 
@@ -58,20 +60,34 @@ class DatabaseService {
 
     // get user doc stream
   Stream<BuildingRooms> get roomData {
-    return roomCollection.document(id).snapshots()
+    return roomCollection.document(adminID).snapshots()
       .map(_roomDataFromSnapshot);
   }
 
   RoomLogs _roomLogsFromSnapshot(DocumentSnapshot snapshot) {
+    Map<dynamic, dynamic> dailyLog = Map.from(snapshot.data['dailyLog']);
+    Map<String, List<dynamic>> newDailyLog = new Map();
+    Map<dynamic, dynamic> temp;
+    List<dynamic> times;
+
+    dailyLog.forEach((key, value) {
+      temp = value;
+      temp.forEach((otherkey, othervalue) {
+        times = List.from(othervalue);
+        times.forEach((element) {
+          }
+        );    
+      });
+      newDailyLog[key] = times;
+    });
     return RoomLogs(
-      history: snapshot.data['user01'],
-      timesEntered: List.from(snapshot.data['user01']['time'])
+      roomsLog: newDailyLog
     );
   }
 
     // get user doc stream
   Stream<RoomLogs> get roomLogs {
-    return roomCollection.document(id).collection('rooms').document(id2).collection('roomLog').document(date).snapshots()
+    return roomCollection.document(buildingID).collection('rooms').document(roomID).collection('roomLog').document(date).snapshots()
       .map(_roomLogsFromSnapshot);
   }
 
@@ -83,7 +99,7 @@ class DatabaseService {
 
   Future<void> addBuildingtoAdmin(String buildingID) async {
     List<String> rooms;
-    return await userCollection.document(id).setData({
+    return await userCollection.document(adminID).setData({
       'buildings' : {buildingID: {'rooms' : rooms}}
     }, merge: true);
   }
