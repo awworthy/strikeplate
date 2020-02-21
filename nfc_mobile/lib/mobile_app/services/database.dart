@@ -7,9 +7,14 @@ import 'package:nfc_mobile/shared/user.dart';
 class DatabaseService {
 
   final String uid;
-  DatabaseService({ this.uid });
+  final String date;
+  final String buildingID;
+  final String roomID;
+  DatabaseService({ this.uid, this.date, this.buildingID, this.roomID });
 
   final CollectionReference userCollection = Firestore.instance.collection('users');
+  final CollectionReference roomCollection = Firestore.instance.collection('buildings');
+
 
   Future<void> updateUserData(String firstName, String lastName, String email, String company, String rooms, bool isAdmin) async {
     return await userCollection.document(uid).setData({
@@ -37,4 +42,13 @@ class DatabaseService {
     return userCollection.document(uid).snapshots()
       .map(_userDataFromSnapshot);
   }
+
+    Future<void> enterRoom(Timestamp date) async {
+    String dateID = date.toDate().year.toString() + '-' + date.toDate().month.toString() + '-' + date.toDate().day.toString();
+    var values = { 'times' : FieldValue.arrayUnion([date]) };
+    return await roomCollection.document(buildingID).collection('rooms').document(roomID).collection('roomLog').document(dateID).setData({
+      uid: values 
+    }, merge: true);
+  }
 }
+
