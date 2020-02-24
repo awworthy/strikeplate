@@ -1,4 +1,5 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:nfc_mobile/shared/rooms.dart';
 import 'package:nfc_mobile/shared/user.dart';
 
 // look up if firebase has SAML
@@ -43,7 +44,20 @@ class DatabaseService {
       .map(_userDataFromSnapshot);
   }
 
-    Future<void> enterRoom(Timestamp date) async {
+  Stream<RoomAccess> get roomAccess {
+    return roomCollection.document(buildingID).collection('rooms').document(roomID).snapshots()
+      .map(_userAccessCheck); 
+  }
+
+  RoomAccess _userAccessCheck(DocumentSnapshot snapshot) {
+    RoomAccess data = new RoomAccess(
+      users: List.from(snapshot.data['usersWithAccess']),
+      locked: snapshot.data['locked']
+    );
+    return data;
+  }
+
+  Future<void> enterRoom(Timestamp date) async {
     String dateID = date.toDate().year.toString() + '-' + date.toDate().month.toString() + '-' + date.toDate().day.toString();
     var values = { 'times' : FieldValue.arrayUnion([date]) };
     return await roomCollection.document(buildingID).collection('rooms').document(roomID).collection('roomLog').document(dateID).setData({
