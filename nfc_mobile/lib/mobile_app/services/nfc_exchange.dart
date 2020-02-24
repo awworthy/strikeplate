@@ -13,7 +13,7 @@ class NFCAuth {
 
   String sign(String proof) {
     Storage storage = Storage();
-    PrivateKey privateKey = storage.getPrivateKey();
+    RSAPrivateKey privateKey = storage.getPrivateKey();
     signer.init(true, PrivateKeyParameter<RSAPrivateKey>(privateKey));
     var signedBytes = signer.generateSignature(Uint8List.fromList(proof.codeUnits));
 

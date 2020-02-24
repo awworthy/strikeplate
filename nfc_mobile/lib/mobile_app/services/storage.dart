@@ -39,7 +39,7 @@ class Storage{
     return _publicKey;
   }
 
-  PrivateKey getPrivateKey() {
+  RSAPrivateKey getPrivateKey() {
     _loadPrivateKey();
     if (_privateKey == null)
       _generateKeys();
@@ -50,6 +50,7 @@ class Storage{
   _loadPublicKey() async {
     SharedPreferences prefs = await SharedPreferences.getInstance();
     _publicKey = (prefs.getString(publicKeyName) ?? null);
+    print(_publicKey);
   }
 
   _loadPrivateKey() async {
