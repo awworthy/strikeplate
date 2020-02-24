@@ -35,9 +35,17 @@ class BuildingRooms {
 
 class RoomLogs {
 
-  final Map history;
-  final List<Timestamp> timesEntered;
+  final Map<String, List<dynamic>> roomsLog;
 
-  RoomLogs({ this.history, this.timesEntered });
+  RoomLogs({ this.roomsLog });
+
+}
+
+class RoomAccess {
+
+  final List<String> users;
+  final bool locked;
+
+  RoomAccess({ this.users, this.locked });
 
 }
