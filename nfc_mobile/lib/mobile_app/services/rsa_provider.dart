@@ -1,10 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:nfc_mobile/mobile_app/services/key_helper.dart';
 
-/// As an [InheritedWidget] this class will provide its childs the objects it hold
-///
-/// By accessing [of] and providing a [BuildContext] we can access, for example, the [Config] instance.
-/// Usage: `var provider = DependencyProvider.of(context);`
+// InheritedWidget RSAProvider is used as a top level widget so that any widgets
+// further down in the tree can use it to obtain RSA asymmetric key cryptography
+// functions from getKeyHelper()
 class RSAProvider extends InheritedWidget {
 
   static RSAProvider of(BuildContext context) {

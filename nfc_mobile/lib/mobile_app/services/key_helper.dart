@@ -153,7 +153,7 @@ class KeyHelper {
   }
 
   // encode Private key to PEM format for storage on disk later
-  String encodePrivateKeyToPemPKCS1(RSAPrivateKey privateKey) {
+  String privateToString(RSAPrivateKey privateKey) {
 
     var topLevel = new ASN1Sequence();
 
@@ -186,7 +186,7 @@ class KeyHelper {
   }
 
   // Encode public key to string, likely required for OG transmission
-  String encodePublicKeyToPemPKCS1(RSAPublicKey publicKey) {
+  String publicToString(RSAPublicKey publicKey) {
     var topLevel = new ASN1Sequence();
 
     topLevel.add(ASN1Integer(publicKey.modulus));
