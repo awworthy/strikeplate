@@ -40,3 +40,12 @@ class RoomLogs {
   RoomLogs({ this.roomsLog });
 
 }
+
+class RoomAccess {
+
+  final List<String> users;
+  final bool locked;
+
+  RoomAccess({ this.users, this.locked });
+
+}
