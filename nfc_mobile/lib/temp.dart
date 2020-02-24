@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:nfc_mobile/mobile_app/services/auth.dart';
-import 'package:nfc_mobile/mobile_app/services/rsa_provider.dart';
+import 'file:///C:/Users/User/Documents/C496/project/nfc_mobile/lib/mobile_app/shared_mobile/rsa_provider.dart';
 import 'package:nfc_mobile/mobile_app/services/storagetest.dart';
 import 'package:nfc_mobile/shared/constants.dart';
 import 'package:provider/provider.dart';

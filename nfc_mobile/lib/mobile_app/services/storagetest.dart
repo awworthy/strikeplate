@@ -2,7 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_spinkit/flutter_spinkit.dart';
 import 'package:nfc_mobile/admin_app/shared_admin/app_bar.dart';
-import 'package:nfc_mobile/mobile_app/services/rsa_provider.dart';
+import 'file:///C:/Users/User/Documents/C496/project/nfc_mobile/lib/mobile_app/shared_mobile/rsa_provider.dart';
 import 'package:nfc_mobile/mobile_app/shared_mobile/drawer.dart';
 import 'package:nfc_mobile/shared/constants.dart';
 import 'package:pointycastle/export.dart' as ac;
