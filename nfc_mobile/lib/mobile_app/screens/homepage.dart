@@ -178,8 +178,8 @@ class _HomePageState extends State<HomePage> {
                     onTap: () async { 
                       dynamic result = await DatabaseService(uid: user.uid, buildingID: 'building01', roomID: _room).getRoomAccessData();
                       if(result != null) {
-                        RoomAccess x = result;
-                        if(x.locked == false && x.users.contains(user.uid) && _selector == 1) {
+                        RoomAccess roomAccess = result;
+                        if(roomAccess.locked == false && roomAccess.users.contains(user.uid) && _selector == 1) {
                           DatabaseService(uid: user.uid, buildingID: 'building01', roomID: _room).enterRoom(Timestamp.now());
                           setState(() {
                             _selector = 2;
