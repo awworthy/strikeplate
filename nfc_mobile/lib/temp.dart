@@ -1,15 +1,19 @@
 import 'package:flutter/material.dart';
 import 'package:nfc_mobile/mobile_app/services/auth.dart';
-import 'file:///C:/Users/User/Documents/C496/project/nfc_mobile/lib/mobile_app/shared_mobile/rsa_provider.dart';
 import 'package:nfc_mobile/mobile_app/services/storagetest.dart';
+import 'package:nfc_mobile/mobile_app/shared_mobile/rsa_provider.dart';
+import 'package:nfc_mobile/mobile_app/shared_mobile/storage_provider.dart';
 import 'package:nfc_mobile/shared/constants.dart';
 import 'package:provider/provider.dart';
 import 'package:nfc_mobile/shared/user.dart';
 
 void main() {
   runApp(
-      RSAProvider(
-        child: NFCApp(),)
+    RSAProvider(
+      child: StorageProvider(
+        child: NFCApp()
+      ),
+    )
   );
 }
 
@@ -34,7 +38,7 @@ class NFCApp extends StatelessWidget {
           //home: AdminAddUser(),
           //home: Loading(),
           //home: HomePage(),
-          //home: StorageTest(),
+          home: StorageTest(),
       ),
     );
   }
