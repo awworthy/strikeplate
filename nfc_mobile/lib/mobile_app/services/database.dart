@@ -64,5 +64,17 @@ class DatabaseService {
       uid: values 
     }, merge: true);
   }
+
+  Future<RoomAccess> getRoomAccessData() async {
+    DocumentSnapshot result = await roomCollection.document(buildingID).collection('rooms').document(roomID).get();
+    if(result != null){
+      RoomAccess access = new RoomAccess(users: List.from(result['usersWithAccess']), locked: result.data['locked']);
+      return access;
+    } else {
+      return null;
+    }
+  }
 }
+
+
 
