@@ -18,38 +18,13 @@ class HomePage extends StatefulWidget {
 }
 
 class _HomePageState extends State<HomePage> {
-  //final List<String> buildings = ['Building 1', 'Building 2'];
-  int selector = 1;
-  bool _isLocked = true;
+  int _selector = 1;
   String _room;
   bool _pressA101 = false;
   bool _pressA102 = false;
 
-  Future<void> lockCheck(String userID, String buildingID, String roomID) async {
-    try {
-      Stream<RoomAccess> roomCheck = DatabaseService(uid: userID, buildingID: 'building01', roomID: roomID).roomAccess;
-      await roomCheck.forEach((element) {
-        if (element.locked == false) { 
-          setState(() {
-            _isLocked = false;
-          });
-          return null;
-        } else {
-          setState(() {
-            _isLocked = true;
-          });
-          return null;
-        }
-      });
-    } catch (e) {
-      print("register error = " + e.toString());
-      return null;
-    }
-  }
-
   @override
   Widget build(BuildContext context) {
-    // test = 'test' as Future<String>;
     User user = Provider.of<User>(context);
     return Scaffold(
       appBar: CustomAppBar(title: 'Strikeplate',),
@@ -164,6 +139,9 @@ class _HomePageState extends State<HomePage> {
                             color: _pressA101 ? Colors.yellow : Colors.grey,
                             onPressed: () { 
                               setState(() {
+                                if(_pressA102){
+                                  _pressA102 = !_pressA102;
+                                }
                                 _pressA101 = !_pressA101;
                                 _room = 'A-101';
                               });
@@ -180,6 +158,9 @@ class _HomePageState extends State<HomePage> {
                             color: _pressA102 ? Colors.yellow : Colors.grey,
                             onPressed: () { 
                               setState(() {
+                                if(_pressA101){
+                                  _pressA101 = !_pressA101;
+                                }
                                 _pressA102 = !_pressA102;
                                 _room = 'A-102';
                               });
@@ -194,23 +175,21 @@ class _HomePageState extends State<HomePage> {
                     height: 50
                   ),
                   GestureDetector(
-                    // onTap: return NFCReader() in a pop up window, adjust the way it looks later,
-                    onTap: () { 
-                      lockCheck(user.uid, 'building01', _room);
-                      Timer(Duration(seconds:3), () { // temporary solution until I figure out async with setstate
-                        setState(() {
-                          if(_isLocked == false && selector == 1) {
-                            DatabaseService(uid: user.uid, buildingID: 'building01', roomID: _room).enterRoom(Timestamp.now());
-                            setState(() {
-                              selector = 2;
-                            });
-                          } else {
-                            setState(() {
-                              selector = 3;
-                            });
-                          }
-                        });
-                        Timer(Duration(seconds: 1), () {
+                    onTap: () async { 
+                      dynamic result = await DatabaseService(uid: user.uid, buildingID: 'building01', roomID: _room).getRoomAccessData();
+                      if(result != null) {
+                        RoomAccess roomAccess = result;
+                        if(roomAccess.locked == false && roomAccess.users.contains(user.uid) && _selector == 1) {
+                          DatabaseService(uid: user.uid, buildingID: 'building01', roomID: _room).enterRoom(Timestamp.now());
+                          setState(() {
+                            _selector = 2;
+                          });
+                        } else {
+                          setState(() {
+                            _selector = 3;
+                          });
+                        }
+                        Timer(Duration(seconds: 2), () {
                           setState(() {
                             _room = null;
                             if(_pressA101) {
@@ -219,16 +198,18 @@ class _HomePageState extends State<HomePage> {
                             if(_pressA102) {
                               _pressA102 = false;
                             }
-                            selector = 1;
+                            _selector = 1;
                           });                          
-                        });
-                      });
+                        }); 
+                      } else {
+                        Text('error');
+                      }
                     },
-                    child: ConstrainedBox(
+                    child:  ConstrainedBox(
                       constraints: BoxConstraints(maxWidth: 240.0),
-                      child: getImage(selector)
+                      child: getImage(_selector)
                     ),
-                  ),                     
+                  )
                 ]
               ),
             ]
@@ -251,4 +232,5 @@ Image getImage(int selector) {
   else if ( selector == 3 ) {
     return Image.asset('assets/lock_button_red.png');
   }
+  return null;
 }
