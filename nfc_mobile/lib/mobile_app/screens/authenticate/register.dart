@@ -1,5 +1,6 @@
 import 'package:nfc_mobile/mobile_app/services/auth.dart';
 import 'package:flutter/material.dart';
+import 'package:nfc_mobile/mobile_app/services/storage.dart';
 import 'package:nfc_mobile/shared/constants.dart';
 // import 'package:nfc_mobile/mobile_app/shared/drawer.dart';
 import 'package:nfc_mobile/shared/loading.dart';
@@ -17,15 +18,22 @@ class _RegAdminState extends State<RegAdmin> {
 
   final AuthService _auth = AuthService();
   final _formKey = GlobalKey<FormState>();
+  final _formKey2 = GlobalKey<FormState>();
   bool loading = false;
+  bool _page1 = true;
 
-  String email = '';
-  String password = '';
-  String error = '';
+  String _email = '';
+  String _password = '';
+  String _error = '';
+  String _fName = '';
+  String _lName = '';
+  String _company = '';
+  String _pubKey = '';
 
   @override
   Widget build(BuildContext context) {
-    return loading ? Loading() : Scaffold(
+    return loading ? Loading() :  
+    Scaffold(
       appBar: AppBar(
       elevation: 0.0,
       title: Text('Strikeplate'),
@@ -42,8 +50,8 @@ class _RegAdminState extends State<RegAdmin> {
           ),
         ],
       ),
-      //drawer: MakeDrawer(),
-      body: Container(
+      body: _page1 ?
+      Container(
         height: MediaQuery.of(context).size.height,
         decoration: BoxDecoration(
           gradient: backgroundGradient,
@@ -79,7 +87,7 @@ class _RegAdminState extends State<RegAdmin> {
                           ),
                         ),
                         onChanged: (val) {
-                          setState(() => email = val);
+                          setState(() => _email = val);
                         },
                       ),
                     ),
@@ -99,7 +107,7 @@ class _RegAdminState extends State<RegAdmin> {
                             ),
                         obscureText: true,
                         onChanged: (val) {
-                          setState(() => password = val);
+                          setState(() => _password = val);
                         },
                       ),
                     ),
@@ -107,25 +115,20 @@ class _RegAdminState extends State<RegAdmin> {
                     RaisedButton(
                       color: Colors.yellow,
                       child: Text(
-                        'Register',
+                        'Continue',
                         style: TextStyle(color: Colors.black)
                       ),
                       onPressed: () async {
                         if (_formKey.currentState.validate()) {
-                          setState(() => loading = true);
-                          dynamic result = await _auth.registerNewUser(email, password, 'bob', 'whatevs', 'strikeplate', null);
-                          if(result == null) {
-                            setState(() { 
-                              error = 'Please supply a valid email';
-                              loading = false;
-                            });
-                          }
+                          // Store private key to device
+                          // setState (() => _pubKey = pubKey);
+                          setState(() => _page1 = false);
                         }
                       }
                     ),
                     SizedBox(height: MediaQuery.of(context).size.height * .1),
                     Text(
-                      error,
+                      _error,
                       style: TextStyle(
                         color: Colors.red, fontSize: 14
                       ),
@@ -157,7 +160,151 @@ class _RegAdminState extends State<RegAdmin> {
                     ),
                     SizedBox(height: 12),
                       Text(
-                        error,
+                        _error,
+                        style: TextStyle(color: Colors.red, fontSize: 14),
+                      )
+                  ],
+                ),
+              ),
+            ],
+          ),
+        ),
+      ): Container(
+        height: MediaQuery.of(context).size.height,
+        decoration: BoxDecoration(
+          gradient: backgroundGradient,
+        ),
+        child: Form(
+          key: _formKey2,
+          child: Row(
+            mainAxisAlignment: MainAxisAlignment.center,
+            children: <Widget>[
+              SingleChildScrollView(
+                scrollDirection: Axis.vertical,
+                  child: Column(
+                  mainAxisAlignment: MainAxisAlignment.center,
+                  children: <Widget>[
+                    Text('Please sign up to Strikeplate',
+                      style: TextStyle(
+                      color: Colors.white,
+                      fontSize: 20
+                    ),),
+                    SizedBox(height: 20,),
+                    SizedBox(
+                      height: 50, width: MediaQuery.of(context).size.width * .8,
+                      child: TextFormField(
+                        validator: (val) => val.isEmpty ? 'Enter your first name' : null,
+                        style: TextStyle(
+                          color: Colors.white
+                          ),
+                        decoration: textInputDecoration.copyWith(
+                          hintText: 'First Name', 
+                          hintStyle: TextStyle(
+                            fontStyle: FontStyle.italic,
+                            color: Colors.white54
+                          ),
+                        ),
+                        onChanged: (val) {
+                          setState(() => _fName = val);
+                        },
+                      ),
+                    ),
+                    SizedBox(height: 20,),
+                    SizedBox(
+                      height: 50, width: MediaQuery.of(context).size.width * .8,
+                      child: TextFormField(
+                        validator: (val) => val.isEmpty ? 'Enter your last name' : null,
+                        style: TextStyle(
+                          color: Colors.white
+                          ),
+                        decoration: textInputDecoration.copyWith(
+                          hintText: 'Last Name', 
+                          hintStyle: TextStyle(
+                            fontStyle: FontStyle.italic,
+                            color: Colors.white54
+                          ),
+                        ),
+                        onChanged: (val) {
+                          setState(() => _lName = val);
+                        },
+                      ),
+                    ),
+                    SizedBox(height: 20,),
+                    SizedBox(
+                      height: 50, width: MediaQuery.of(context).size.width * .8,
+                      child: TextFormField(
+                        validator: (val) => val.isEmpty ? 'Enter the company you work for' : null,
+                        style: TextStyle(
+                          color: Colors.white
+                          ),
+                        decoration: textInputDecoration.copyWith(
+                          hintText: 'Company Name', 
+                          hintStyle: TextStyle(
+                            fontStyle: FontStyle.italic,
+                            color: Colors.white54
+                          ),
+                        ),
+                        onChanged: (val) {
+                          setState(() => _company = val);
+                        },
+                      ),
+                    ),
+                    SizedBox(height: 20,),
+                    RaisedButton(
+                      color: Colors.yellow,
+                      child: Text(
+                        'Register',
+                        style: TextStyle(color: Colors.black)
+                      ),
+                      onPressed: () async {
+                        if (_formKey2.currentState.validate()) {
+                          setState(() => loading = true);
+                          dynamic result = await _auth.registerNewUser(_email, _password, _fName, _lName, _company, _pubKey);
+                          if(result == null) {
+                            setState(() { 
+                              _error = 'Please supply a valid email';
+                              setState(() => _page1 = true);
+                              loading = false;
+                            });
+                          }
+                        }
+                      }
+                    ),
+                    SizedBox(height: MediaQuery.of(context).size.height * .1),
+                    Text(
+                      _error,
+                      style: TextStyle(
+                        color: Colors.red, fontSize: 14
+                      ),
+                    ),
+                    Align(
+                      alignment: FractionalOffset.bottomCenter,
+                      child: Container(
+                        child: Column(
+                          children: <Widget>[
+                            Text("Already registered?",
+                              style: TextStyle(
+                                fontStyle: FontStyle.italic,
+                                color: Colors.yellow[200]
+                              ),
+                            ),
+                            RaisedButton(  
+                              color: Colors.yellow,
+                              child: Text(
+                                'Sign In',
+                                style: TextStyle(color: Colors.black)
+                              ),
+                              onPressed: ()  {
+                                widget.toggleView();
+                              }
+                            ),
+                          ],
+                        ),
+                      ),
+                    ),
+                    SizedBox(height: 12),
+                      Text(
+                        _error,
                         style: TextStyle(color: Colors.red, fontSize: 14),
                       )
                   ],

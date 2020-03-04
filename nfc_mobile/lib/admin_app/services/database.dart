@@ -65,7 +65,7 @@ class DatabaseService {
   }
 
   RoomLogs _roomLogsFromSnapshot(DocumentSnapshot snapshot) {
-    Map<dynamic, dynamic> dailyLog = Map.from(snapshot.data['dailyLog']);
+    Map<dynamic, dynamic> dailyLog = Map.from(snapshot.data);
     Map<String, List<dynamic>> newDailyLog = new Map();
     Map<dynamic, dynamic> temp;
     List<dynamic> times;
