@@ -31,16 +31,16 @@ class KeyHelper {
   RSAPublicKey parsePublicFromString(pString) {
     List<int> publicKeyDER = decodePEM(pString);
     var asn1Parser = new ASN1Parser(publicKeyDER);
-    var topLevelSeq = asn1Parser.nextObject() as ASN1Sequence;
+    var binarySequence = asn1Parser.nextObject() as ASN1Sequence;
     var modulus;
     var exponent;
 
     // Depending on the first element type, we either have PKCS1 or 2
-    if (topLevelSeq.elements[0].runtimeType == ASN1Integer) {
-      modulus = topLevelSeq.elements[0] as ASN1Integer;
-      exponent = topLevelSeq.elements[1] as ASN1Integer;
+    if (binarySequence.elements[0].runtimeType == ASN1Integer) {
+      modulus = binarySequence.elements[0] as ASN1Integer;
+      exponent = binarySequence.elements[1] as ASN1Integer;
     } else {
-      var publicKeyBitString = topLevelSeq.elements[1];
+      var publicKeyBitString = binarySequence.elements[1];
 
       var publicKeyAsn = new ASN1Parser(publicKeyBitString.contentBytes());
       ASN1Sequence publicKeySeq = publicKeyAsn.nextObject();
@@ -73,12 +73,12 @@ class KeyHelper {
   RSAPrivateKey parsePrivateFromString(pString) {
     List<int> privateKeyDER = decodePEM(pString);
     var asn1Parser = new ASN1Parser(privateKeyDER);
-    var topLevelSeq = asn1Parser.nextObject() as ASN1Sequence;
+    var binarySequence = asn1Parser.nextObject() as ASN1Sequence;
 
     var modulus, privateExponent, p, q;
     // Depending on the number of elements, we will either use PKCS1 or PKCS8
-    if (topLevelSeq.elements.length == 3) {
-      var privateKey = topLevelSeq.elements[2];
+    if (binarySequence.elements.length == 3) {
+      var privateKey = binarySequence.elements[2];
 
       asn1Parser = new ASN1Parser(privateKey.contentBytes());
       var pkSeq = asn1Parser.nextObject() as ASN1Sequence;
@@ -88,10 +88,10 @@ class KeyHelper {
       p = pkSeq.elements[4] as ASN1Integer;
       q = pkSeq.elements[5] as ASN1Integer;
     } else {
-      modulus = topLevelSeq.elements[1] as ASN1Integer;
-      privateExponent = topLevelSeq.elements[3] as ASN1Integer;
-      p = topLevelSeq.elements[4] as ASN1Integer;
-      q = topLevelSeq.elements[5] as ASN1Integer;
+      modulus = binarySequence.elements[1] as ASN1Integer;
+      privateExponent = binarySequence.elements[3] as ASN1Integer;
+      p = binarySequence.elements[4] as ASN1Integer;
+      q = binarySequence.elements[5] as ASN1Integer;
     }
 
     RSAPrivateKey rsaPrivateKey = RSAPrivateKey(
@@ -155,7 +155,7 @@ class KeyHelper {
   // encode Private key to PEM format for storage on disk later
   String privateToString(RSAPrivateKey privateKey) {
 
-    var topLevel = new ASN1Sequence();
+    var binarySequence = new ASN1Sequence();
 
     var version = ASN1Integer(BigInt.from(0));
     var modulus = ASN1Integer(privateKey.n);
@@ -170,29 +170,29 @@ class KeyHelper {
     var iQ = privateKey.q.modInverse(privateKey.p);
     var co = ASN1Integer(iQ);
 
-    topLevel.add(version);
-    topLevel.add(modulus);
-    topLevel.add(publicExponent);
-    topLevel.add(privateExponent);
-    topLevel.add(p);
-    topLevel.add(q);
-    topLevel.add(exp1);
-    topLevel.add(exp2);
-    topLevel.add(co);
+    binarySequence.add(version);
+    binarySequence.add(modulus);
+    binarySequence.add(publicExponent);
+    binarySequence.add(privateExponent);
+    binarySequence.add(p);
+    binarySequence.add(q);
+    binarySequence.add(exp1);
+    binarySequence.add(exp2);
+    binarySequence.add(co);
 
-    var dataBase64 = base64.encode(topLevel.encodedBytes);
+    var dataBase64 = base64.encode(binarySequence.encodedBytes);
 
     return """-----BEGIN PRIVATE KEY-----\r\n$dataBase64\r\n-----END PRIVATE KEY-----""";
   }
 
   // Encode public key to string, likely required for OG transmission
   String publicToString(RSAPublicKey publicKey) {
-    var topLevel = new ASN1Sequence();
+    var binarySequence = new ASN1Sequence();
 
-    topLevel.add(ASN1Integer(publicKey.modulus));
-    topLevel.add(ASN1Integer(publicKey.exponent));
+    binarySequence.add(ASN1Integer(publicKey.modulus));
+    binarySequence.add(ASN1Integer(publicKey.exponent));
 
-    var dataBase64 = base64.encode(topLevel.encodedBytes);
+    var dataBase64 = base64.encode(binarySequence.encodedBytes);
     return """-----BEGIN PUBLIC KEY-----\r\n$dataBase64\r\n-----END PUBLIC KEY-----""";
   }
 }
