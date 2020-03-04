@@ -17,14 +17,15 @@ class DatabaseService {
   final CollectionReference roomCollection = Firestore.instance.collection('buildings');
 
 
-  Future<void> updateUserData(String firstName, String lastName, String email, String company, String rooms, bool isAdmin) async {
+  Future<void> updateUserData(String firstName, String lastName, String email, String company, String rooms, bool isAdmin, String pubKey) async {
     return await userCollection.document(uid).setData({
       'firstName': firstName,
       'lastName': lastName,
       'email': email,
       'company': company,
       'rooms': rooms,
-      'isAdmin': isAdmin
+      'isAdmin': isAdmin,
+      'pubKey' : pubKey
     });
   }
 
