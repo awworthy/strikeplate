@@ -182,7 +182,7 @@ class KeyHelper {
 
     var dataBase64 = base64.encode(binarySequence.encodedBytes);
 
-    return """-----BEGIN PRIVATE KEY-----\r\n$dataBase64\r\n-----END PRIVATE KEY-----""";
+    return """-----BEGIN RSA PRIVATE KEY-----\r\n$dataBase64\r\n-----END RSA PRIVATE KEY-----""";
   }
 
   // Encode public key to string, likely required for OG transmission
@@ -193,7 +193,7 @@ class KeyHelper {
     binarySequence.add(ASN1Integer(publicKey.exponent));
 
     var dataBase64 = base64.encode(binarySequence.encodedBytes);
-    return """-----BEGIN PUBLIC KEY-----\r\n$dataBase64\r\n-----END PUBLIC KEY-----""";
+    return """-----BEGIN RSA PUBLIC KEY-----\r\n$dataBase64\r\n-----END RSA PUBLIC KEY-----""";
   }
 }
 
