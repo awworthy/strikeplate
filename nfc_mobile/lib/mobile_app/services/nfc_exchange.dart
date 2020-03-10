@@ -1,25 +1,8 @@
 import 'dart:async';
-import 'dart:convert';
-import 'dart:typed_data';
 import 'package:flutter/material.dart';
 import 'package:flutter_spinkit/flutter_spinkit.dart';
 import 'package:nfc_in_flutter/nfc_in_flutter.dart';
-import 'package:nfc_mobile/mobile_app/services/storage.dart';
 import 'package:nfc_mobile/shared/constants.dart';
-import 'package:pointycastle/export.dart';
-
-class NFCAuth {
-  var signer = RSASigner(SHA256Digest(), "0609608648016503040201");
-
-  String sign(String proof) {
-    Storage storage = Storage();
-    RSAPrivateKey privateKey = storage.getPrivateKey();
-    signer.init(true, PrivateKeyParameter<RSAPrivateKey>(privateKey));
-    var signedBytes = signer.generateSignature(Uint8List.fromList(proof.codeUnits));
-
-    return base64Encode(signedBytes.bytes);
-  }
-}
 
 
 class NFCLoad extends StatelessWidget {

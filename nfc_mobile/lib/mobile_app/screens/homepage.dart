@@ -1,9 +1,7 @@
 import 'dart:async';
-
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:nfc_mobile/mobile_app/services/database.dart';
-// import 'package:nfc_mobile/mobile_app/services/nfc_exchange.dart';
 import 'package:nfc_mobile/mobile_app/shared_mobile/app_bar.dart';
 import 'package:nfc_mobile/shared/constants.dart';
 import 'package:nfc_mobile/mobile_app/shared_mobile/drawer.dart';
