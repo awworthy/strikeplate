@@ -1,4 +1,5 @@
 import 'dart:async';
+import 'dart:io';
 import 'package:flutter/material.dart';
 import 'package:flutter_spinkit/flutter_spinkit.dart';
 import 'package:nfc_in_flutter/nfc_in_flutter.dart';
@@ -10,6 +11,23 @@ class RecordEditor {
   RecordEditor() {
     mediaTypeController = TextEditingController();
     payloadController = TextEditingController();
+  }
+}
+loadingScreen(context) {
+  if (Platform.isAndroid) {
+    showDialog(
+      context: context,
+      builder: (context) =>
+        AlertDialog(
+          title: const Text("Loading..."),
+          actions: <Widget>[
+            SpinKitFadingCube(
+              size: 100,
+              color: Colors.orangeAccent,
+            ),
+          ],
+        ),
+    );
   }
 }
 
