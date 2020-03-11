@@ -2,6 +2,7 @@ import 'dart:async';
 
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
+import 'package:http/http.dart';
 import 'package:nfc_mobile/mobile_app/services/database.dart';
 // import 'package:nfc_mobile/mobile_app/services/nfc_exchange.dart';
 import 'package:nfc_mobile/mobile_app/shared_mobile/app_bar.dart';
@@ -181,6 +182,8 @@ class _HomePageState extends State<HomePage> {
                         RoomAccess roomAccess = result;
                         if(roomAccess.locked == false && roomAccess.users.contains(user.uid) && _selector == 1) {
                           DatabaseService(uid: user.uid, buildingID: 'building01', roomID: _room).enterRoom(Timestamp.now());
+                          String body = await _makePostRequest();
+                          print(body);
                           setState(() {
                             _selector = 2;
                           });
@@ -233,4 +236,15 @@ Image getImage(int selector) {
     return Image.asset('assets/lock_button_red.png');
   }
   return null;
+}
+
+Future<String> _makePostRequest() async {  // set up POST request arguments
+  String url = 'https://us-central1-strikeplate-app.cloudfunctions.net/postUserID';
+  Map<String, String> headers = {"Content-type": "application/json"};
+  String json = '{"title": "Hello", "body": "body text", "userId": 1}';  // make POST request
+  Response response = await post(url, headers: headers, body: json);  // check the status code for the result
+  // int statusCode = response.statusCode;  // this API passes back the id of the new item added to the body
+  String body = response.body;
+  // print("Status = " + statusCode.toString() + ", Response = " + body);
+  return body;
 }
