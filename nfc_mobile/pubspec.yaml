@@ -45,6 +45,10 @@ dependencies:
   pointycastle: ^1.0.2
   asn1lib: ^0.6.0
 
+  # For push notification to device token
+    # This is necessary for the "reader" to be notified from the server that it
+    # is OK to open the door
+  firebase_messaging: ^5.0.2
 
 dev_dependencies:
   flutter_test:

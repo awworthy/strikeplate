@@ -1,11 +1,21 @@
 import 'package:flutter/material.dart';
 import 'package:nfc_mobile/mobile_app/screens/wrapper.dart';
 import 'package:nfc_mobile/mobile_app/services/auth.dart';
+import 'package:nfc_mobile/mobile_app/shared_mobile/rsa_provider.dart';
+import 'package:nfc_mobile/mobile_app/shared_mobile/storage_provider.dart';
 import 'package:nfc_mobile/shared/constants.dart';
 import 'package:provider/provider.dart';
 import 'package:nfc_mobile/shared/user.dart';
 
-void main() => runApp(NFCApp());
+void main() {
+  runApp(
+      RSAProvider(
+        child: StorageProvider(
+            child: NFCApp()
+        ),
+      )
+  );
+}
 
 class NFCApp extends StatelessWidget {
   // This widget is the root of your application.
