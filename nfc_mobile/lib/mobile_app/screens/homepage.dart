@@ -177,6 +177,7 @@ class _HomePageState extends State<HomePage> {
                   ),
                   GestureDetector(
                     onTap: () async {
+                      _room = _nfcReader.listen();
                       dynamic result = await DatabaseService(uid: user.uid, buildingID: 'building01', roomID: _room).getRoomAccessData();
                       if(result != null) {
                         RoomAccess roomAccess = result;

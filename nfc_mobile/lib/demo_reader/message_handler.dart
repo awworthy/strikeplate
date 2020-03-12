@@ -4,6 +4,7 @@ import 'package:flutter/material.dart';
 import 'package:nfc_mobile/admin_app/shared_admin/app_bar.dart';
 import 'package:nfc_mobile/mobile_app/services/nfc_exchange.dart';
 import 'package:nfc_mobile/mobile_app/shared_mobile/drawer.dart';
+import 'package:nfc_mobile/mobile_app/shared_mobile/storage_provider.dart';
 import 'package:nfc_mobile/shared/constants.dart';
 
 /// Listens for incoming signals from the server. Stateful.
@@ -61,8 +62,24 @@ class _MessageHandlerState extends State<MessageHandler> {
             });
           });
         }
+        setIdle();
       }
     );
+    setIdle();
+  }
+
+  setIdle() {
+    String readerID = StorageProvider.of(context).getStorage().loadReader();
+    if (readerID == null) {
+      throw "ReaderNAError: Reader contains no readerID field";
+    }
+    while (true) {
+      Future.delayed(Duration(seconds: 3)).then((_) {
+        setState(() {
+          _nfcReader.send(readerID);
+        });
+      });
+    }
   }
 
   /// Determines the device's token and registers it
@@ -84,11 +101,6 @@ class _MessageHandlerState extends State<MessageHandler> {
         'created': FieldValue.serverTimestamp(),
       });
     }
-  }
-
-  _openDoor() {
-    // Signal that the door should be opened
-
   }
 
   /// Displays a demo page for the reader.
