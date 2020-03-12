@@ -1,3 +1,5 @@
+import 'dart:async';
+
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_messaging/firebase_messaging.dart';
 import 'package:flutter/material.dart';
@@ -46,7 +48,7 @@ class _MessageHandlerState extends State<MessageHandler> {
             setState(() {
               _selector = 2;
             });
-            Future.delayed(Duration(seconds: 3)).then((_) {
+            Timer(Duration(seconds: 3), () {
               setState(() {
                 _selector = 1;
               });
@@ -56,7 +58,7 @@ class _MessageHandlerState extends State<MessageHandler> {
           setState(() {
             _selector = 3;
           });
-          Future.delayed(Duration(seconds: 3)).then((_) {
+          Timer(Duration(seconds: 3), () {
             setState(() {
               _selector = 1;
             });
@@ -74,7 +76,7 @@ class _MessageHandlerState extends State<MessageHandler> {
       throw "ReaderNAError: Reader contains no readerID field";
     }
     while (true) {
-      Future.delayed(Duration(seconds: 3)).then((_) {
+      Timer(Duration(seconds: 3), () {
         setState(() {
           _nfcReader.send(readerID);
         });
