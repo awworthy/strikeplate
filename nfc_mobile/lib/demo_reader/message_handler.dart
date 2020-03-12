@@ -99,7 +99,7 @@ class _MessageHandlerState extends State<MessageHandler> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-        appBar: CustomAppBar(title: 'Strikeplate',),
+        appBar: CustomAppBar(title: 'Reader',),
         drawer: MakeDrawer(),
         body: Container(
           decoration: BoxDecoration(
@@ -114,9 +114,6 @@ class _MessageHandlerState extends State<MessageHandler> {
                       children: <Widget>[
                         Container(
                           height: 200,
-                        ),
-                        Container(
-                            height: 50
                         ),
                         ConstrainedBox(
                             constraints: BoxConstraints(maxWidth: 240.0),

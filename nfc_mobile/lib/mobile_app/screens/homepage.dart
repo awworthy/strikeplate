@@ -176,7 +176,7 @@ class _HomePageState extends State<HomePage> {
                     height: 50
                   ),
                   GestureDetector(
-                    onTap: () async { 
+                    onTap: () async {
                       dynamic result = await DatabaseService(uid: user.uid, buildingID: 'building01', roomID: _room).getRoomAccessData();
                       if(result != null) {
                         RoomAccess roomAccess = result;
