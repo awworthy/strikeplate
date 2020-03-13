@@ -1,7 +1,8 @@
 import 'dart:async';
+import 'dart:convert';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
-import 'package:http/http.dart';
+import 'package:http/http.dart' as http;
 import 'package:nfc_mobile/mobile_app/services/database.dart';
 import 'package:nfc_mobile/mobile_app/shared_mobile/app_bar.dart';
 import 'package:nfc_mobile/shared/constants.dart';
@@ -42,7 +43,7 @@ class _HomePageState extends State<HomePage> {
                   Container(
                     height: 50,
                   ),
-                  Row(
+                  Row( // The next three rows display instructions for user. 1
                     children: <Widget>[
                       Padding(
                         padding: EdgeInsets.fromLTRB(0, 40, 0, 0),
@@ -63,7 +64,7 @@ class _HomePageState extends State<HomePage> {
                       ),
                     ]
                   ),
-                  Row(
+                  Row( // 2
                     children: <Widget>[
                       Padding(
                         padding: EdgeInsets.fromLTRB(0, 20, 0, 0),
@@ -84,7 +85,7 @@ class _HomePageState extends State<HomePage> {
                       ),
                     ]
                   ),
-                  Row(
+                  Row( // 3
                     children: <Widget>[
                       Padding(
                         padding: EdgeInsets.fromLTRB(0, 20, 0, 0),
@@ -105,30 +106,10 @@ class _HomePageState extends State<HomePage> {
                       ),
                     ]
                   ),
-                  // ConstrainedBox(
-                  //   constraints: BoxConstraints(maxWidth: 240.0),
-                  //   child: Padding( 
-                  //     padding: EdgeInsets.fromLTRB(10, 10, 10, 10),
-                  //     child: DropdownButtonFormField(
-                  //       decoration: textInputDecoration,
-                  //       value: buildings[0],
-                  //       items: buildings.map((building) {
-                  //         return DropdownMenuItem(
-                  //           value: building,
-                  //           child: Text('$building')
-                  //         );
-                  //       }).toList(), 
-                  //       onChanged: (String newValue) {
-                  //         //this will change the value for rooms displayed in the next child
-
-                  //       },
-                  //     ),
-                  //   ),
-                  // ),
                   Container(
                     height: 50
                   ),  
-                  Row(
+                  Row( // this row contains two buttons simulating rooms
                     children: <Widget>[
                       Container(
                         height: 50,
@@ -175,13 +156,20 @@ class _HomePageState extends State<HomePage> {
                   ),
                   GestureDetector(
                     onTap: () async { 
+                      // make sure _room is null if no button is pressed
+                      if (!_pressA101 && !_pressA102) {
+                        _room = null;
+                      }
+                      // check with database if user has access
                       dynamic result = await DatabaseService(uid: user.uid, buildingID: 'building01', roomID: _room).getRoomAccessData();
                       if(result != null) {
                         RoomAccess roomAccess = result;
                         if(roomAccess.locked == false && roomAccess.users.contains(user.uid) && _selector == 1) {
+                          // send userID to server
+                          String body = await _makePostRequest(user.uid);
+                          // submit log entry for user with room
                           DatabaseService(uid: user.uid, buildingID: 'building01', roomID: _room).enterRoom(Timestamp.now());
-                          String body = await _makePostRequest();
-                          print(body);
+
                           setState(() {
                             _selector = 2;
                           });
@@ -236,13 +224,27 @@ Image getImage(int selector) {
   return null;
 }
 
-Future<String> _makePostRequest() async {  // set up POST request arguments
+Future<String> _makePostRequest(String uid) async {  // set up POST request arguments
+  var client = http.Client();
   String url = 'https://us-central1-strikeplate-app.cloudfunctions.net/postUserID';
   Map<String, String> headers = {"Content-type": "application/json"};
-  String json = '{"title": "Hello", "body": "body text", "userId": 1}';  // make POST request
-  Response response = await post(url, headers: headers, body: json);  // check the status code for the result
-  // int statusCode = response.statusCode;  // this API passes back the id of the new item added to the body
-  String body = response.body;
-  // print("Status = " + statusCode.toString() + ", Response = " + body);
-  return body;
+  String json = '{"FunctionType" : "1", "userID": "$uid"}';  // make POST request
+
+  try {
+    var response = await client.post(url, headers: headers, body: json);  // check the status code for the result
+    //int statusCode = response.statusCode;  // this API passes back the id of the new item added to the body
+    String body = response.body;
+    var parsedJson = jsonDecode(body);
+    int value = int.parse(parsedJson["value"]);
+    int newValue = value * 2;
+    json = '{"FunctionType" : "2", "newvalue": "$newValue"}';
+    response = await client.post(url, headers: headers, body: json);
+    body = response.body;
+    parsedJson = jsonDecode(body);
+    String message = parsedJson["value"];
+    print(message);
+    return body;
+  } finally {
+    client.close();
+  }
 }
