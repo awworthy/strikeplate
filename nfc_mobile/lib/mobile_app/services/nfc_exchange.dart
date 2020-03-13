@@ -31,6 +31,10 @@ loadingScreen(context) {
   }
 }
 
+/// Initialize an NFCReader object within a widget to obtain the widget's
+/// context.
+///   Context is used to enable NFCReader to display a loading screen
+/// on Android devices as it operates.
 class NFCReader {
   bool _supportsNFC = false;
   bool _reading = false;
@@ -64,7 +68,6 @@ class NFCReader {
     String payload;
     if (this._supportsNFC) {
       _reading = true;
-      String payload;
       // Start reading using NFC.readNDEF()
       _stream = NFC.readNDEF(
       once: true,
