@@ -2,6 +2,7 @@ import 'dart:async';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:nfc_mobile/mobile_app/services/database.dart';
+import 'package:nfc_mobile/mobile_app/services/nfc_exchange.dart';
 import 'package:nfc_mobile/mobile_app/shared_mobile/app_bar.dart';
 import 'package:nfc_mobile/shared/constants.dart';
 import 'package:nfc_mobile/mobile_app/shared_mobile/drawer.dart';
@@ -20,9 +21,11 @@ class _HomePageState extends State<HomePage> {
   String _room;
   bool _pressA101 = false;
   bool _pressA102 = false;
+  NFCReader _nfcReader; // context provided in widget
 
   @override
   Widget build(BuildContext context) {
+    _nfcReader = NFCReader(context);
     User user = Provider.of<User>(context);
     return Scaffold(
       appBar: CustomAppBar(title: 'Strikeplate',),
@@ -173,7 +176,7 @@ class _HomePageState extends State<HomePage> {
                     height: 50
                   ),
                   GestureDetector(
-                    onTap: () async { 
+                    onTap: () async {
                       dynamic result = await DatabaseService(uid: user.uid, buildingID: 'building01', roomID: _room).getRoomAccessData();
                       if(result != null) {
                         RoomAccess roomAccess = result;
@@ -220,6 +223,8 @@ class _HomePageState extends State<HomePage> {
 
 
 Image getImage(int selector) {
+
+  // TODO: refactor to switch case?
   
   if (selector == 1) {
     return Image.asset('assets/lock_button_orange.png');
