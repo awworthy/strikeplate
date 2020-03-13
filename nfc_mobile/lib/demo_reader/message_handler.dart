@@ -1,5 +1,4 @@
 import 'dart:async';
-
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_messaging/firebase_messaging.dart';
 import 'package:flutter/material.dart';
@@ -85,8 +84,6 @@ class _MessageHandlerState extends State<MessageHandler> {
   }
 
   /// Determines the device's token and registers it
-  ///
-  /// TODO: Change String ID so that it is working like the rest of the ID's on the Firestore database.
   _saveDeviceToken() async {
     String fcmToken = await _fcm.getToken();
 
