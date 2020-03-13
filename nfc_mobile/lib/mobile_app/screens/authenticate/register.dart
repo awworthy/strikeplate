@@ -304,7 +304,6 @@ class _RegAdminState extends State<RegAdmin> {
                       onPressed: () async {
                         if (_formKey2.currentState.validate()) {
                           setState(() => loading = true);
-                          print("Pubkey2 = " +_pubKey);
                           dynamic result = await _auth.registerNewUser(_email, _password, _fName, _lName, _company, _pubKey);
                           if(result == null) {
                             setState(() { 
