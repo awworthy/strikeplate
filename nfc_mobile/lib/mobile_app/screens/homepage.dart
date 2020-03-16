@@ -238,24 +238,22 @@ Future<String> _makePostRequest(BuildContext context, String uid) async {  // se
 
   try {
     var response = await client.post(url, headers: headers, body: json);  // check the status code for the result
-    //int statusCode = response.statusCode;  // this API passes back the id of the new item added to the body
     String body = response.body;
     var parsedJson = jsonDecode(body);
     String challenge = parsedJson["challenge"];
+    String nonceID = parsedJson["nonceID"];
     print(challenge);
-    // sign challenge as verified
     String _privateKey = await _storage.loadPrivate();
     if (_privateKey == null) {
       throw "Error: no Private Key saved to device\nPlease register properly\n...Aborting";
     }
     ac.RSAPrivateKey _pKey = _keyHelper.parsePrivateFromString(_privateKey);
-    String toVerify = _keyHelper.sign(challenge, _pKey);
-    // String toVerify = "Test";
-    json = '{"FunctionType" : "2", "userID": "$uid", "status": "$toVerify"}';
+    String signature = _keyHelper.sign(challenge, _pKey);
+    json = '{"FunctionType" : "2", "userID": "$uid", "signature": "$signature", "nonceID": "$nonceID"}';
     response = await client.post(url, headers: headers, body: json);
     body = response.body;
     parsedJson = jsonDecode(body);
-    String status = parsedJson["status"];
+    String status = parsedJson["message"];
     print(status);
     return status;
   } finally {
