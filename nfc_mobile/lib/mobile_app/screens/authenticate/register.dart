@@ -26,6 +26,7 @@ class _RegAdminState extends State<RegAdmin> {
   final _formKey2 = GlobalKey<FormState>();
   bool loading = false;
   bool _page1 = true;
+  var _keyHelper;
 
   String _email = '';
   String _password = '';
@@ -43,12 +44,12 @@ class _RegAdminState extends State<RegAdmin> {
 
   // generate a new asymmetric key pair
   Future<ac.AsymmetricKeyPair<ac.PublicKey, ac.PrivateKey>> getKeyPair() {
-    var keyHelper = RSAProvider.of(context).getKeyHelper();
-    return keyHelper.computeKeyPair(keyHelper.getSecureRandom());
+    return _keyHelper.computeKeyPair(_keyHelper.getSecureRandom());
   }
 
   @override
   Widget build(BuildContext context) {
+    _keyHelper = RSAProvider.of(context).getKeyHelper();
     return loading ? Loading() :  
     Scaffold(
       appBar: AppBar(
@@ -158,16 +159,14 @@ class _RegAdminState extends State<RegAdmin> {
                             _keyPair = value;
                             setState(() {
                               _page1 = false;
-                              _pubKey = RSAProvider.of(context).getKeyHelper().publicToString(_keyPair.publicKey);
-                              ac.RSAPrivateKey privateKey = _keyPair.privateKey;
-                              String privateKeyS = RSAProvider.of(context).getKeyHelper().privateToString(privateKey);
+                              _pubKey = _keyHelper.publicToString(_keyPair.publicKey);
+                              String privateKeyS = _keyHelper.privateToString(_keyPair.privateKey);
                               Storage storage = StorageProvider.of(context).getStorage();
                               storage.savePrivate(privateKeyS);
                               storage.savePublic(_pubKey);
                             });
-                            Navigator.pop(context);
+                            Navigator.pop(context); // get rid of loading screen
                           });
-
                         }
                       }
                     ),
