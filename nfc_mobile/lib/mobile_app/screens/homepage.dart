@@ -5,6 +5,7 @@ import 'package:flutter/material.dart';
 import 'package:http/http.dart' as http;
 import 'package:nfc_mobile/mobile_app/services/database.dart';
 import 'package:nfc_mobile/mobile_app/services/nfc_exchange.dart';
+import 'package:nfc_mobile/mobile_app/services/storage.dart';
 import 'package:nfc_mobile/mobile_app/shared_mobile/app_bar.dart';
 import 'package:nfc_mobile/mobile_app/shared_mobile/rsa_provider.dart';
 import 'package:nfc_mobile/mobile_app/shared_mobile/storage_provider.dart';
@@ -231,7 +232,7 @@ Future<String> _makePostRequest(BuildContext context, String uid) async {  // se
 
   // Get Crypto and Storage classes
   var _keyHelper = RSAProvider.of(context).getKeyHelper();
-  var _privateKey = StorageProvider.of(context).getStorage().loadPrivate();
+  Storage _storage = StorageProvider.of(context).getStorage();
 
   try {
     var response = await client.post(url, headers: headers, body: json);  // check the status code for the result
@@ -241,6 +242,10 @@ Future<String> _makePostRequest(BuildContext context, String uid) async {  // se
     String challenge = parsedJson["challenge"];
     print(challenge);
     // sign challenge as verified
+    String _privateKey = _storage.loadPrivate();
+    if (_privateKey == null) {
+      throw "Error: no Private Key saved to device\nPlease register properly\n...Aborting";
+    }
     String toVerify = _keyHelper.sign(challenge, _keyHelper.parsePrivateFromString(_privateKey));
     // String toVerify = "Test";
     json = '{"FunctionType" : "2", "userID": "$uid", "status": "$toVerify"}';
