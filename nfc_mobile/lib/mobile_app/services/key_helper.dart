@@ -70,7 +70,7 @@ class KeyHelper {
 
   // Output string value of private key. Only necessary for testing
   // **** remove this functionality later!
-  RSAPrivateKey parsePrivateFromString(pString) {
+  RSAPrivateKey parsePrivateFromString(String pString) {
     List<int> privateKeyDER = decodePEM(pString);
     var asn1Parser = new ASN1Parser(privateKeyDER);
     var binarySequence = asn1Parser.nextObject() as ASN1Sequence;

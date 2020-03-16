@@ -4,6 +4,7 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:http/http.dart' as http;
 import 'package:nfc_mobile/mobile_app/services/database.dart';
+import 'package:nfc_mobile/mobile_app/services/key_helper.dart';
 import 'package:nfc_mobile/mobile_app/services/nfc_exchange.dart';
 import 'package:nfc_mobile/mobile_app/services/storage.dart';
 import 'package:nfc_mobile/mobile_app/shared_mobile/app_bar.dart';
@@ -14,6 +15,7 @@ import 'package:nfc_mobile/mobile_app/shared_mobile/drawer.dart';
 import 'package:nfc_mobile/shared/rooms.dart';
 import 'package:nfc_mobile/shared/user.dart';
 import 'package:provider/provider.dart';
+import "package:pointycastle/export.dart" as ac;
 
 class HomePage extends StatefulWidget {
 
@@ -231,7 +233,7 @@ Future<String> _makePostRequest(BuildContext context, String uid) async {  // se
   String json = '{"FunctionType" : "1", "challenge": ""}';  // make POST request
 
   // Get Crypto and Storage classes
-  var _keyHelper = RSAProvider.of(context).getKeyHelper();
+  KeyHelper _keyHelper = RSAProvider.of(context).getKeyHelper();
   Storage _storage = StorageProvider.of(context).getStorage();
 
   try {
@@ -242,11 +244,12 @@ Future<String> _makePostRequest(BuildContext context, String uid) async {  // se
     String challenge = parsedJson["challenge"];
     print(challenge);
     // sign challenge as verified
-    String _privateKey = _storage.loadPrivate();
+    String _privateKey = await _storage.loadPrivate();
     if (_privateKey == null) {
       throw "Error: no Private Key saved to device\nPlease register properly\n...Aborting";
     }
-    String toVerify = _keyHelper.sign(challenge, _keyHelper.parsePrivateFromString(_privateKey));
+    ac.RSAPrivateKey _pKey = _keyHelper.parsePrivateFromString(_privateKey);
+    String toVerify = _keyHelper.sign(challenge, _pKey);
     // String toVerify = "Test";
     json = '{"FunctionType" : "2", "userID": "$uid", "status": "$toVerify"}';
     response = await client.post(url, headers: headers, body: json);
