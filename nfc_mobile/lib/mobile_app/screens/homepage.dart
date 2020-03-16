@@ -161,7 +161,10 @@ class _HomePageState extends State<HomePage> {
                         ),
                         GestureDetector(
                           onTap: () async {
-                            _room = _nfcReader.listen();
+                            if (!_pressA101 && !_pressA102) {
+                              _room = null;
+                            }
+                            // _room = _nfcReader.listen();
                             dynamic result = await DatabaseService(uid: user.uid, buildingID: 'building01', roomID: _room).getRoomAccessData();
                             if(result != null) {
                               RoomAccess roomAccess = result;
@@ -212,26 +215,19 @@ class _HomePageState extends State<HomePage> {
 
 
 Image getImage(int selector) {
-
-  // TODO: refactor to switch case?
-
-  if (selector == 1) {
-    return Image.asset('assets/lock_button_orange.png');
+  switch(selector) {
+    case 1: { return Image.asset('assets/lock_button_orange.png'); }
+    case 2: { return Image.asset('assets/lock_button_green.png'); }
+    case 3: { return Image.asset('assets/lock_button_red.png'); }
+    default: return null;
   }
-  else if ( selector ==2 ) {
-    return Image.asset('assets/lock_button_green.png');
-  }
-  else if ( selector == 3 ) {
-    return Image.asset('assets/lock_button_red.png');
-  }
-  return null;
 }
 
 Future<String> _makePostRequest(BuildContext context, String uid) async {  // set up POST request arguments
   var client = http.Client();
   String url = 'https://us-central1-strikeplate-app.cloudfunctions.net/postUserID';
   Map<String, String> headers = {"Content-type": "application/json"};
-  String json = '{"FunctionType" : "1", "userID": "$uid"}';  // make POST request
+  String json = '{"FunctionType" : "1", "challenge": ""}';  // make POST request
 
   // Get Crypto and Storage classes
   var _keyHelper = RSAProvider.of(context).getKeyHelper();
@@ -242,16 +238,18 @@ Future<String> _makePostRequest(BuildContext context, String uid) async {  // se
     //int statusCode = response.statusCode;  // this API passes back the id of the new item added to the body
     String body = response.body;
     var parsedJson = jsonDecode(body);
-    String challenge = parsedJson["value"];
+    String challenge = parsedJson["challenge"];
+    print(challenge);
     // sign challenge as verified
-    String verified = _keyHelper.sign(challenge, _keyHelper.parsePrivateFromString(_privateKey));
-    json = '{"FunctionType" : "2", "newvalue": "$verified"}';
+    String toVerify = _keyHelper.sign(challenge, _keyHelper.parsePrivateFromString(_privateKey));
+    // String toVerify = "Test";
+    json = '{"FunctionType" : "2", "userID": "$uid", "status": "$toVerify"}';
     response = await client.post(url, headers: headers, body: json);
     body = response.body;
     parsedJson = jsonDecode(body);
-    String status = parsedJson["value"];
+    String status = parsedJson["status"];
     print(status);
-    return body;
+    return status;
   } finally {
     client.close();
   }
