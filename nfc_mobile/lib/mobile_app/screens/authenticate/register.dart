@@ -157,15 +157,15 @@ class _RegAdminState extends State<RegAdmin> {
                           _futureKeyPair = getKeyPair();
                           _futureKeyPair.then((value) {
                             _keyPair = value;
+                            setState(() {
+                              _page1 = false;
+                              _pubKey = _keyHelper.publicToString(_keyPair.publicKey);
+                              String privateKeyS = _keyHelper.privateToString(_keyPair.privateKey);
+                              Storage storage = StorageProvider.of(context).getStorage();
+                              storage.savePrivate(privateKeyS);
+                              storage.savePublic(_pubKey);
+                            });
                             Navigator.pop(context); // get rid of loading screen
-                          });
-                          setState(() {
-                            _page1 = false;
-                            _pubKey = _keyHelper.publicToString(_keyPair.publicKey);
-                            String privateKeyS = _keyHelper.privateToString(_keyPair.privateKey);
-                            Storage storage = StorageProvider.of(context).getStorage();
-                            storage.savePrivate(privateKeyS);
-                            storage.savePublic(_pubKey);
                           });
                         }
                       }
