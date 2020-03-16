@@ -240,14 +240,14 @@ Future<String> _makePostRequest(String uid) async {  // set up POST request argu
     //int statusCode = response.statusCode;  // this API passes back the id of the new item added to the body
     String body = response.body;
     var parsedJson = jsonDecode(body);
-    int value = int.parse(parsedJson["value"]);
-    int newValue = value * 2;
-    json = '{"FunctionType" : "2", "newvalue": "$newValue"}';
+    String challenge = parsedJson["value"];
+    // sign challenge as verified
+    json = '{"FunctionType" : "2", "newvalue": "$verified"}';
     response = await client.post(url, headers: headers, body: json);
     body = response.body;
     parsedJson = jsonDecode(body);
-    String message = parsedJson["value"];
-    print(message);
+    String status = parsedJson["value"];
+    print(status);
     return body;
   } finally {
     client.close();
