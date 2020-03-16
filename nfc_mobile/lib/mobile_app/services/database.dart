@@ -68,11 +68,11 @@ class DatabaseService {
 
   Future<RoomAccess> getRoomAccessData() async {
     DocumentSnapshot result = await roomCollection.document(buildingID).collection('rooms').document(roomID).get();
-    if(result != null){
+    if(result.data == null){
+      return null;
+    } else {
       RoomAccess access = new RoomAccess(users: List.from(result['usersWithAccess']), locked: result.data['locked']);
       return access;
-    } else {
-      return null;
     }
   }
 }

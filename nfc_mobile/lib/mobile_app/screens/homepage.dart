@@ -1,9 +1,13 @@
 import 'dart:async';
+import 'dart:convert';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
+import 'package:http/http.dart' as http;
 import 'package:nfc_mobile/mobile_app/services/database.dart';
 import 'package:nfc_mobile/mobile_app/services/nfc_exchange.dart';
 import 'package:nfc_mobile/mobile_app/shared_mobile/app_bar.dart';
+import 'package:nfc_mobile/mobile_app/shared_mobile/rsa_provider.dart';
+import 'package:nfc_mobile/mobile_app/shared_mobile/storage_provider.dart';
 import 'package:nfc_mobile/shared/constants.dart';
 import 'package:nfc_mobile/mobile_app/shared_mobile/drawer.dart';
 import 'package:nfc_mobile/shared/rooms.dart';
@@ -44,7 +48,7 @@ class _HomePageState extends State<HomePage> {
                   Container(
                     height: 50,
                   ),
-                  Row(
+                  Row( // The next three rows display instructions for user. 1
                     children: <Widget>[
                       Padding(
                         padding: EdgeInsets.fromLTRB(0, 40, 0, 0),
@@ -65,7 +69,7 @@ class _HomePageState extends State<HomePage> {
                       ),
                     ]
                   ),
-                  Row(
+                  Row( // 2
                     children: <Widget>[
                       Padding(
                         padding: EdgeInsets.fromLTRB(0, 20, 0, 0),
@@ -86,7 +90,7 @@ class _HomePageState extends State<HomePage> {
                       ),
                     ]
                   ),
-                  Row(
+                  Row( // 3
                     children: <Widget>[
                       Padding(
                         padding: EdgeInsets.fromLTRB(0, 20, 0, 0),
@@ -107,30 +111,10 @@ class _HomePageState extends State<HomePage> {
                       ),
                     ]
                   ),
-                  // ConstrainedBox(
-                  //   constraints: BoxConstraints(maxWidth: 240.0),
-                  //   child: Padding( 
-                  //     padding: EdgeInsets.fromLTRB(10, 10, 10, 10),
-                  //     child: DropdownButtonFormField(
-                  //       decoration: textInputDecoration,
-                  //       value: buildings[0],
-                  //       items: buildings.map((building) {
-                  //         return DropdownMenuItem(
-                  //           value: building,
-                  //           child: Text('$building')
-                  //         );
-                  //       }).toList(), 
-                  //       onChanged: (String newValue) {
-                  //         //this will change the value for rooms displayed in the next child
-
-                  //       },
-                  //     ),
-                  //   ),
-                  // ),
                   Container(
                     height: 50
                   ),  
-                  Row(
+                  Row( // this row contains two buttons simulating rooms
                     children: <Widget>[
                       Container(
                         height: 50,
@@ -182,7 +166,11 @@ class _HomePageState extends State<HomePage> {
                       if(result != null) {
                         RoomAccess roomAccess = result;
                         if(roomAccess.locked == false && roomAccess.users.contains(user.uid) && _selector == 1) {
+                          // send userID to server
+                          String body = await _makePostRequest(context, user.uid);
+                          // submit log entry for user with room
                           DatabaseService(uid: user.uid, buildingID: 'building01', roomID: _room).enterRoom(Timestamp.now());
+
                           setState(() {
                             _selector = 2;
                           });
@@ -237,4 +225,34 @@ Image getImage(int selector) {
     return Image.asset('assets/lock_button_red.png');
   }
   return null;
+}
+
+Future<String> _makePostRequest(BuildContext context, String uid) async {  // set up POST request arguments
+  var client = http.Client();
+  String url = 'https://us-central1-strikeplate-app.cloudfunctions.net/postUserID';
+  Map<String, String> headers = {"Content-type": "application/json"};
+  String json = '{"FunctionType" : "1", "userID": "$uid"}';  // make POST request
+
+  // Get Crypto and Storage classes
+  var _keyHelper = RSAProvider.of(context).getKeyHelper();
+  var _privateKey = StorageProvider.of(context).getStorage().loadPrivate();
+
+  try {
+    var response = await client.post(url, headers: headers, body: json);  // check the status code for the result
+    //int statusCode = response.statusCode;  // this API passes back the id of the new item added to the body
+    String body = response.body;
+    var parsedJson = jsonDecode(body);
+    String challenge = parsedJson["value"];
+    // sign challenge as verified
+    String verified = _keyHelper.sign(challenge, _keyHelper.parsePrivateFromString(_privateKey));
+    json = '{"FunctionType" : "2", "newvalue": "$verified"}';
+    response = await client.post(url, headers: headers, body: json);
+    body = response.body;
+    parsedJson = jsonDecode(body);
+    String status = parsedJson["value"];
+    print(status);
+    return body;
+  } finally {
+    client.close();
+  }
 }
