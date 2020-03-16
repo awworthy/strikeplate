@@ -165,9 +165,8 @@ class _RegAdminState extends State<RegAdmin> {
                               storage.savePrivate(privateKeyS);
                               storage.savePublic(_pubKey);
                             });
-                            Navigator.pop(context);
+                            Navigator.pop(context); // get rid of loading screen
                           });
-
                         }
                       }
                     ),
