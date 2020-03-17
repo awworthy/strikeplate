@@ -173,10 +173,9 @@ class _HomePageState extends State<HomePage> {
                               RoomAccess roomAccess = result;
                               if(roomAccess.locked == false && roomAccess.users.contains(user.uid) && _selector == 1) {
                                 // send userID to server
-                                String body = await _makePostRequest(context, user.uid);
+                                await _makePostRequest(context, user.uid);
                                 // submit log entry for user with room
                                 DatabaseService(uid: user.uid, buildingID: 'building01', roomID: _room).enterRoom(Timestamp.now());
-
                                 setState(() {
                                   _selector = 2;
                                 });
@@ -239,6 +238,7 @@ Future<String> _makePostRequest(BuildContext context, String uid) async {  // se
   try {
     var response = await client.post(url, headers: headers, body: json);  // check the status code for the result
     String body = response.body;
+    print("This is the body" + body);
     var parsedJson = jsonDecode(body);
     String challenge = parsedJson["challenge"];
     String nonceID = parsedJson["nonceID"];
