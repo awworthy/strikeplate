@@ -25,7 +25,7 @@ class Storage {
     return value;
   }
 
-  loadReader() async {
+  Future<String> loadReader() async {
     SharedPreferences prefs = await SharedPreferences.getInstance();
     //Return String or return 'null' if there is no value to return
     String value = prefs.getString('reader') ?? null;

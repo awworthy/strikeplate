@@ -4,6 +4,7 @@ import 'package:firebase_messaging/firebase_messaging.dart';
 import 'package:flutter/material.dart';
 import 'package:nfc_mobile/admin_app/shared_admin/app_bar.dart';
 import 'package:nfc_mobile/mobile_app/services/nfc_exchange.dart';
+import 'package:nfc_mobile/mobile_app/services/storage.dart';
 import 'package:nfc_mobile/mobile_app/shared_mobile/drawer.dart';
 import 'package:nfc_mobile/mobile_app/shared_mobile/storage_provider.dart';
 import 'package:nfc_mobile/shared/constants.dart';
@@ -23,6 +24,8 @@ class _MessageHandlerState extends State<MessageHandler> {
   String _validation;
   String _userID;
   int _selector;
+  Storage _storage;
+  String _readerID;
 
   /// Initialize the state of the message handler
   ///
@@ -30,9 +33,10 @@ class _MessageHandlerState extends State<MessageHandler> {
   /// the server. Here it checks the content of the signal and saves a copy of
   /// the user's ID for proximity detection.
   @override
-  void initState() {
+  void initState() async {
     _nfcReader = NFCReader(context);
     _selector = 1;
+    String readerID = await _storage.loadReader();
     _fcm.configure(
       onMessage: (Map<String, dynamic> message) async {
         _validation = message['notification']['validation'];
@@ -70,7 +74,15 @@ class _MessageHandlerState extends State<MessageHandler> {
   }
 
   setIdle() {
-    String readerID = StorageProvider.of(context).getStorage().loadReader();
+    _storage.loadReader().then((value) => {
+      if (value == null) {
+
+
+        // continue here
+
+
+      }
+    });
     if (readerID == null) {
       throw "ReaderNAError: Reader contains no readerID field";
     }
