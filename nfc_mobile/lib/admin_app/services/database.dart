@@ -92,20 +92,47 @@ class DatabaseService {
   }
 
   Future<void> addBuildingtoBuildings(String buildingID) async {
+    List<String> rooms;
     return await roomCollection.document(buildingID).setData({
-      'buildingID' : buildingID
+      'buildingID' : buildingID,
+      'rooms' : rooms
     });
   }
 
   Future<void> addBuildingtoAdmin(String buildingID) async {
-    List<String> rooms;
     return await userCollection.document(adminID).setData({
-      'buildings' : {buildingID: {'rooms' : rooms}}
+      'buildings' : {buildingID: {'rooms' : []}}
     }, merge: true);
   }
 
   Future<void> addBuilding(String buildingID) async {
     addBuildingtoBuildings(buildingID);
     addBuildingtoAdmin(buildingID);
+  }
+
+  Future<void> addRoomtoBuilding(String buildingID, String roomID) async {
+    return await roomCollection.document(buildingID).collection('rooms').document(roomID).setData({
+      'users' : [adminID],
+      'locked' : false
+    }, merge: true);
+  }
+
+  Future<void> addRoomtoBuildingFields(String buildingID, String roomID) async {
+    return await roomCollection.document(buildingID).setData({
+      'buildingID' : buildingID, 
+      'rooms' : [roomID]
+    }, merge: true);
+  }
+
+  Future<void> addRoomtoAdmin(String buildingID, String roomID) async {
+    return await userCollection.document(adminID).setData({
+      'buildings' : {buildingID: {'rooms' : [roomID]}}
+    }, merge: true);
+  }
+
+  Future<void> addRoom(String buildingID, String roomID) async {
+    addRoomtoBuilding(buildingID, roomID);
+    addRoomtoBuildingFields(buildingID, roomID);
+    addRoomtoAdmin(buildingID, roomID);
   }
 }
