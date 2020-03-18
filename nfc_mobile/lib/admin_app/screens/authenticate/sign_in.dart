@@ -85,7 +85,7 @@ class _SignInState extends State<SignIn> {
                           color: Colors.white54),
                         ),
                       onChanged: (val) {
-                        setState(() => email = val);
+                        setState(() => email = val.trim());
                       },
                     ),
                   ),
@@ -104,7 +104,7 @@ class _SignInState extends State<SignIn> {
                         ),
                       obscureText: true,
                       onChanged: (val) {
-                        setState(() => password = val);
+                        setState(() => password = val.trim());
                       },
                     ),
                   ),

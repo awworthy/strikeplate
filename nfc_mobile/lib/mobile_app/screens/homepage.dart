@@ -26,6 +26,7 @@ class HomePage extends StatefulWidget {
 class _HomePageState extends State<HomePage> {
   int _selector = 1;
   String _room;
+  String accessData = "";
   bool _pressA101 = false;
   bool _pressA102 = false;
   NFCReader _nfcReader; // context provided in widget
@@ -160,7 +161,13 @@ class _HomePageState extends State<HomePage> {
                           ],
                         ),
                         Container(
-                            height: 50
+                            height: 60,
+                            child: Center(
+                              child: Text(accessData,
+                              style: TextStyle(
+                                fontSize: 15
+                              ),),
+                            ),
                         ),
                         GestureDetector(
                           onTap: () async {
@@ -173,13 +180,19 @@ class _HomePageState extends State<HomePage> {
                               RoomAccess roomAccess = result;
                               if(roomAccess.locked == false && roomAccess.users.contains(user.uid) && _selector == 1) {
                                 // send userID to server
-                                String body = await _makePostRequest(context, user.uid);
+                                String status = await _makePostRequest(context, user.uid);
                                 // submit log entry for user with room
-                                DatabaseService(uid: user.uid, buildingID: 'building01', roomID: _room).enterRoom(Timestamp.now());
-
-                                setState(() {
-                                  _selector = 2;
-                                });
+                                if (status == "true") {
+                                  DatabaseService(uid: user.uid, buildingID: 'building01', roomID: _room).enterRoom(Timestamp.now());
+                                  setState(() {
+                                    _selector = 2;
+                                    accessData = "";
+                                  });
+                                } else {
+                                  setState(() {
+                                    accessData = status;
+                                  });
+                                }
                               } else {
                                 setState(() {
                                   _selector = 3;
@@ -193,6 +206,9 @@ class _HomePageState extends State<HomePage> {
                                   }
                                   if(_pressA102) {
                                     _pressA102 = false;
+                                  }
+                                  if(accessData.length > 0) {
+                                    accessData = "";
                                   }
                                   _selector = 1;
                                 });
@@ -238,26 +254,31 @@ Future<String> _makePostRequest(BuildContext context, String uid) async {  // se
 
   try {
     var response = await client.post(url, headers: headers, body: json);  // check the status code for the result
-    //int statusCode = response.statusCode;  // this API passes back the id of the new item added to the body
-    String body = response.body;
-    var parsedJson = jsonDecode(body);
-    String challenge = parsedJson["challenge"];
-    print(challenge);
-    // sign challenge as verified
-    String _privateKey = await _storage.loadPrivate();
-    if (_privateKey == null) {
-      throw "Error: no Private Key saved to device\nPlease register properly\n...Aborting";
+    switch(response.statusCode) {
+      case 200: {
+        String body = response.body;
+        var parsedJson = jsonDecode(body);
+        String challenge = parsedJson["challenge"];
+        String nonceID = parsedJson["nonceID"];
+        String _privateKey = await _storage.loadPrivate();
+        if (_privateKey == null) {
+          throw "Error: no Private Key saved to device\nPlease register properly\n...Aborting";
+        }
+        ac.RSAPrivateKey _pKey = _keyHelper.parsePrivateFromString(_privateKey);
+        String signature = _keyHelper.sign(challenge, _pKey);
+        json = '{"FunctionType" : "2", "userID": "$uid", "signature": "$signature", "nonceID": "$nonceID"}';
+        response = await client.post(url, headers: headers, body: json);
+        body = response.body;
+        parsedJson = jsonDecode(body);
+        String status = parsedJson["status"];
+        client.close();
+        return status;
+      }
+      default: {
+        client.close();
+        return "Error " + response.statusCode.toString() + ": Please try again";
+      }
     }
-    ac.RSAPrivateKey _pKey = _keyHelper.parsePrivateFromString(_privateKey);
-    String toVerify = _keyHelper.sign(challenge, _pKey);
-    // String toVerify = "Test";
-    json = '{"FunctionType" : "2", "userID": "$uid", "status": "$toVerify"}';
-    response = await client.post(url, headers: headers, body: json);
-    body = response.body;
-    parsedJson = jsonDecode(body);
-    String status = parsedJson["status"];
-    print(status);
-    return status;
   } finally {
     client.close();
   }
