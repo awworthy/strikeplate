@@ -17,9 +17,11 @@ class _RoomsState extends State<Rooms> {
   String _building;
   String _buildingInput;
   String _room;
+  String _roomInput;
   DateTime _date = DateTime.now();
   String _dateID;  
-  bool input = false;
+  bool buildingInput = false;
+  bool roomInput = false;
 
   Future<Null> selectDate(BuildContext context) async {
     final DateTime picked = await showDatePicker(
@@ -98,17 +100,17 @@ class _RoomsState extends State<Rooms> {
                       RaisedButton(
                         child: Text('Add building'),
                         onPressed: () { 
-                          if(input == false){
-                            setState(() => input = true);
+                          if(buildingInput == false){
+                            setState(() => buildingInput = true);
                           }
-                          else if(input == true) {
-                            setState(() => input = false);
+                          else if(buildingInput == true) {
+                            setState(() => buildingInput = false);
                           }
                         }
                       ),
                     ],
                   ),
-                  input ? 
+                  buildingInput ? 
                   Row(
                     children: <Widget>[
                       ConstrainedBox(
@@ -138,7 +140,7 @@ class _RoomsState extends State<Rooms> {
                           onPressed: () { 
                             if (_formKey.currentState.validate()) {
                               DatabaseService(adminID: user.uid).addBuilding(_buildingInput);
-                              setState(() => input = false);
+                              setState(() => buildingInput = false);
                             }
                           }
                         ),
@@ -170,8 +172,57 @@ class _RoomsState extends State<Rooms> {
                           );
                         },
                       ),
+                      RaisedButton(
+                        child: Text('Add room'),
+                        onPressed: () { 
+                          if(roomInput == false){
+                            setState(() => roomInput = true);
+                          }
+                          else if(roomInput == true) {
+                            setState(() => roomInput = false);
+                          }
+                        }
+                      ),
                     ],
                   ),
+                  roomInput ? 
+                  Row(
+                    children: <Widget>[
+                      ConstrainedBox(
+                        constraints: BoxConstraints(maxWidth: 200, maxHeight: 30),
+                        child: TextFormField(
+                          style: TextStyle(
+                            fontSize: 16,
+                            ),
+                            decoration: textInputDecoration.copyWith(
+                              contentPadding: new EdgeInsets.all(4),
+                              hintText: 'Enter room ID', 
+                              hintStyle: TextStyle(
+                                fontStyle: FontStyle.italic,
+                                fontSize: 16
+                              ),
+                            ),
+                          validator: (val) => val.isEmpty ? "Please input a room ID" : null,
+                          onChanged: (val) {
+                            setState(() => _roomInput = val);
+                          },
+                        ),
+                      ),
+                      Padding(
+                        padding: const EdgeInsets.fromLTRB(4, 0, 0, 0),
+                        child: RaisedButton(
+                          child: Text('Enter'),
+                          onPressed: () { 
+                            if (_formKey.currentState.validate()) {
+                              DatabaseService(adminID: user.uid).addRoom(_building, _roomInput);
+                              setState(() => roomInput = false);
+                            }
+                          }
+                        ),
+                      ),
+                    ],
+                  ) : 
+                  Container(),
                 ],
               ),
             ),
@@ -181,7 +232,7 @@ class _RoomsState extends State<Rooms> {
         Padding(
           padding: const EdgeInsets.all(8.0),
           child: SingleChildScrollView(
-            scrollDirection: Axis.horizontal,
+            scrollDirection: Axis.vertical,
             child: Column(
               children: <Widget>[
                 Row(
