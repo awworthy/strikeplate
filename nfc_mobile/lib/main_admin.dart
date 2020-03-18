@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:nfc_mobile/admin_app/screens/wrapper.dart';
 import 'package:nfc_mobile/admin_app/services/auth.dart';
+import 'package:nfc_mobile/admin_app/shared_admin/app_bar.dart';
 import 'package:nfc_mobile/shared/constants.dart';
 import 'package:provider/provider.dart';
 import 'package:nfc_mobile/shared/user.dart';
@@ -25,6 +26,7 @@ class NFCApp extends StatelessWidget {
             subtitle1: TextStyle(fontSize: 16.0, fontWeight: FontWeight.w200, color: secondaryFG)
           ),
         ),
+        // home: CustomAppBar()
         //home: AdminAddUser()
         //home: Loading()
         //home: HomePage(),
