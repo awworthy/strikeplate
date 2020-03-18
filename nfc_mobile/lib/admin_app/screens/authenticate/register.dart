@@ -119,7 +119,7 @@ class _RegFormLargeState extends State<RegFormLarge> {
                                   ),
                                 ),
                             onChanged: (val) {
-                              setState(() => firstName = val);
+                              setState(() => firstName = val.trim());
                             },
                           ),
                         ),
@@ -138,7 +138,7 @@ class _RegFormLargeState extends State<RegFormLarge> {
                                   ),
                                 ),
                             onChanged: (val) {
-                              setState(() => lastName = val);
+                              setState(() => lastName = val.trim());
                             },
                           ),
                         ),
@@ -158,7 +158,7 @@ class _RegFormLargeState extends State<RegFormLarge> {
                               ),
                             ),
                             onChanged: (val) {
-                              setState(() => email = val);
+                              setState(() => email = val.trim());
                             },
                           ),
                         ),
@@ -186,7 +186,7 @@ class _RegFormLargeState extends State<RegFormLarge> {
                                 ),
                             obscureText: true,
                             onChanged: (val) {
-                              setState(() => password = val);
+                              setState(() => password = val.trim());
                             },
                           ),
                         ),
@@ -207,7 +207,7 @@ class _RegFormLargeState extends State<RegFormLarge> {
                                 ),
                             obscureText: true,
                             onChanged: (val) {
-                              setState(() => password = val);
+                              setState(() => password = val.trim());
                             },
                           ),
                         ),
@@ -308,7 +308,7 @@ class _RegFormSmallState extends State<RegFormSmall> {
                                 ),
                               ),
                           onChanged: (val) {
-                            setState(() => firstName = val);
+                            setState(() => firstName = val.trim());
                           },
                         ),
                       ),
@@ -327,7 +327,7 @@ class _RegFormSmallState extends State<RegFormSmall> {
                                 ),
                               ),
                           onChanged: (val) {
-                            setState(() => lastName = val);
+                            setState(() => lastName = val.trim());
                           },
                         ),
                       ),
@@ -347,7 +347,7 @@ class _RegFormSmallState extends State<RegFormSmall> {
                             ),
                           ),
                           onChanged: (val) {
-                            setState(() => email = val);
+                            setState(() => email = val.trim());
                           },
                         ),
                       ),
@@ -368,7 +368,7 @@ class _RegFormSmallState extends State<RegFormSmall> {
                               ),
                           obscureText: true,
                           onChanged: (val) {
-                            setState(() => password = val);
+                            setState(() => password = val.trim());
                           },
                         ),
                       ),
@@ -389,7 +389,7 @@ class _RegFormSmallState extends State<RegFormSmall> {
                               ),
                           obscureText: true,
                           onChanged: (val) {
-                            setState(() => password = val);
+                            setState(() => password = val.trim());
                           },
                         ),
                       ),

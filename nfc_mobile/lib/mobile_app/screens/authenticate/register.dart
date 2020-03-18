@@ -105,7 +105,7 @@ class _RegAdminState extends State<RegAdmin> {
                           ),
                         ),
                         onChanged: (val) {
-                          setState(() => _email = val);
+                          setState(() => _email = val.trim());
                         },
                       ),
                     ),
@@ -125,7 +125,7 @@ class _RegAdminState extends State<RegAdmin> {
                             ),
                         obscureText: true,
                         onChanged: (val) {
-                          setState(() => _password = val);
+                          setState(() => _password = val.trim());
                         },
                       ),
                     ),
@@ -249,7 +249,7 @@ class _RegAdminState extends State<RegAdmin> {
                           ),
                         ),
                         onChanged: (val) {
-                          setState(() => _fName = val);
+                          setState(() => _fName = val.trim());
                         },
                       ),
                     ),
@@ -269,7 +269,7 @@ class _RegAdminState extends State<RegAdmin> {
                           ),
                         ),
                         onChanged: (val) {
-                          setState(() => _lName = val);
+                          setState(() => _lName = val.trim());
                         },
                       ),
                     ),
@@ -289,7 +289,7 @@ class _RegAdminState extends State<RegAdmin> {
                           ),
                         ),
                         onChanged: (val) {
-                          setState(() => _company = val);
+                          setState(() => _company = val.trim());
                         },
                       ),
                     ),
