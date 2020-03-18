@@ -21,9 +21,23 @@ class CustomAppBar extends StatelessWidget implements PreferredSizeWidget {
           appBar: AppBar(
             bottom: TabBar(
               tabs: <Widget>[
-                Tab(icon: Icon(Icons.notifications)),
+                Tab(child: new Stack(
+                  children: <Widget>[
+                    Icon(Icons.notifications),
+                      new Positioned(
+                        top: 15,
+                        left: 15,
+                        child: new Icon(
+                          Icons.brightness_1,
+                          size: 10,
+                          color: Colors.red,
+                        ),
+                      )
+                    ],
+                  )
+                ),
                 Tab(icon: Icon(Icons.people)),
-                Tab(icon: Icon(Icons.add_location))
+                Tab(icon: Icon(Icons.add_location)),
               ],
             ),
             elevation: 0.0,
