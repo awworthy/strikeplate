@@ -2,9 +2,10 @@ import 'dart:async';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_messaging/firebase_messaging.dart';
 import 'package:flutter/material.dart';
-import 'package:nfc_mobile/admin_app/shared_admin/app_bar.dart';
+import 'package:nfc_in_flutter/nfc_in_flutter.dart';
 import 'package:nfc_mobile/mobile_app/services/nfc_exchange.dart';
 import 'package:nfc_mobile/mobile_app/services/storage.dart';
+import 'package:nfc_mobile/mobile_app/shared_mobile/app_bar.dart';
 import 'package:nfc_mobile/mobile_app/shared_mobile/drawer.dart';
 import 'package:nfc_mobile/mobile_app/shared_mobile/storage_provider.dart';
 import 'package:nfc_mobile/shared/constants.dart';
@@ -18,8 +19,10 @@ class MessageHandler extends StatefulWidget {
 /// Acts on incoming signals from the server
 class _MessageHandlerState extends State<MessageHandler> {
   final Firestore _db = Firestore.instance;
+
   // FCM = Firebase Cloud Messaging
   final FirebaseMessaging _fcm = FirebaseMessaging();
+  bool _supportsNFC = false;
   NFCReader _nfcReader;
   String _validation;
   String _userID;
@@ -33,70 +36,27 @@ class _MessageHandlerState extends State<MessageHandler> {
   /// the server. Here it checks the content of the signal and saves a copy of
   /// the user's ID for proximity detection.
   @override
-  void initState() async {
+  void initState() {
     _nfcReader = NFCReader(context);
     _selector = 1;
-    String readerID = await _storage.loadReader();
+    NFC.isNDEFSupported
+        .then((bool isSupported) {
+      setState(() {
+        _supportsNFC = isSupported;
+      });
+    });
     _fcm.configure(
-      onMessage: (Map<String, dynamic> message) async {
-        _validation = message['notification']['validation'];
-        _userID = message['notification']['userID'];
-
-        // Check if user was validated for entry first
-        if (_validation == 'OK') {
-          // check if user is nearby using NFC!
-          String cast = _nfcReader.listen();
-          if (_userID == cast) {
-            // user device has broadcast the correct user ID to reader
-            setState(() {
-              _selector = 2;
-            });
-            Timer(Duration(seconds: 3), () {
-              setState(() {
-                _selector = 1;
-              });
-            });
-          } // else something funky is going on here...
-        } else {
+        onMessage: (Map<String, dynamic> message) async {
           setState(() {
-            _selector = 3;
-          });
-          Timer(Duration(seconds: 3), () {
-            setState(() {
-              _selector = 1;
-            });
+            _validation = message['notification']['validation'];
+            _userID = message['notification']['userID'];
           });
         }
-        setIdle();
-      }
     );
-    setIdle();
-  }
-
-  setIdle() {
-    _storage.loadReader().then((value) => {
-      if (value == null) {
-
-
-        // continue here
-
-
-      }
-    });
-    if (readerID == null) {
-      throw "ReaderNAError: Reader contains no readerID field";
-    }
-    while (true) {
-      Timer(Duration(seconds: 3), () {
-        setState(() {
-          _nfcReader.send(readerID);
-        });
-      });
-    }
   }
 
   /// Determines the device's token and registers it
-  _saveDeviceToken() async {
+  registerDevice() async {
     String fcmToken = await _fcm.getToken();
 
     // save device token to Firestore
@@ -111,6 +71,7 @@ class _MessageHandlerState extends State<MessageHandler> {
         'token': fcmToken,
         'created': FieldValue.serverTimestamp(),
       });
+      _readerID = tokens.documentID;
     }
   }
 
@@ -121,9 +82,61 @@ class _MessageHandlerState extends State<MessageHandler> {
   /// ie. Lock turns green or red.
   @override
   Widget build(BuildContext context) {
+    if (!_supportsNFC) {
+      return RaisedButton(
+        child: const Text("You device does not support NFC"),
+        onPressed: null,
+      );
+    }
+    if (_storage == null) {
+      _storage = StorageProvider.of(context).getStorage();
+    }
+    _storage.loadReader().then((value) => _readerID = value);
+    if (_readerID == null) {
+      registerDevice();
+      // throw "ReaderNAError: Reader contains no readerID field";
+    }
+    _nfcReader.send(_readerID);
+
+    // Periodically broadcast device ID
+    new Future.delayed(Duration(seconds: 4), () {
+      setState(() {
+        _nfcReader.send(_readerID);
+        print("Reader ID: $_readerID");
+      });
+    });
+
+    // Check if user was validated for entry first
+    if (_validation == 'OK') {
+      // check if user is nearby using NFC!
+      String cast = _nfcReader.listen();
+      if (_userID == cast) {
+        // user device has broadcast the correct user ID to reader
+        setState(() {
+          _selector = 2;
+        });
+        Timer(Duration(seconds: 4), () {
+          setState(() {
+            _selector = 1;
+            _validation = null;
+            _userID = null;
+          });
+        });
+      } // else something funky is going on here...
+    } else if (_validation == "NO") {
+      setState(() {
+        _selector = 3;
+      });
+      Timer(Duration(seconds: 4), () {
+        setState(() {
+          _selector = 1;
+          _validation = null;
+          _userID = null;
+        });
+      });
+    }
     return Scaffold(
         appBar: CustomAppBar(title: 'Reader',),
-        drawer: MakeDrawer(),
         body: Container(
           decoration: BoxDecoration(
             gradient: backgroundGradient,
@@ -140,7 +153,7 @@ class _MessageHandlerState extends State<MessageHandler> {
                         ),
                         ConstrainedBox(
                             constraints: BoxConstraints(maxWidth: 240.0),
-                            child: getImage(_selector)
+                            child: getImage(_selector),
                         ),
                       ]
                   ),
