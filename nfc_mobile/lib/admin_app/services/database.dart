@@ -1,5 +1,4 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
-import 'package:nfc_mobile/mobile_app/services/database.dart';
 import 'package:nfc_mobile/shared/rooms.dart';
 import 'package:nfc_mobile/shared/user.dart';
 // look up if firebase has SAML
@@ -135,4 +134,68 @@ class DatabaseService {
     addRoomtoBuildingFields(buildingID, roomID);
     addRoomtoAdmin(buildingID, roomID);
   }
+
+  Future<void> deleteRoom() async {
+    deleteRoomFromBuildingRoomArray();
+    deleteRoomFromBuildingRoomCollection();
+    deleteRoomFromAllUsers();
+  }
+
+  Future<void> deleteRoomFromBuildingRoomArray() async { // success
+    DocumentReference postRef = Firestore.instance.document('buildings/$buildingID');
+    return await postRef.updateData({"rooms" : FieldValue.arrayRemove([roomID])});
+  }
+
+  Future<void> deleteRoomFromBuildingRoomCollection() async { // success
+    Firestore.instance.collection('buildings/$buildingID/rooms/$roomID/roomLog').getDocuments().then((snapshot) {
+      for (DocumentSnapshot ds in snapshot.documents){
+        ds.reference.delete();
+      }
+    });
+    Firestore.instance.collection('buildings/$buildingID/rooms').document(roomID).delete(); // success
+  }
+  
+  Future<void> deleteRoomFromAllUsers() async {
+    return Firestore.instance.collection('users').where("buildings.$buildingID.rooms", arrayContains: roomID).snapshots().listen((data) =>
+      data.documents.forEach((element) => element.reference.updateData({"buildings.$buildingID.rooms" : FieldValue.arrayRemove([roomID])})));
+  }
+
+  Future<void> deleteBuilding() async {
+    deleteBuildingFromBuildings();
+    deleteRoomsFromBuilding();
+    deleteBuildingFromAllUsers();
+  }
+
+  Future<void> deleteBuildingFromBuildings() async { // success
+    return await roomCollection.document(buildingID).delete();
+  }
+
+  Future<void> deleteRoomsFromBuilding() async { // success
+    Firestore.instance.collection('buildings/$buildingID/rooms').getDocuments().then((snapshot) {
+      for (DocumentSnapshot ds in snapshot.documents) {
+        String docID = ds.documentID;
+        Firestore.instance.collection('buildings/$buildingID/rooms/$docID.roomLog').getDocuments().then((snapshot) {
+          for (DocumentSnapshot ds in snapshot.documents) {
+            ds.reference.delete();
+          }
+        });
+        ds.reference.delete();
+      }
+    });
+  }
+  
+  Future<void> deleteBuildingFromAllUsers() async { 
+    print("buildingID = " + buildingID);
+    return Firestore.instance.collection('users').where("buildingList", arrayContains: buildingID).snapshots().listen((data) =>
+      data.documents.forEach((element) { 
+        print(element["email"]);
+        element.reference.updateData({"buildingList" : FieldValue.arrayRemove([buildingID])});
+        element.reference.updateData({"buildings.$buildingID": FieldValue.delete()});
+        }
+      )
+    );
+  }
+
+
 }
+

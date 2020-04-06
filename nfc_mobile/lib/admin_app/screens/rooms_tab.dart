@@ -14,6 +14,8 @@ class Rooms extends StatefulWidget {
 
 class _RoomsState extends State<Rooms> {
   final _formKey = GlobalKey<FormState>();
+  List<String> _buildings;
+  List<String> _rooms;
   String _building;
   String _buildingInput;
   String _room;
@@ -44,8 +46,6 @@ class _RoomsState extends State<Rooms> {
     }
   }
 
-  
-
   @override
   Widget build(BuildContext context) {
     
@@ -62,35 +62,49 @@ class _RoomsState extends State<Rooms> {
               child: Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: <Widget>[
-                  Text('Choose a room',
+                  SizedBox(
+                    height: 25
+                  ),
+                  Text('Room Management',
                   style: TextStyle(
                     fontSize: 18,
                     fontStyle: FontStyle.italic),
                   ),
+                  SizedBox(
+                    height: 25,
+                  ),
                   Row(
                     children: <Widget>[
-                      Text('Building: '),
+                      SizedBox(
+                        width: 75,
+                        child: Text('Building: '
+                        )
+                      ),
                       StreamBuilder(
                         stream: DatabaseService(userID: user.uid).userData,
                         builder: (context, snapshot) {
                           if (snapshot.hasData) {
                             UserData userData = snapshot.data;
-                            List<String> buildings = new List(userData.buildings.length);
+                            _buildings = new List(userData.buildings.length);
                             int i = 0;
-                            userData.buildings.forEach((key, value) {buildings[i] = key;i++;});
-                            return DropdownButton<String>(       
-                              value: _building,
-                              onChanged: (String building) { 
-                                setState(() => _building = building);
-                                setState(() => _room = null);
-                              },
-                              hint: Text('Select Building'),
-                              items: buildings.map<DropdownMenuItem<String>>((String value) {
-                                return DropdownMenuItem<String>(
-                                  value: value,
-                                  child: new Text(value)
-                                );
-                              }).toList(), 
+                            userData.buildings.forEach((key, value) {_buildings[i] = key;i++;});
+                            return SizedBox(
+                                width:140,
+                                child: DropdownButton<String>(       
+                                  value: _building,
+                                  onChanged: (String building) { 
+                                    setState(() => _building = building);
+                                    setState(() => _room = null);
+                                  },
+                                  hint: Text('Select Building'),
+                                  items: _buildings.map<DropdownMenuItem<String>>((String value) {
+                                    return DropdownMenuItem<String>(
+                                      value: value,
+                                      child: new Text(value)
+                                    );
+                                  }
+                                ).toList(), 
+                              ),
                             );
                           } else {
                             return Container();
@@ -98,7 +112,7 @@ class _RoomsState extends State<Rooms> {
                         },
                       ),
                       RaisedButton(
-                        child: Text('Add building'),
+                        child: Text('Add'),
                         onPressed: () { 
                           if(buildingInput == false){
                             setState(() => buildingInput = true);
@@ -108,6 +122,16 @@ class _RoomsState extends State<Rooms> {
                           }
                         }
                       ),
+                      SizedBox(
+                        width: 10,
+                      ),
+                      RaisedButton(
+                        child: Text('Delete'),
+                        onPressed: () { 
+                          DatabaseService(buildingID: _building, roomID: _room).deleteBuilding(); 
+                          setState(() => _building = null);
+                        }
+                      )
                     ],
                   ),
                   buildingInput ? 
@@ -150,20 +174,36 @@ class _RoomsState extends State<Rooms> {
                   Container(),
                   Row(
                     children: <Widget>[
-                      Text('Room: '),
+                      SizedBox(
+                        width: 75,
+                        child: Text('Room: '
+                        )
+                      ),
                       StreamBuilder(
                         stream: DatabaseService(adminID: _building).roomData,
                         builder: (context, snapshot) {
-                          if (!snapshot.hasData) return Container();
+                          if (!snapshot.hasData) {
+                            return SizedBox(
+                              width: 140,
+                              child: Text(
+                                "Choose Building        ",
+                                style: TextStyle(
+                                  color: Colors.grey,
+                                  fontStyle: FontStyle.italic
+                                  ),
+                                textAlign: TextAlign.center,
+                                ),
+                            );
+                          }
                           BuildingRooms buildingData = snapshot.data;
-                          List<String> rooms = buildingData.rooms;
+                          _rooms = buildingData.rooms;
                           return DropdownButton<String>(
                             value: _room,
                             hint: Text('Enter Room'),
                             onChanged: (String room) { 
                               setState(() => _room = room);
                             },
-                            items: rooms.map<DropdownMenuItem<String>>((String value) {
+                            items: _rooms.map<DropdownMenuItem<String>>((String value) {
                               return DropdownMenuItem<String>(
                                 value: value,
                                 child: new Text(value)
@@ -173,7 +213,7 @@ class _RoomsState extends State<Rooms> {
                         },
                       ),
                       RaisedButton(
-                        child: Text('Add room'),
+                        child: Text('Add'),
                         onPressed: () { 
                           if(roomInput == false){
                             setState(() => roomInput = true);
@@ -183,6 +223,20 @@ class _RoomsState extends State<Rooms> {
                           }
                         }
                       ),
+                      SizedBox(
+                        width: 10,
+                      ),
+                      RaisedButton(
+                        child: Text('Delete'),
+                        onPressed: () { 
+                          if(_building != null && _room != null) {
+                            print("Building = " + _building.toString() + ", Room = " + _room.toString());
+                            DatabaseService(buildingID: _building, roomID: _room).deleteRoom();
+                          } else {
+                          print("Please input a room and a building");
+                          }
+                        }
+                      )
                     ],
                   ),
                   roomInput ? 
@@ -254,26 +308,7 @@ class _RoomsState extends State<Rooms> {
                     )
                   ],
                 ),
-                StreamBuilder(
-                  stream: DatabaseService(buildingID: _building, roomID: _room, date: _dateID).roomLogs,
-                  builder: (context, snapshot) {
-                    if (!snapshot.hasData) {
-                      return Container();
-                    }
-                    else {
-                    RoomLogs logs = snapshot.data;
-                    Map<String, List<dynamic>> roomLogs = logs.roomsLog;
-                    String timesList ='';
-                    roomLogs.forEach((key, value) {
-                      timesList += '\nUser:\t' + key.toString() + '\nTimes Accessed:\n';
-                      for(int i = 0; i < value.length; i++){
-                        timesList += '\t' + value[i].toDate().toString() + '\n';
-                      }
-                    });
-                    return Text(timesList);
-                    }
-                  },
-                ),
+                roomInfo(_building, _room, _dateID)
               ],
             ),
           ),
@@ -281,4 +316,27 @@ class _RoomsState extends State<Rooms> {
       ],
     );
   }
+}
+
+Widget roomInfo(building, room, dateID) {
+  return StreamBuilder(
+    stream: DatabaseService(buildingID: building, roomID: room, date: dateID).roomLogs,
+    builder: (context, snapshot) {
+      if (!snapshot.hasData) {
+        return Container();
+      }
+      else {
+      RoomLogs logs = snapshot.data;
+      Map<String, List<dynamic>> roomLogs = logs.roomsLog;
+      String timesList ='';
+      roomLogs.forEach((key, value) {
+        timesList += '\nUser:\t' + key.toString() + '\nTimes Accessed:\n';
+        for(int i = 0; i < value.length; i++){
+          timesList += '\t' + value[i].toDate().toString() + '\n';
+        }
+      });
+      return Text(timesList);
+      }
+    },
+  );
 }

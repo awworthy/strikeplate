@@ -36,7 +36,7 @@ dependencies:
   firebase_auth: ^0.15.3+1
 
   # Cloud Firestore for using Firestore database in the cloud
-  cloud_firestore: ^0.13.2+1
+  cloud_firestore: ^0.13.4+2
 
   # for read-write to disk
   shared_preferences: ^0.5.6+1
