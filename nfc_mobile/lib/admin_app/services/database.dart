@@ -33,7 +33,8 @@ class DatabaseService {
     return UserData(
       uid: userID,
       buildings: snapshot.data['buildings'],
-      name: snapshot.data['firstName'] + " " + snapshot.data['lastName'],
+      firstName: snapshot.data['firstName'],
+      lastName: snapshot.data['lastName'],
       email: snapshot.data['email'],
       company: snapshot.data['company']
     );
@@ -43,6 +44,24 @@ class DatabaseService {
   Stream<UserData> get userData {
     return userCollection.document(userID).snapshots()
       .map(_userDataFromSnapshot);
+  }
+
+  AdminData _adminDataFromSnapshot(DocumentSnapshot snapshot) {
+    return AdminData(
+      uid: userID,
+      buildings: snapshot.data['buildings'],
+      firstName: snapshot.data['firstName'],
+      lastName: snapshot.data['lastName'],
+      email: snapshot.data['email'],
+      company: snapshot.data['company'],
+      users: List.from(snapshot.data['users'])
+    );
+  }
+
+    // get user doc stream
+  Stream<AdminData> get adminData {
+    return userCollection.document(userID).snapshots()
+      .map(_adminDataFromSnapshot);
   }
 
   Future<void> updateRoomData(String bName, String roomID, String status) async {
@@ -185,10 +204,8 @@ class DatabaseService {
   }
   
   Future<void> deleteBuildingFromAllUsers() async { 
-    print("buildingID = " + buildingID);
     return Firestore.instance.collection('users').where("buildingList", arrayContains: buildingID).snapshots().listen((data) =>
       data.documents.forEach((element) { 
-        print(element["email"]);
         element.reference.updateData({"buildingList" : FieldValue.arrayRemove([buildingID])});
         element.reference.updateData({"buildings.$buildingID": FieldValue.delete()});
         }

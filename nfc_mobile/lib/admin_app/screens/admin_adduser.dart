@@ -1,7 +1,10 @@
 import 'package:flutter/material.dart';
+import 'package:nfc_mobile/admin_app/services/database.dart';
 // import 'package:nfc_mobile/admin_app/shared/app_bar.dart';
 import 'package:nfc_mobile/shared/constants.dart';
 import 'package:nfc_mobile/admin_app/services/auth.dart';
+import 'package:nfc_mobile/shared/user.dart';
+import 'package:provider/provider.dart';
 // import 'package:nfc_mobile/admin_app/shared/loading.dart';
 // import 'package:nfc_mobile/admin_app/shared/passwordGen.dart';
 
@@ -28,9 +31,13 @@ class _AdminAddUserState extends State<AdminAddUser> {
   String rooms = '';
   String error = '';
   String password = '';
+  List<String> _users;
+  String _user;
+  String _userRooms;
   
   @override
   Widget build(BuildContext context) {
+    final user = Provider.of<User>(context);
     return Scaffold(
       //appBar: CustomAppBar(title: 'Strikeplate',),
       body: Container(
@@ -65,6 +72,47 @@ class _AdminAddUserState extends State<AdminAddUser> {
                                       fontStyle: FontStyle.italic
                                       ),
                                     ),
+                                  ),
+                                  StreamBuilder(
+                                    stream: DatabaseService(userID: user.uid).adminData,
+                                    builder: (context, snapshot) {
+                                      if (snapshot.hasData) {
+                                        AdminData adminData = snapshot.data;
+                                        _users = new List(adminData.users.length);
+                                        int i = 0;
+                                        adminData.users.forEach((value) {_users[i] = value.trim();i++;});
+                                        return Padding(
+                                          padding: const EdgeInsets.all(16.0),
+                                          child: SizedBox(
+                                              width:340,
+                                              child: DropdownButton<String>(       
+                                                value: _user,
+                                                onChanged: (String selUser) { 
+                                                  setState(() => _user = selUser);
+                                                },
+                                                hint: Text('Select User',
+                                                style: TextStyle(color: Colors.white)),
+                                                iconDisabledColor: Colors.white,
+                                                iconEnabledColor: Colors.black,
+                                                focusColor: Colors.black,
+                                                items: _users.map<DropdownMenuItem<String>>((String value) {
+                                                  return DropdownMenuItem<String>(
+                                                    value: value,
+                                                    child: new Text(value, 
+                                                      style: TextStyle(
+                                                        color: Colors.white
+                                                      ),
+                                                    )
+                                                  );
+                                                }
+                                              ).toList(), 
+                                            ),
+                                          ),
+                                        );
+                                      } else {
+                                        return Container();
+                                      }  
+                                    },
                                   ),
                                   Padding(
                                     padding: const EdgeInsets.all(8.0),
@@ -216,119 +264,188 @@ class _AdminAddUserState extends State<AdminAddUser> {
                                   ),  
                                 ],
                               ),
-
                               Column(
-                            mainAxisAlignment: MainAxisAlignment.start,
-                            children: <Widget>[
-                              Padding(
-                                padding: const EdgeInsets.all(16.0),
-                                child: ConstrainedBox(
-                                  constraints: BoxConstraints(maxHeight: 375, minWidth: 400),
-                                  child: Container(
-                                    decoration: BoxDecoration(
-                                      border: Border.all(
-                                        color: Colors.grey[500]
-                                      ),
-                                    ),
-                                    child: Padding(
-                                      padding: const EdgeInsets.all(16.0),
-                                      child: Column(
-                                        children: <Widget>[
-                                          Row(
-                                            mainAxisAlignment: MainAxisAlignment.start, // displaying in centre. Why?
-                                            children: <Widget>[
-                                              Text('User Information',
-                                              style: TextStyle(
-                                                color: Colors.white,
-                                                fontSize: 20
-                                                ),
-                                              ), 
-                                            ],
+                                mainAxisAlignment: MainAxisAlignment.start,
+                                children: <Widget>[
+                                  Padding(
+                                    padding: const EdgeInsets.all(16.0),
+                                    child: ConstrainedBox(
+                                      constraints: BoxConstraints(maxHeight: 375, minWidth: 400),
+                                      child: Container(
+                                        decoration: BoxDecoration(
+                                          border: Border.all(
+                                            color: Colors.grey[500]
                                           ),
-                                          Divider(  //not showing up. Why?
-                                            height: 20,
-                                            color: Colors.black,
-                                            thickness: 4,
-                                          ),
-                                          Row(
+                                        ),
+                                        child: Padding(
+                                          padding: const EdgeInsets.all(16.0),
+                                          child: Column(
                                             children: <Widget>[
-                                              Column(
+                                              Row(
+                                                mainAxisAlignment: MainAxisAlignment.start, // displaying in centre. Why?
                                                 children: <Widget>[
-                                                  Padding(
-                                                    padding: const EdgeInsets.all(4.0),
-                                                    child: Text('User ID: ',
-                                                    style: TextStyle(
-                                                      color: Colors.white
-                                                    ),),
-                                                  ),
-                                                  Padding(
-                                                    padding: const EdgeInsets.all(4.0),
-                                                    child: Text('First Name: ',
-                                                    style: TextStyle(
-                                                      color: Colors.white
-                                                    ),),
-                                                  ),
-                                                  Padding(
-                                                    padding: const EdgeInsets.all(4.0),
-                                                    child: Text('Last Name: ',
-                                                    style: TextStyle(
-                                                      color: Colors.white
-                                                    ),),
-                                                  ),
-                                                  Padding(
-                                                    padding: const EdgeInsets.all(4.0),
-                                                    child: Text('Email: ',
-                                                    style: TextStyle(
-                                                      color: Colors.white
-                                                    ),),
-                                                  ),
-                                                  Padding(
-                                                    padding: const EdgeInsets.all(4.0),
-                                                    child: Text('Title: ',
-                                                    style: TextStyle(
-                                                      color: Colors.white
-                                                    ),),
-                                                  ),
+                                                  Text('User Information',
+                                                  style: TextStyle(
+                                                    color: Colors.white,
+                                                    fontSize: 20
+                                                    ),
+                                                  ), 
                                                 ],
+                                              ),
+                                              Divider(  //not showing up. Why?
+                                                height: 20,
+                                                color: Colors.white,
+                                                thickness: 4,
+                                              ),
+                                              StreamBuilder(
+                                                stream: DatabaseService(userID: _user).userData,
+                                                builder: (context, snapshot) {
+                                                  if (snapshot.hasData) {
+                                                    UserData userData = snapshot.data;
+                                                    String tempRooms = "";
+                                                    print(userData.buildings.toString());
+                                                    userData.buildings.forEach((key, value) {
+                                                      tempRooms += key.toString() + ": ";
+                                                      List<String> rooms = List.from(value["rooms"]);
+                                                      rooms.forEach((element) {
+                                                        tempRooms += element.toString();
+                                                        if(element != rooms.last) {
+                                                          tempRooms += ", ";
+                                                        }
+                                                      });
+                                                    });
+                                                    return Column(
+                                                      children: <Widget>[
+                                                        Row(
+                                                          children: <Widget>[
+                                                            Column(
+                                                              children: <Widget>[
+                                                                Padding(
+                                                                  padding: const EdgeInsets.all(4.0),
+                                                                  child: Text('User ID: ',
+                                                                    style: TextStyle(
+                                                                      color: Colors.white
+                                                                    ),
+                                                                  ),
+                                                                ),
+                                                                Padding(
+                                                                  padding: const EdgeInsets.all(4.0),
+                                                                  child: Text('First Name: ',
+                                                                    style: TextStyle(
+                                                                      color: Colors.white
+                                                                    ),
+                                                                  ),
+                                                                ),
+                                                                Padding(
+                                                                  padding: const EdgeInsets.all(4.0),
+                                                                  child: Text('Last Name: ',
+                                                                    style: TextStyle(
+                                                                      color: Colors.white
+                                                                    ),
+                                                                  ),
+                                                                ),
+                                                                Padding(
+                                                                  padding: const EdgeInsets.all(4.0),
+                                                                  child: Text('Email: ',
+                                                                    style: TextStyle(
+                                                                      color: Colors.white
+                                                                    ),
+                                                                  ),
+                                                                ),
+                                                                Padding(
+                                                                  padding: const EdgeInsets.all(8.0),
+                                                                  child: Row(
+                                                                    mainAxisAlignment: MainAxisAlignment.start, // displaying in centre. Why?
+                                                                    children: <Widget>[
+                                                                      Text('Accessible Rooms:',
+                                                                        style: TextStyle(
+                                                                          color: Colors.white,
+                                                                          fontSize: 12
+                                                                        )
+                                                                      )
+                                                                    ]
+                                                                  )
+                                                                )
+                                                              ]
+                                                            ),
+                                                            Column(
+                                                              children: <Widget>[
+                                                                Padding(
+                                                                  padding: const EdgeInsets.all(4.0),
+                                                                  child: Text(userData.uid,
+                                                                    style: TextStyle(
+                                                                      color: Colors.white
+                                                                    ),
+                                                                  ),
+                                                                ),
+                                                                Padding(
+                                                                  padding: const EdgeInsets.all(4.0),
+                                                                  child: Text(userData.firstName,
+                                                                    style: TextStyle(
+                                                                      color: Colors.white
+                                                                    ),
+                                                                  ),
+                                                                ),
+                                                                Padding(
+                                                                  padding: const EdgeInsets.all(4.0),
+                                                                  child: Text(userData.lastName,
+                                                                    style: TextStyle(
+                                                                      color: Colors.white
+                                                                    )
+                                                                  )
+                                                                ),
+                                                                Padding(
+                                                                  padding: const EdgeInsets.all(4.0),
+                                                                  child: Text(userData.email,
+                                                                    style: TextStyle(
+                                                                      color: Colors.white
+                                                                    ),
+                                                                  ),
+                                                                ),
+                                                                Padding(padding: const EdgeInsets.all(14))
+                                                              ]
+                                                            )
+                                                          ]
+                                                        ),
+                                                        Padding(
+                                                          padding: const EdgeInsets.all(8.0),
+                                                          child: SizedBox(
+                                                            height: 120, width: 350,
+                                                            child: Container(
+                                                              decoration: BoxDecoration(
+                                                              border: Border.all(
+                                                                color: Colors.grey[400]
+                                                              )
+                                                            ),
+                                                            child: SingleChildScrollView(
+                                                              scrollDirection: Axis.vertical,
+                                                                child: Padding(
+                                                                  padding: EdgeInsets.all(8),
+                                                                  child: Text(tempRooms.toString(),
+                                                                    style: TextStyle(
+                                                                      color: Colors.white
+                                                                    )
+                                                                  ),
+                                                                ),
+                                                            ),
+                                                            )
+                                                          )
+                                                        )
+                                                      ],
+                                                    );
+                                                  } else {
+                                                    return Container();
+                                                  }
+                                                }
                                               )
                                             ],
                                           ),
-                                          Padding(
-                                            padding: const EdgeInsets.all(8.0),
-                                            child: Row(
-                                              mainAxisAlignment: MainAxisAlignment.start, // displaying in centre. Why?
-                                              children: <Widget>[
-                                                Text('Accessible Rooms:',
-                                                style: TextStyle(
-                                                  color: Colors.white,
-                                                  fontSize: 12
-                                                  ),
-                                                ),
-                                              ],
-                                            ),
-                                          ),
-                                          Padding(
-                                            padding: const EdgeInsets.all(8.0),
-                                            child: ConstrainedBox(
-                                              constraints: BoxConstraints(
-                                              maxHeight: 120, maxWidth: 350),
-                                              child: Container(
-                                                decoration: BoxDecoration(
-                                                  border: Border.all(
-                                                    color: Colors.grey[400]
-                                                    )
-                                                  ),
-                                                )
-                                              ),
-                                            )
-                                          ],
                                         ),
                                       ),
                                     ),
                                   ),
-                                ),
-                              ],
-                            )
+                                ],
+                              )
                             ],
                           ),
                         ],
