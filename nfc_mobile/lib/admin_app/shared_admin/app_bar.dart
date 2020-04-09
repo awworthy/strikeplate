@@ -68,7 +68,14 @@ class CustomAppBar extends StatelessWidget implements PreferredSizeWidget {
           ),
           body: TabBarView(
             children: [
-              Icon(Icons.notifications),
+              Container(
+                decoration: BoxDecoration(
+                  gradient: backgroundGradient
+                ),
+                child: Icon(Icons.notifications,
+                  color: Colors.white
+                ),
+              ),
               AdminAddUser(),
               Rooms()
             ]),

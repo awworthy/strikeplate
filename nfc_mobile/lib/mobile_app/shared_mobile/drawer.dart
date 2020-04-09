@@ -22,7 +22,6 @@ class MakeDrawer extends StatelessWidget {
       builder: (context, snapshot) {
         if(snapshot.hasData) {
           UserData userData = snapshot.data;
-          print(userData.name);
           return Drawer(
           elevation: 16.0,
           child: new ListView(
@@ -30,7 +29,7 @@ class MakeDrawer extends StatelessWidget {
               Container(
                 color: secondaryBG,
                 child: new UserAccountsDrawerHeader(
-                  accountName: Text(userData.name),
+                  accountName: Text(userData.firstName + " " + userData.lastName),
                   accountEmail: Text(userData.email),
                   currentAccountPicture: new CircleAvatar(
                     backgroundColor: secondaryBG,
