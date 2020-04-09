@@ -28,6 +28,43 @@ class DatabaseService {
     });
   }
 
+  Future<void> updateExistingUserFirstName(String firstName) async {
+    if(firstName.isNotEmpty){
+      return await userCollection.document(userID).updateData({
+        'firstName': firstName
+      });
+    } else {
+      return;
+    }
+  }
+
+    Future<void> updateExistingUserLastName(String lastName) async {
+    if(lastName.isNotEmpty){
+      return await userCollection.document(userID).updateData({
+        'lastName': lastName
+      });
+    } else {
+      return;
+    }
+  }
+
+  Future<void> updateExistingUserEmail(String email) async {
+    if(email.isNotEmpty){
+      return await userCollection.document(userID).updateData({
+        'email': email
+      });
+    } else {
+      return;
+    }
+  }
+
+
+  Future<void> updateExistingUserData(String firstName, String lastName, String email) async {
+    updateExistingUserFirstName(firstName);
+    updateExistingUserLastName(lastName);
+    updateExistingUserEmail(email);
+  }
+
   // user data from snapshots
   UserData _userDataFromSnapshot(DocumentSnapshot snapshot) {
     return UserData(
