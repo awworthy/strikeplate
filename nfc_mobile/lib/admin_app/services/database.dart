@@ -91,7 +91,7 @@ class DatabaseService {
       lastName: snapshot.data['lastName'],
       email: snapshot.data['email'],
       company: snapshot.data['company'],
-      users: List.from(snapshot.data['users'])
+      users: snapshot.data['users']
     );
   }
 

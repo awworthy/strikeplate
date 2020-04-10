@@ -26,7 +26,7 @@ class AdminData {
   final String email;
   final String company;
   final Map buildings;
-  final List<String> users;
+  final Map users;
 
   AdminData({ this.uid, this.firstName, this.lastName, this.email, this.company, this.buildings, this.users});
 }
