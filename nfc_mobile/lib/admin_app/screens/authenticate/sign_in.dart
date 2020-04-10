@@ -1,7 +1,10 @@
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:nfc_mobile/admin_app/services/auth.dart';
 import 'package:flutter/material.dart';
+import 'package:nfc_mobile/admin_app/services/database.dart';
 import 'package:nfc_mobile/shared/constants.dart';
 import 'package:nfc_mobile/shared/loading.dart';
+import 'package:nfc_mobile/shared/user.dart';
 
 class SignIn extends StatefulWidget {
 
@@ -121,12 +124,13 @@ class _SignInState extends State<SignIn> {
                         dynamic result = await _auth.signInWithEmailandPassword(email, password);
                         if(result == null) {
                           setState(() {
-                          loading = false;
-                          error = 'Could not sign in with those credentials';
-                        });
+                            loading = false;
+                            error = 'Could not sign in with those credentials';
+                          });
+                        } 
                       }
                     }
-                    }),
+                  ),
                   SizedBox(height: 12),
                     Text(
                       error,

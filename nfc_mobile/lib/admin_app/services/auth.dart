@@ -1,3 +1,4 @@
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:nfc_mobile/admin_app/services/database.dart';
 import 'package:nfc_mobile/shared/user.dart';
@@ -33,7 +34,14 @@ class AuthService {
     try {
       AuthResult result = await _auth.signInWithEmailAndPassword(email: email, password: password);
       FirebaseUser user = result.user;
-      return _userFromFirebaseUser(user); 
+      DocumentSnapshot userData = await Firestore.instance.collection("users").document(user.uid).get();
+      if(userData.exists) {
+        if(userData["isAdmin"] != false) {
+          return _userFromFirebaseUser(user); 
+        } else {
+          return null;
+        }
+      }
     } catch (e) {
       print("sign in error = " + e.toString());
       return null;

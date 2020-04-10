@@ -1,10 +1,11 @@
 import 'package:flutter/material.dart';
+import 'package:nfc_mobile/mobile_app/services/auth.dart';
 import 'package:nfc_mobile/shared/constants.dart';
 
 class CustomAppBar extends StatelessWidget implements PreferredSizeWidget {
 
   final String title;
-
+  final AuthService _auth = AuthService();
   CustomAppBar({this.title});
 
 
@@ -23,7 +24,8 @@ class CustomAppBar extends StatelessWidget implements PreferredSizeWidget {
         Padding(
           padding: const EdgeInsets.fromLTRB(0, 10, 10, 10),
           child: Image.asset('assets/profile_gold.png'),
-        )
+        ),
+        // RaisedButton(onPressed: () async { await _auth.signOut();})
       ],
     );
   }

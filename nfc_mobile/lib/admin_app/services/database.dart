@@ -212,7 +212,7 @@ class DatabaseService {
   }
   
   Future<void> deleteRoomFromAllUsers() async {
-    return Firestore.instance.collection('users').where("buildings.$buildingID.rooms", arrayContains: roomID).snapshots().listen((data) =>
+    return userCollection.where("buildings.$buildingID.rooms", arrayContains: roomID).snapshots().listen((data) =>
       data.documents.forEach((element) => element.reference.updateData({"buildings.$buildingID.rooms" : FieldValue.arrayRemove([roomID])})));
   }
 
