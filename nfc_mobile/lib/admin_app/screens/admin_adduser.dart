@@ -78,7 +78,7 @@ class _AdminAddUserState extends State<AdminAddUser> {
                                 children: <Widget>[
                                   Padding(
                                     padding: const EdgeInsets.all(16.0),
-                                    child: Text('Add/Update User', 
+                                    child: Text('Update User', 
                                     style: TextStyle(
                                       color: Colors.white,
                                       fontSize: 24,
@@ -96,7 +96,7 @@ class _AdminAddUserState extends State<AdminAddUser> {
                                             _userNames = new List(adminData.users.length);
                                             int i = 0;
                                             adminData.users.forEach((key, value) {
-                                              _userNames[i] = value["userName"];
+                                              _userNames[i] = value["lastName"].toString() + ", " + value["firstName"].toString();
                                               i++;
                                             });
                                             _userNames.sort();
@@ -108,7 +108,8 @@ class _AdminAddUserState extends State<AdminAddUser> {
                                                     value: _user,
                                                     onChanged: (String selUser) {
                                                       adminData.users.forEach((key, value) {
-                                                        if(value["userName"] == selUser) {
+                                                        print(value);
+                                                        if(value["lastName"].toString() + ", " + value["firstName"].toString() == selUser) {
                                                           setState(() => _user = selUser);
                                                           setState(() => _userID = key.trim());
                                                         }
@@ -118,8 +119,8 @@ class _AdminAddUserState extends State<AdminAddUser> {
                                                       }
                                                     },
                                                     hint: Text('Select User',
-                                                    style: TextStyle(color: Colors.white)),
-                                                    iconDisabledColor: Colors.white,
+                                                    style: TextStyle(color: Colors.grey)),
+                                                    iconDisabledColor: Colors.grey,
                                                     iconEnabledColor: Colors.black,
                                                     focusColor: Colors.black,
                                                     items: _userNames.map<DropdownMenuItem<String>>((String value) {
@@ -127,7 +128,7 @@ class _AdminAddUserState extends State<AdminAddUser> {
                                                         value: value,
                                                         child: new Text(value, 
                                                           style: TextStyle(
-                                                            color: Colors.white
+                                                            color: Colors.grey
                                                           ),
                                                         )
                                                       );
@@ -251,7 +252,7 @@ class _AdminAddUserState extends State<AdminAddUser> {
                                                     ),
                                                   onPressed: () async {
                                                       setState(() => loading = true);
-                                                      await DatabaseService(userID: _userID).updateExistingUserData(firstName, lastName, email);
+                                                      await DatabaseService(userID: _userID, adminID: user.uid).updateExistingUserData(firstName, lastName, email);
                                                       loading = false;
 
                                                     }
