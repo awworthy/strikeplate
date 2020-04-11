@@ -91,7 +91,7 @@ class DatabaseService {
       lastName: snapshot.data['lastName'],
       email: snapshot.data['email'],
       company: snapshot.data['company'],
-      users: List.from(snapshot.data['users'])
+      users: snapshot.data['users']
     );
   }
 
@@ -212,7 +212,7 @@ class DatabaseService {
   }
   
   Future<void> deleteRoomFromAllUsers() async {
-    return Firestore.instance.collection('users').where("buildings.$buildingID.rooms", arrayContains: roomID).snapshots().listen((data) =>
+    return userCollection.where("buildings.$buildingID.rooms", arrayContains: roomID).snapshots().listen((data) =>
       data.documents.forEach((element) => element.reference.updateData({"buildings.$buildingID.rooms" : FieldValue.arrayRemove([roomID])})));
   }
 

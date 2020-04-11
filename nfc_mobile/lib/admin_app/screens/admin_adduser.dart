@@ -1,13 +1,12 @@
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:nfc_mobile/admin_app/services/database.dart';
-// import 'package:nfc_mobile/admin_app/shared/app_bar.dart';
 import 'package:nfc_mobile/shared/constants.dart';
 import 'package:nfc_mobile/admin_app/services/auth.dart';
 import 'package:nfc_mobile/shared/rooms.dart';
 import 'package:nfc_mobile/shared/user.dart';
 import 'package:provider/provider.dart';
-// import 'package:nfc_mobile/admin_app/shared/loading.dart';
-// import 'package:nfc_mobile/admin_app/shared/passwordGen.dart';
+
 
 class AdminAddUser extends StatefulWidget{
 
@@ -32,8 +31,9 @@ class _AdminAddUserState extends State<AdminAddUser> {
   String rooms = '';
   String error = '';
   String password = '';
-  List<String> _users;
+  List<String> _userNames;
   String _user;
+  String _userID;
   bool _edit = false; 
   bool _editActivate = false;
   List<String> _buildings;
@@ -78,7 +78,7 @@ class _AdminAddUserState extends State<AdminAddUser> {
                                 children: <Widget>[
                                   Padding(
                                     padding: const EdgeInsets.all(16.0),
-                                    child: Text('Add/Update User', 
+                                    child: Text('Update User', 
                                     style: TextStyle(
                                       color: Colors.white,
                                       fontSize: 24,
@@ -93,32 +93,42 @@ class _AdminAddUserState extends State<AdminAddUser> {
                                         builder: (context, snapshot) {
                                           if (snapshot.hasData) {
                                             AdminData adminData = snapshot.data;
-                                            _users = new List(adminData.users.length);
+                                            _userNames = new List(adminData.users.length);
                                             int i = 0;
-                                            adminData.users.forEach((value) {_users[i] = value.trim();i++;});
+                                            adminData.users.forEach((key, value) {
+                                              _userNames[i] = value["lastName"].toString() + ", " + value["firstName"].toString();
+                                              i++;
+                                            });
+                                            _userNames.sort();
                                             return Padding(
                                               padding: const EdgeInsets.all(16.0),
                                               child: SizedBox(
                                                   width:340,
                                                   child: DropdownButton<String>(       
                                                     value: _user,
-                                                    onChanged: (String selUser) { 
-                                                      setState(() => _user = selUser);
+                                                    onChanged: (String selUser) {
+                                                      adminData.users.forEach((key, value) {
+                                                        print(value);
+                                                        if(value["lastName"].toString() + ", " + value["firstName"].toString() == selUser) {
+                                                          setState(() => _user = selUser);
+                                                          setState(() => _userID = key.trim());
+                                                        }
+                                                      }); 
                                                       if (_user != null) {
                                                         setState(() => _editActivate = true);
                                                       }
                                                     },
                                                     hint: Text('Select User',
-                                                    style: TextStyle(color: Colors.white)),
-                                                    iconDisabledColor: Colors.white,
+                                                    style: TextStyle(color: Colors.grey)),
+                                                    iconDisabledColor: Colors.grey,
                                                     iconEnabledColor: Colors.black,
                                                     focusColor: Colors.black,
-                                                    items: _users.map<DropdownMenuItem<String>>((String value) {
+                                                    items: _userNames.map<DropdownMenuItem<String>>((String value) {
                                                       return DropdownMenuItem<String>(
                                                         value: value,
                                                         child: new Text(value, 
                                                           style: TextStyle(
-                                                            color: Colors.white
+                                                            color: Colors.grey
                                                           ),
                                                         )
                                                       );
@@ -181,7 +191,6 @@ class _AdminAddUserState extends State<AdminAddUser> {
                                                     style: TextStyle(
                                                       color: Colors.white
                                                     ),
-                                                    // validator: (val) => val.isEmpty ? "Enter user's first name" : null,
                                                     decoration: textInputDecoration,
                                                     onChanged: (val) {
                                                       setState(() => firstName = val);
@@ -201,7 +210,6 @@ class _AdminAddUserState extends State<AdminAddUser> {
                                                     style: TextStyle(
                                                       color: Colors.white
                                                     ),
-                                                    // validator: (val) => val.isEmpty ? "Enter user's email address" : null,
                                                     decoration: textInputDecoration,
                                                     onChanged: (val) {
                                                       setState(() => email = val);
@@ -229,7 +237,6 @@ class _AdminAddUserState extends State<AdminAddUser> {
                                                     style: TextStyle(
                                                       color: Colors.white
                                                     ),
-                                                    // validator: (val) => val.isEmpty ? "Enter user's last name" : null,
                                                     decoration: textInputDecoration,
                                                     onChanged: (val) {
                                                       setState(() => lastName = val);
@@ -244,18 +251,11 @@ class _AdminAddUserState extends State<AdminAddUser> {
                                                     'Update',
                                                     ),
                                                   onPressed: () async {
-                                                    // if (_formKey.currentState.validate()) {
                                                       setState(() => loading = true);
-                                                      await DatabaseService(userID: _user).updateExistingUserData(firstName, lastName, email);
+                                                      await DatabaseService(userID: _userID, adminID: user.uid).updateExistingUserData(firstName, lastName, email);
                                                       loading = false;
-                                                      // if(result == null) {
-                                                      //   setState(() { 
-                                                      //     error = 'Please supply a valid email';
-                                                      //     loading = false;
-                                                      //   });
-                                                      // }
+
                                                     }
-                                                  // }
                                                 ),
                                               ),
                                             ],
@@ -391,12 +391,7 @@ class _AdminAddUserState extends State<AdminAddUser> {
                                                 child: RaisedButton(
                                                   child: Text('Add'),
                                                   onPressed: () { 
-                                                    // if(roomInput == false){
-                                                    //   setState(() => roomInput = true);
-                                                    // }
-                                                    // else if(roomInput == true) {
-                                                    //   setState(() => roomInput = false);
-                                                    // }
+
                                                   }
                                                 ),
                                               )
@@ -442,7 +437,7 @@ class _AdminAddUserState extends State<AdminAddUser> {
                                                 thickness: 4,
                                               ),
                                               StreamBuilder(
-                                                stream: DatabaseService(userID: _user).userData,
+                                                stream: DatabaseService(userID: _userID).userData,
                                                 builder: (context, snapshot) {
                                                   if (snapshot.hasData) {
                                                     UserData userData = snapshot.data;
@@ -561,4 +556,14 @@ Widget userInfo(List<String> info) {
   return Column(
     children: infoObjects,  
   );
+}
+
+List<String> getNames(List<String> users){
+  List<String> userNames = new List(users.length);
+  int i = 0;
+  users.forEach((element) async {
+    DocumentSnapshot querySnapshot = await Firestore.instance.collection("users").document(element).get();
+    userNames[i] = querySnapshot.data["lastName"] + ", " + querySnapshot.data["firstName"];
+  });
+  return userNames;
 }
