@@ -18,9 +18,11 @@ class RoomData {
 
 class Building {
 
-  final String bName;
+  final String buildingID;
+  final String company;
+  final List<String> rooms;
 
-  Building({ this.bName});
+  Building({ this.buildingID, this.company, this.rooms });
 
 }
 

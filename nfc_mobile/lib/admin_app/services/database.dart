@@ -11,7 +11,8 @@ class DatabaseService {
   final String date;
   final String buildingID;
   final String roomID;
-  DatabaseService({ this.adminID, this.userID, this.date, this.buildingID, this.roomID });
+  final String company;
+  DatabaseService({ this.adminID, this.userID, this.date, this.buildingID, this.roomID, this.company });
 
   //final fs.Firestore userCollection = fb.firestore();
   final CollectionReference userCollection = Firestore.instance.collection('users');
@@ -167,7 +168,7 @@ class DatabaseService {
 
   Future<void> addRoomtoBuilding(String buildingID, String roomID) async {
     return await roomCollection.document(buildingID).collection('rooms').document(roomID).setData({
-      'users' : [adminID],
+      'users' : FieldValue.arrayUnion([adminID]),
       'locked' : false
     }, merge: true);
   }
@@ -175,13 +176,13 @@ class DatabaseService {
   Future<void> addRoomtoBuildingFields(String buildingID, String roomID) async {
     return await roomCollection.document(buildingID).setData({
       'buildingID' : buildingID, 
-      'rooms' : [roomID]
+      'rooms' : FieldValue.arrayUnion([roomID])
     }, merge: true);
   }
 
   Future<void> addRoomtoAdmin(String buildingID, String roomID) async {
     return await userCollection.document(adminID).setData({
-      'buildings' : {buildingID: {'rooms' : [roomID]}}
+      'buildings' : {buildingID: {'rooms' : FieldValue.arrayUnion([roomID])}}
     }, merge: true);
   }
 
@@ -250,6 +251,47 @@ class DatabaseService {
     );
   }
 
+  Future<void> addUserToRoom() async {
+    return await userCollection.document(userID).setData({"buildings" : {buildingID : {"rooms" : FieldValue.arrayUnion([roomID])}}}, merge: true);
+  }
 
+  Future<void> addRoomToUser() async {
+    return await roomCollection.document(buildingID).collection("rooms").document(roomID).setData({"usersWithAccess" : FieldValue.arrayUnion([userID])}, merge: true);
+  }
+
+  Future<void> adminAddRoomUserPage() async {
+    addRoomToUser();
+    addUserToRoom();
+  }
+
+    Future<void> deleteUserFromRoom() async {
+    return await userCollection.document(userID).setData({"buildings" : {buildingID : {"rooms" : FieldValue.arrayRemove([roomID])}}}, merge: true);
+  }
+
+  Future<void> deleteRoomFromUser() async {
+    return await roomCollection.document(buildingID).collection("rooms").document(roomID).setData({"usersWithAccess" : FieldValue.arrayRemove([userID])}, merge: true);
+  }
+
+  Future<void> adminDeleteRoomUserPage() async {
+    deleteRoomFromUser();
+    deleteUserFromRoom();
+  }
+
+  Future<void> registerUserAsAdmin() async { // test with new admin registration
+    Firestore.instance.collection("buildings").where("company", isEqualTo: company).getDocuments().then((snapshot) {
+      List<Building> buildingList = new List(snapshot.documents.length);
+      int i = 0;
+      for (DocumentSnapshot ds in snapshot.documents) {
+        Building buildingSnapshot = new Building(buildingID: ds["buildingID"], company: ds["company"], rooms: ds["rooms"]);
+        buildingList[i] = buildingSnapshot;
+      }
+      buildingList.forEach((element) {
+        userCollection.document(adminID).setData({
+          'buildingList' : FieldValue.arrayUnion([element.buildingID]),
+          'buildings' : { element.buildingID : { 'rooms' : FieldValue.arrayUnion(element.rooms)}}
+        });
+      });
+    });
+  }
 }
 

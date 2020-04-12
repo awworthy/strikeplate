@@ -31,7 +31,8 @@ class DatabaseService {
       'company': company,
       'isAdmin': isAdmin,
       'pubKey' : pubKey,
-      'buildings' : {}
+      'buildings' : {},
+      'buildingList' : []
     });
   }
 
