@@ -11,13 +11,13 @@ import 'package:nfc_mobile/mobile_app/shared_mobile/storage_provider.dart';
 import 'package:nfc_mobile/shared/constants.dart';
 
 /// Listens for incoming signals from the server. Stateful.
-class MessageHandler extends StatefulWidget {
+class ReaderMessageHandler extends StatefulWidget {
   @override
-  _MessageHandlerState createState() => _MessageHandlerState();
+  _ReaderMessageHandlerState createState() => _ReaderMessageHandlerState();
 }
 
 /// Acts on incoming signals from the server
-class _MessageHandlerState extends State<MessageHandler> {
+class _ReaderMessageHandlerState extends State<ReaderMessageHandler> {
   final Firestore _db = Firestore.instance;
 
   // FCM = Firebase Cloud Messaging
@@ -84,15 +84,16 @@ class _MessageHandlerState extends State<MessageHandler> {
   Widget build(BuildContext context) {
     if (!_supportsNFC) {
       return RaisedButton(
-        child: const Text("You device does not support NFC"),
+        child: const Text("Your device does not support NFC"),
         onPressed: null,
       );
     }
     if (_storage == null) {
       _storage = StorageProvider.of(context).getStorage();
     }
-    _storage.loadReader().then((value) => _readerID = value);
+
     if (_readerID == null) {
+      _storage.loadReader().then((value) => _readerID = value);
       registerDevice();
       // throw "ReaderNAError: Reader contains no readerID field";
     }

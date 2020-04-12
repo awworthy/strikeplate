@@ -1,0 +1,6 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="app_name">Strikeplate</string>
+    <string name="servicedesc">Host Card Emulator Service</string>
+    <string name="aid_description">Testing AID</string>
+</resources>
