@@ -314,17 +314,8 @@ class DatabaseService {
     }, merge: true);
     return readerCollection.document(readerID).setData({
       'buildingID' : building,
-      'roomID' : 'room'
-    });
-  }
-
-  Future<void> registerReader(String readerID) async {
-    return readerCollection.document(readerID).setData({
-      'buildingID' : "",
-      'readerID' : readerID,
-      'roomID' : "",
-      'token' : ""
-    });
+      'roomID' : room
+    }, merge: true);
   }
 }
 
