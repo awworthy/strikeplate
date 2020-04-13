@@ -1,3 +1,5 @@
+import 'dart:async';
+
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:nfc_mobile/admin_app/services/database.dart';
@@ -44,6 +46,7 @@ class _AdminAddUserState extends State<AdminAddUser> {
   bool buildingInput = false;
   bool roomInput = false;
   int valCount = 0;
+  bool _errorDisplay = false;
 
 
  
@@ -63,6 +66,7 @@ class _AdminAddUserState extends State<AdminAddUser> {
             child: Container(
               height: MediaQuery.of(context).size.height,
               child: Row(
+                crossAxisAlignment: CrossAxisAlignment.start,
                 children: <Widget>[
                   SingleChildScrollView(
                     scrollDirection: Axis.vertical,
@@ -101,44 +105,68 @@ class _AdminAddUserState extends State<AdminAddUser> {
                                             });
                                             _userNames.sort();
                                             return Padding(
-                                              padding: const EdgeInsets.all(16.0),
+                                              padding: const EdgeInsets.all(8.0),
                                               child: SizedBox(
                                                   width:340,
-                                                  child: DropdownButton<String>(       
-                                                    value: _user,
-                                                    onChanged: (String selUser) {
-                                                      adminData.users.forEach((key, value) {
-                                                        print(value);
-                                                        if(value["lastName"].toString() + ", " + value["firstName"].toString() == selUser) {
-                                                          setState(() => _user = selUser);
-                                                          setState(() => _userID = key.trim());
+                                                  height: 35,
+                                                  child: Container(
+                                                    decoration: BoxDecoration(
+                                                      color: Colors.white,
+                                                      borderRadius: BorderRadius.all(Radius.circular(5))
+                                                    ),
+                                                    child: DropdownButtonHideUnderline(
+                                                      child: DropdownButton<String>(       
+                                                        value: _user,
+                                                        onChanged: (String selUser) {
+                                                          adminData.users.forEach((key, value) {
+                                                            if(value["lastName"].toString() + ", " + value["firstName"].toString() == selUser) {
+                                                              setState(() => _user = selUser);
+                                                              setState(() => _userID = key.trim());
+                                                            }
+                                                          }); 
+                                                          if (_user != null) {
+                                                            setState(() => _editActivate = true);
+                                                          }
+                                                        },
+                                                        hint: Padding(
+                                                          padding: const EdgeInsets.all(8.0),
+                                                          child: Text('Select User',
+                                                          style: TextStyle(color: Colors.black)),
+                                                        ),
+                                                        items: _userNames.map<DropdownMenuItem<String>>((String value) {
+                                                          return DropdownMenuItem<String>(
+                                                            value: value,
+                                                            child: Padding(
+                                                              padding: const EdgeInsets.all(8.0),
+                                                              child: Text(value, 
+                                                                style: TextStyle(
+                                                                  color: Colors.black,
+                                                                  fontSize: 14
+                                                                ),
+                                                              ),
+                                                            )
+                                                          );
                                                         }
-                                                      }); 
-                                                      if (_user != null) {
-                                                        setState(() => _editActivate = true);
-                                                      }
-                                                    },
-                                                    hint: Text('Select User',
-                                                    style: TextStyle(color: Colors.grey)),
-                                                    iconDisabledColor: Colors.grey,
-                                                    iconEnabledColor: Colors.black,
-                                                    focusColor: Colors.black,
-                                                    items: _userNames.map<DropdownMenuItem<String>>((String value) {
-                                                      return DropdownMenuItem<String>(
-                                                        value: value,
-                                                        child: new Text(value, 
-                                                          style: TextStyle(
-                                                            color: Colors.grey
-                                                          ),
-                                                        )
-                                                      );
-                                                    }
-                                                  ).toList(), 
+                                                      ).toList(), 
                                                 ),
+                                                    ),
+                                                  ),
                                               ),
                                             );
                                           } else {
-                                            return Container();
+                                            return Padding(
+                                              padding: const EdgeInsets.all(8.0),
+                                              child: SizedBox(
+                                                  width:340,
+                                                  height: 35,
+                                                  child: Container(
+                                                    decoration: BoxDecoration(
+                                                      color: Colors.white,
+                                                      borderRadius: BorderRadius.all(Radius.circular(5))
+                                                    )
+                                                  )
+                                              )
+                                            );
                                           }  
                                         },
                                       ),
@@ -156,15 +184,15 @@ class _AdminAddUserState extends State<AdminAddUser> {
                                               }
                                             ),
                                           ),
-                                          Padding(
-                                            padding: const EdgeInsets.all(8.0),
-                                            child: RaisedButton(
-                                              child: Text('Delete'),
-                                              onPressed: () { 
+                                          // Padding(
+                                          //   padding: const EdgeInsets.all(8.0),
+                                          //   child: RaisedButton(
+                                          //     child: Text('Delete'),
+                                          //     onPressed: () { 
                                                 
-                                              }
-                                            ),
-                                          ),
+                                          //     }
+                                          //   ),
+                                          // ),
                                         ],
                                       ) : Container(),
                                     ],
@@ -271,7 +299,7 @@ class _AdminAddUserState extends State<AdminAddUser> {
                                       children: <Widget>[
                                         Padding(
                                           padding: const EdgeInsets.all(16.0),
-                                          child: Text('Add Rooms', 
+                                          child: Text('Add/Remove Rooms', 
                                           style: TextStyle(
                                             color: Colors.white,
                                             fontSize: 20,
@@ -299,34 +327,65 @@ class _AdminAddUserState extends State<AdminAddUser> {
                                                     _buildings = new List(userData.buildings.length);
                                                     int i = 0;
                                                     userData.buildings.forEach((key, value) {_buildings[i] = key;i++;});
-                                                    return SizedBox(
-                                                        width:140,
-                                                        child: DropdownButton<String>(       
-                                                          value: _building,
-                                                          onChanged: (String building) { 
-                                                            setState(() => _building = building);
-                                                            setState(() => _room = null);
-                                                          },
-                                                          hint: Text('Select Building',
-                                                            style: TextStyle(
-                                                              color: Colors.white
-                                                              ),
+                                                    return Padding(
+                                                      padding: const EdgeInsets.all(8.0),
+                                                      child: SizedBox(
+                                                          width:155,
+                                                          height: 35,
+                                                          child: Container(
+                                                            decoration:BoxDecoration(
+                                                              color: Colors.white,
+                                                              borderRadius: BorderRadius.all(Radius.circular(5))
                                                             ),
-                                                          items: _buildings.map<DropdownMenuItem<String>>((String value) {
-                                                            return DropdownMenuItem<String>(
-                                                              value: value,
-                                                              child: new Text(value,
-                                                                style: TextStyle(
-                                                                  color: Colors.grey
-                                                                )
-                                                              )
-                                                            );
-                                                          }
-                                                        ).toList(), 
+                                                            child: DropdownButtonHideUnderline(
+                                                              child: DropdownButton<String>(       
+                                                                value: _building,
+                                                                onChanged: (String building) { 
+                                                                  setState(() => _building = building);
+                                                                  setState(() => _room = null);
+                                                                },
+                                                                hint: Padding(
+                                                                  padding: const EdgeInsets.all(8.0),
+                                                                  child: Text('Select Building',
+                                                                    style: TextStyle(
+                                                                      color: Colors.grey
+                                                                      ),
+                                                                    ),
+                                                                ),
+                                                                items: _buildings.map<DropdownMenuItem<String>>((String value) {
+                                                                  return DropdownMenuItem<String>(
+                                                                    value: value,
+                                                                    child: Padding(
+                                                                      padding: const EdgeInsets.all(8.0),
+                                                                      child: Text(value,
+                                                                        style: TextStyle(
+                                                                          color: Colors.black,
+                                                                          fontSize: 14
+                                                                        )
+                                                                      ),
+                                                                    )
+                                                                  );
+                                                                }
+                                                              ).toList(), 
+                                                        ),
+                                                            ),
+                                                          ),
                                                       ),
                                                     );
                                                   } else {
-                                                    return Container();
+                                                    return Padding(
+                                                      padding: const EdgeInsets.all(8.0),
+                                                      child: SizedBox(
+                                                          width:155,
+                                                          height: 35,
+                                                          child: Container(
+                                                            decoration:BoxDecoration(
+                                                              color: Colors.white,
+                                                              borderRadius: BorderRadius.all(Radius.circular(5))
+                                                            )
+                                                          )
+                                                      )
+                                                    );
                                                   }  
                                                 },
                                               ),
@@ -350,7 +409,7 @@ class _AdminAddUserState extends State<AdminAddUser> {
                                                 builder: (context, snapshot) {
                                                   if (!snapshot.hasData) {
                                                     return SizedBox(
-                                                      width: 140,
+                                                      width: 172,
                                                       child: Text(
                                                         "Choose Building        ",
                                                         style: TextStyle(
@@ -363,26 +422,49 @@ class _AdminAddUserState extends State<AdminAddUser> {
                                                   }
                                                   BuildingRooms buildingData = snapshot.data;
                                                   _rooms = buildingData.rooms;
-                                                  return DropdownButton<String>(
-                                                    value: _room,
-                                                    hint: Text('Enter Room',
-                                                      style: TextStyle(
-                                                        color: Colors.white
+                                                  return Padding(
+                                                    padding: const EdgeInsets.all(8.0),
+                                                    child: SizedBox(
+                                                      width: 155,
+                                                      height: 35,
+                                                      child: Container(
+                                                        decoration: BoxDecoration(
+                                                          color: Colors.white,
+                                                          borderRadius: BorderRadius.all(Radius.circular(5))
+                                                        ),
+                                                        child: DropdownButtonHideUnderline(
+                                                          child: DropdownButton<String>(
+                                                            value: _room,
+                                                            hint: Padding(
+                                                              padding: const EdgeInsets.all(8.0),
+                                                              child: Text('Choose Room',
+                                                                style: TextStyle(
+                                                                  color: Colors.black,
+                                                                  fontSize: 14
+                                                                  ),
+                                                                ),
+                                                            ),
+                                                            onChanged: (String room) { 
+                                                              setState(() => _room = room);
+                                                            },
+                                                            items: _rooms.map<DropdownMenuItem<String>>((String value) {
+                                                              return DropdownMenuItem<String>(
+                                                                value: value,
+                                                                child: Padding(
+                                                                  padding: const EdgeInsets.all(8.0),
+                                                                  child: Text(value,
+                                                                    style: TextStyle(
+                                                                      color: Colors.black,
+                                                                      fontSize: 14
+                                                                    )
+                                                                  ),
+                                                                )
+                                                              );
+                                                            }).toList(), 
+                                                          ),
                                                         ),
                                                       ),
-                                                    onChanged: (String room) { 
-                                                      setState(() => _room = room);
-                                                    },
-                                                    items: _rooms.map<DropdownMenuItem<String>>((String value) {
-                                                      return DropdownMenuItem<String>(
-                                                        value: value,
-                                                        child: new Text(value,
-                                                          style: TextStyle(
-                                                            color: Colors.grey
-                                                          )
-                                                        )
-                                                      );
-                                                    }).toList(), 
+                                                    ),
                                                   );
                                                 },
                                               ),
@@ -390,14 +472,73 @@ class _AdminAddUserState extends State<AdminAddUser> {
                                                 padding: const EdgeInsets.all(8.0),
                                                 child: RaisedButton(
                                                   child: Text('Add'),
-                                                  onPressed: () { 
-
+                                                  onPressed: () async { 
+                                                    if(_userID != null && _building != null && _room != null) {
+                                                      await DatabaseService(userID: _userID, buildingID: _building, roomID: _room).adminAddRoomUserPage();
+                                                      setState(() {
+                                                        error = null;
+                                                        _building = null;
+                                                        _room = null;
+                                                      });
+                                                    } else {
+                                                      setState(() {
+                                                        error = "Unable to add room";
+                                                      });
+                                                    }
+                                                    if (error.length > 0) {
+                                                      setState(() {
+                                                        _errorDisplay = true;
+                                                      });
+                                                    }
+                                                    Timer(Duration(seconds: 2), () {
+                                                      setState(() {
+                                                        _errorDisplay = false;
+                                                      });
+                                                    });
                                                   }
                                                 ),
-                                              )
+                                              ),
+                                              Padding(
+                                                padding: const EdgeInsets.all(8.0),
+                                                child: RaisedButton(
+                                                  child: Text('Delete'),
+                                                  onPressed: () async { 
+                                                    if(_userID != null && _building != null && _room != null) {
+                                                      await DatabaseService(userID: _userID, buildingID: _building, roomID: _room).adminDeleteRoomUserPage();
+                                                      setState(() {
+                                                        error = null;
+                                                        _building = null;
+                                                        _room = null;
+                                                      });
+                                                    } else {
+                                                      setState(() {
+                                                        error = "Unable to delete room";
+                                                      });
+                                                    }
+                                                    if (error.length > 0) {
+                                                      setState(() {
+                                                        _errorDisplay = true;
+                                                      });
+                                                    }
+                                                    Timer(Duration(seconds: 2), () {
+                                                      setState(() {
+                                                        _errorDisplay = false;
+                                                      });
+                                                    });
+                                                  }
+                                                ),
+                                              ),
+                                              
                                             ]
                                           )
-                                        )
+                                        ),
+                                        _errorDisplay == true ?
+                                        Padding(
+                                          padding: const EdgeInsets.all(16.0),
+                                          child: Text(error,
+                                            style: TextStyle(color: Colors.red),
+                                          ),
+                                        ) : Container()
                                       ],
                                     ),
                                   ),  
@@ -415,6 +556,7 @@ class _AdminAddUserState extends State<AdminAddUser> {
                                           border: Border.all(
                                             color: Colors.grey[500]
                                           ),
+                                          borderRadius: BorderRadius.all(Radius.circular(5))
                                         ),
                                         child: Padding(
                                           padding: const EdgeInsets.all(16.0),
@@ -443,25 +585,31 @@ class _AdminAddUserState extends State<AdminAddUser> {
                                                     UserData userData = snapshot.data;
                                                     String tempRooms = "";
                                                     userData.buildings.forEach((key, value) {
-                                                      tempRooms += key.toString() + ": ";
+                                                      int i = 0;
+                                                      tempRooms += key.toString() + ":\n";
                                                       List<String> rooms = List.from(value["rooms"]);
                                                       rooms.forEach((element) {
                                                         tempRooms += element.toString();
                                                         if(element != rooms.last) {
                                                           tempRooms += ", ";
                                                         }
+                                                        if(i > 6) {
+                                                          tempRooms += "\n";
+                                                        }
+                                                        i++;
                                                       });
+                                                      tempRooms += "\n\n";
                                                     });
                                                     return Column(
                                                       children: <Widget>[
                                                         Row(
                                                           children: <Widget>[
-                                                            userInfo(["UserID: ", "First Name: ", "Last Name: ", "Email: ", "Accessible Rooms"]),
+                                                            userInfo(["UserID: ", "First Name: ", "Last Name: ", "Email: ", "Accessible Rooms"], Colors.white),
                                                             Column(
                                                               children: <Widget>[
                                                                 Row(
                                                                   children: <Widget>[
-                                                                    userInfo([userData.uid, userData.firstName, userData.lastName, userData.email]),
+                                                                    userInfo([userData.uid, userData.firstName, userData.lastName, userData.email], Colors.yellow[300]),
                                                                   ],
                                                                 ),
                                                                 SizedBox(
@@ -474,12 +622,13 @@ class _AdminAddUserState extends State<AdminAddUser> {
                                                         Padding(
                                                           padding: const EdgeInsets.all(8.0),
                                                           child: SizedBox(
-                                                            height: 120, width: 350,
+                                                            height: 160, width: 350,
                                                             child: Container(
                                                               decoration: BoxDecoration(
                                                               border: Border.all(
                                                                 color: Colors.grey[400]
-                                                              )
+                                                              ),
+                                                              borderRadius: BorderRadius.all(Radius.circular(5))
                                                             ),
                                                             child: SingleChildScrollView(
                                                               scrollDirection: Axis.vertical,
@@ -487,7 +636,8 @@ class _AdminAddUserState extends State<AdminAddUser> {
                                                                   padding: EdgeInsets.all(8),
                                                                   child: Text(tempRooms.toString(),
                                                                     style: TextStyle(
-                                                                      color: Colors.white
+                                                                      color: Colors.white,
+                                                                      fontSize: 14
                                                                     )
                                                                   ),
                                                                 ),
@@ -527,7 +677,7 @@ class _AdminAddUserState extends State<AdminAddUser> {
 }
 
 
-Widget userInfo(List<String> info) {
+Widget userInfo(List<String> info, Color color) {
   int i = 0;
   List<Padding> infoObjects = new List<Padding>();
   info.forEach((element) {
@@ -536,7 +686,7 @@ Widget userInfo(List<String> info) {
       padding: const EdgeInsets.fromLTRB(4,0,4,4),
       child: Text(element,
         style: TextStyle(
-          color: Colors.white
+          color: color
         )
       )
     ));
@@ -545,7 +695,7 @@ Widget userInfo(List<String> info) {
       padding: const EdgeInsets.fromLTRB(4,4,4,4),
       child: Text(element,
         style: TextStyle(
-          color: Colors.white
+          color: color
         )
       )
     ));
@@ -554,6 +704,7 @@ Widget userInfo(List<String> info) {
   });
   
   return Column(
+    crossAxisAlignment: CrossAxisAlignment.start,
     children: infoObjects,  
   );
 }

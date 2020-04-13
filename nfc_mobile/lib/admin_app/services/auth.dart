@@ -49,12 +49,12 @@ class AuthService {
   }
 
 
-  Future registerNewAdmin(String email, String password, String firstName, String lastName, String company, String rooms) async {
+  Future registerNewAdmin(String email, String password) async {
     try {
-      AuthResult result = await _auth.createUserWithEmailAndPassword(email: email, password: password);
+      AuthResult result = await _auth.signInWithEmailAndPassword(email: email, password: password);
       FirebaseUser user = result.user;
       // create a new document for the user with the uid
-      await DatabaseService(userID: user.uid).updateUserData(firstName, lastName, email, company, rooms, true); 
+      await DatabaseService(adminID: user.uid).registerUserAsAdmin(); 
       return _userFromFirebaseUser(user); 
     } catch (e) {
       print("register error = " + e.toString());
