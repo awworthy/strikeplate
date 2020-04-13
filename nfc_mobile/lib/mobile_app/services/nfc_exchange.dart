@@ -83,7 +83,7 @@ class NFCReader {
     return payload;
   }
 
-  sendOnce(String payload) {
+  send(String payload) {
     if (this._supportsNFC) {
       _reading = true;
       List<NDEFRecord> records = _records.map((record) {
@@ -93,7 +93,7 @@ class NFCReader {
       );
       }).toList();
       NDEFMessage newMessage = NDEFMessage.withRecords(records);
-      Stream<NDEFTag> stream = NFC.writeNDEF(newMessage, once: true);
+      Stream<NDEFTag> stream = NFC.writeNDEF(newMessage);
 
       stream.listen((NDEFTag tag) {
       print("Tag written successfully");

@@ -24,4 +24,16 @@ class Storage {
     String value = prefs.getString('publicKey') ?? null;
     return value;
   }
+
+  Future<String> loadReader() async {
+    SharedPreferences prefs = await SharedPreferences.getInstance();
+    //Return String or return 'null' if there is no value to return
+    String value = prefs.getString('reader') ?? null;
+    return value;
+  }
+
+  saveReader(String value) async {
+    SharedPreferences prefs = await SharedPreferences.getInstance();
+    prefs.setString('reader', value);
+  }
 }

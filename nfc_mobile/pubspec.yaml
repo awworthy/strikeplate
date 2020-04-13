@@ -30,7 +30,7 @@ dependencies:
   cupertino_icons: ^0.1.2
 
   # The following adds the NFC reading library, 'nfc_in_flutter' to this package.
-  nfc_in_flutter: ^2.0.3
+  nfc_in_flutter: ^2.0.4
 
   # Firebase Auth for authentication through the Firebase framework
   firebase_auth: ^0.15.3+1
