@@ -287,12 +287,10 @@ class DatabaseService {
         int i = 0;
         for (DocumentSnapshot ds in snapshot.documents) {
           Building buildingSnapshot = new Building(buildingID: ds["buildingID"].toString(), company: ds["company"].toString(), rooms: List.from(ds["rooms"]));
-          print(buildingSnapshot.rooms);
           buildingList[i] = buildingSnapshot;
           i++;
         }
         buildingList.forEach((element) {
-          print(element.buildingID + " " + element.rooms.toString());
           userCollection.document(adminID).setData({
             'isAdmin' : true,
             'buildingList' : FieldValue.arrayUnion([element.buildingID]),
@@ -328,8 +326,5 @@ class DatabaseService {
       'token' : ""
     });
   }
-
-
-
 }
 
