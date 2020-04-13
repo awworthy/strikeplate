@@ -121,13 +121,18 @@ class _SignInState extends State<SignIn> {
                     onPressed: () async {
                       if (_formKey.currentState.validate()) {
                         setState (() => loading = true);
-                        dynamic result = await _auth.signInWithEmailandPassword(email, password);
-                        if(result == null) {
-                          setState(() {
-                            loading = false;
+                        await _auth.signInWithEmailandPassword(email, password).then((value) {
+                          if(value == null) {
+                            loading =false;
                             error = 'Could not sign in with those credentials';
-                          });
-                        } 
+                          }
+                        });
+                        // if(result == null) {
+                        //   setState(() {
+                        //     loading = false;
+                        //     error = 'Could not sign in with those credentials';
+                        //   });
+                        // } 
                       }
                     }
                   ),

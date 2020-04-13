@@ -9,11 +9,11 @@ class Room {
 
 class RoomData {
 
-  final String rid;
-  final String building;
-  final String status;
+  final bool locked;
+  final List<String> usersWithAccess;
+  final String readerID;
 
-  RoomData({ this.rid, this.building, this.status});
+  RoomData({ this.locked, this.usersWithAccess, this.readerID});
 }
 
 class Building {
