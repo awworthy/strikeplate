@@ -1,6 +1,8 @@
 package ca.macewan.c496.nfc_mobile
 
+import android.annotation.TargetApi
 import android.content.Intent
+import android.nfc.NfcAdapter
 import android.os.Bundle
 import android.util.Log
 import io.flutter.embedding.android.FlutterActivity
@@ -8,6 +10,7 @@ import io.flutter.embedding.engine.FlutterEngine
 import io.flutter.plugin.common.MethodChannel
 import io.flutter.plugins.GeneratedPluginRegistrant
 
+@TargetApi(23)
 class MainActivity: FlutterActivity() {
 
     override fun configureFlutterEngine(flutterEngine: FlutterEngine) {
@@ -26,6 +29,7 @@ class MainActivity: FlutterActivity() {
         if (intent.hasExtra("success")) {
             onHCEResult(intent)
         }
+
     }
 
     override fun onNewIntent(intent: Intent) {

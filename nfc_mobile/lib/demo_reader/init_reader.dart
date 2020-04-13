@@ -29,17 +29,22 @@ class InitReader extends StatelessWidget {
 
     // save device token to Firestore
     if (fcmToken != null) {
-      DocumentReference tokens = _db
-          .collection('readers')
-          .document()
-          .collection('tokens')
-          .document(fcmToken);
+      CollectionReference readers = _db
+          .collection('readers');
 
-      await tokens.setData({
-        'token': fcmToken,
-        'created': FieldValue.serverTimestamp(),
+      readers.document(fcmToken).get().then((snapshot) async {
+        if (!snapshot.exists) {
+          await readers.document(fcmToken).setData({
+            'buildingID': '',
+            'roomID': '',
+            'token': fcmToken,
+            'created': FieldValue.serverTimestamp(),
+          });
+        }
       });
-      _readerID = tokens.documentID;
+
+      print("Generating Reader ID");
+      _readerID = fcmToken;
     }
   }
 }
