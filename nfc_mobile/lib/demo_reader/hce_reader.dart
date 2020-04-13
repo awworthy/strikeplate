@@ -12,22 +12,21 @@ class HCEReader extends StatefulWidget {
 class _HCEReaderState extends State<HCEReader> {
 
   String readerID;
-  bool _authenticated = false;
-  bool _validated = false;
+  bool _hasRead = false;
 
   _HCEReaderState() : super() {
     _platform.setMethodCallHandler((call) async {
-      bool auth = call.arguments["success"];
+      bool read = call.arguments["success"];
       switch (call.method) {
         case "onHCEResult":
           setState(() {
-            _authenticated = auth;
+            _hasRead = read;
           });
       }
     });
   }
   @override
   Widget build(BuildContext context) {
-    return ReaderMessageHandler();
+    return DoorReader(_hasRead);
   }
 }

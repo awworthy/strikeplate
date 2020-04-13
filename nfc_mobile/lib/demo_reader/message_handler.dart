@@ -11,14 +11,16 @@ import 'package:nfc_mobile/mobile_app/shared_mobile/storage_provider.dart';
 import 'package:nfc_mobile/shared/constants.dart';
 
 /// Listens for incoming signals from the server. Stateful.
-class ReaderMessageHandler extends StatefulWidget {
+class DoorReader extends StatefulWidget {
+  final bool _hasRead;
+  const DoorReader(this._hasRead);
+
   @override
-  _ReaderMessageHandlerState createState() => _ReaderMessageHandlerState();
+  _DoorReaderState createState() => _DoorReaderState();
 }
 
 /// Acts on incoming signals from the server
-class _ReaderMessageHandlerState extends State<ReaderMessageHandler> {
-  final Firestore _db = Firestore.instance;
+class _DoorReaderState extends State<DoorReader> {
 
   // FCM = Firebase Cloud Messaging
   final FirebaseMessaging _fcm = FirebaseMessaging();
@@ -27,8 +29,6 @@ class _ReaderMessageHandlerState extends State<ReaderMessageHandler> {
   String _validation;
   String _userID;
   int _selector;
-  Storage _storage;
-  String _readerID;
 
   /// Initialize the state of the message handler
   ///
@@ -39,39 +39,23 @@ class _ReaderMessageHandlerState extends State<ReaderMessageHandler> {
   void initState() {
     _nfcReader = NFCReader(context);
     _selector = 1;
+    print("loading NFC Reader");
     NFC.isNDEFSupported
         .then((bool isSupported) {
       setState(() {
         _supportsNFC = isSupported;
       });
     });
-    _fcm.configure(
-        onMessage: (Map<String, dynamic> message) async {
-          setState(() {
-            _validation = message['notification']['validation'];
-            _userID = message['notification']['userID'];
-          });
-        }
-    );
-  }
-
-  /// Determines the device's token and registers it
-  registerDevice() async {
-    String fcmToken = await _fcm.getToken();
-
-    // save device token to Firestore
-    if (fcmToken != null) {
-      var tokens = _db
-          .collection('readers')
-          .document()
-          .collection('tokens')
-          .document(fcmToken);
-
-      await tokens.setData({
-        'token': fcmToken,
-        'created': FieldValue.serverTimestamp(),
-      });
-      _readerID = tokens.documentID;
+    // Don't configure cloud messaging unless the HCE has been read by a phone
+    if (widget._hasRead) {
+      _fcm.configure(
+          onMessage: (Map<String, dynamic> message) async {
+            setState(() {
+              _validation = message['notification']['validation'];
+              _userID = message['notification']['userID'];
+            });
+          }
+      );
     }
   }
 
@@ -83,29 +67,15 @@ class _ReaderMessageHandlerState extends State<ReaderMessageHandler> {
   @override
   Widget build(BuildContext context) {
     if (!_supportsNFC) {
-      return RaisedButton(
-        child: const Text("Your device does not support NFC"),
-        onPressed: null,
+      return Scaffold(
+        body: Container(
+          child: RaisedButton(
+            child: const Text("Your device does not support NFC"),
+            onPressed: null,
+          ),
+        )
       );
     }
-    if (_storage == null) {
-      _storage = StorageProvider.of(context).getStorage();
-    }
-
-    if (_readerID == null) {
-      _storage.loadReader().then((value) => _readerID = value);
-      registerDevice();
-      // throw "ReaderNAError: Reader contains no readerID field";
-    }
-    _nfcReader.send(_readerID);
-
-    // Periodically broadcast device ID
-    new Future.delayed(Duration(seconds: 4), () {
-      setState(() {
-        _nfcReader.send(_readerID);
-        print("Reader ID: $_readerID");
-      });
-    });
 
     // Check if user was validated for entry first
     if (_validation == 'OK') {
@@ -136,6 +106,7 @@ class _ReaderMessageHandlerState extends State<ReaderMessageHandler> {
         });
       });
     }
+    print("Preparing to validate..");
     return Scaffold(
         appBar: CustomAppBar(title: 'Reader',),
         body: Container(

@@ -34,7 +34,7 @@ class NFCApp extends StatelessWidget {
         //home: AdminAddUser(),
         //home: Loading(),
         //home: HomePage(),
-        home: ReaderMessageHandler(),
+        home: DoorReader(false),
     );
   }
 }

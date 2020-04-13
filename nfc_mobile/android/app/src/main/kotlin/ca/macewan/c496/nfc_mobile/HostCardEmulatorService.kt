@@ -28,6 +28,8 @@ class HostCardEmulatorService : HostApduService() {
     }
 
     override fun processCommandApdu(commandApdu: ByteArray?, extras: Bundle?): ByteArray {
+        print("Received Command...Processing...")
+
         if (commandApdu == null) {
             return Utils.hexStringToByteArray(STATUS_FAILED)
         }
@@ -60,6 +62,8 @@ class HostCardEmulatorService : HostApduService() {
     }
 
     private fun forwardTheResult(){
+        print("Pushing result")
+        Log.d("TAG", "Pushing Result")
         startActivity(
             Intent(this, MainActivity::class.java)
                 .apply {
