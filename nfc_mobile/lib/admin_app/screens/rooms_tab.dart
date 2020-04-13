@@ -393,7 +393,7 @@ class _RoomsState extends State<Rooms> {
                     Padding(
                       padding: const EdgeInsets.all(8.0),
                       child: StreamBuilder(
-                        stream: Firestore.instance.collection("readers").where("buildingID", isEqualTo: "").snapshots(),
+                        stream: Firestore.instance.collection("readers").where("buildingID", isEqualTo: '').snapshots(),
                         builder: (context, snapshot) {
                           if (snapshot.hasData) {
                             QuerySnapshot documents = snapshot.data;
