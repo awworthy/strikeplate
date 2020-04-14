@@ -28,6 +28,7 @@ class AdminData {
   final String company;
   final Map buildings;
   final Map users;
+  final bool isAdmin;
 
-  AdminData({ this.uid, this.firstName, this.lastName, this.email, this.company, this.buildings, this.users});
+  AdminData({ this.uid, this.firstName, this.lastName, this.email, this.company, this.buildings, this.users, this.isAdmin});
 }

@@ -5,6 +5,7 @@ import 'package:nfc_mobile/shared/constants.dart';
 import 'package:nfc_mobile/shared/rooms.dart';
 import 'package:nfc_mobile/shared/user.dart';
 import 'package:provider/provider.dart';
+import 'package:intl/intl.dart';
 
 
 class Rooms extends StatefulWidget {
@@ -201,6 +202,7 @@ class _RoomsState extends State<Rooms> {
                             child: TextFormField(
                               style: TextStyle(
                                 fontSize: 16,
+                                color: Colors.white
                                 ),
                                 decoration: textInputDecoration.copyWith(
                                   contentPadding: new EdgeInsets.all(8),
@@ -348,6 +350,7 @@ class _RoomsState extends State<Rooms> {
                             child: TextFormField(
                               style: TextStyle(
                                 fontSize: 16,
+                                color: Colors.white
                                 ),
                                 decoration: textInputDecoration.copyWith(
                                   contentPadding: new EdgeInsets.all(8),
@@ -399,8 +402,16 @@ class _RoomsState extends State<Rooms> {
                             QuerySnapshot documents = snapshot.data;
                             _readers = new List(documents.documents.length);
                             int i = 0;
+                            documents.documents.sort((a,b) {
+                              var aDate = a["created"];
+                              var bDate = b["created"];
+                              return aDate.compareTo(bDate);
+                            });
                             documents.documents.forEach((element) {
-                              _readers[i] = element.documentID.toString();
+                              var created = element.data["created"].toDate();
+                              var formatter = new DateFormat('MMM-dd, H:m:s');
+                              String formatted = formatter.format(created);
+                              _readers[i] = formatted + " -- ID: " + element.data["token"].toString().substring(0,8);
                               i++;
                             });
                             return Padding(
