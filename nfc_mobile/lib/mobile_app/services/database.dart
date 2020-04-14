@@ -18,14 +18,21 @@ class DatabaseService {
 
 
   Future<void> updateUserData(String firstName, String lastName, String email, String company, String rooms, bool isAdmin, String pubKey) async {
+    await userCollection.where("isAdmin", isEqualTo: true).where("company", isEqualTo: company).getDocuments().then((data) =>
+      data.documents.forEach((element) {
+        element.reference.updateData({"users.$uid.firstName": firstName});
+        element.reference.updateData({"users.$uid.lastName" : lastName});
+     })
+    );
     return await userCollection.document(uid).setData({
       'firstName': firstName,
       'lastName': lastName,
       'email': email,
       'company': company,
-      'rooms': rooms,
       'isAdmin': isAdmin,
-      'pubKey' : pubKey
+      'pubKey' : pubKey,
+      'buildings' : {},
+      'buildingList' : []
     });
   }
 
@@ -33,7 +40,8 @@ class DatabaseService {
   UserData _userDataFromSnapshot(DocumentSnapshot snapshot) {
     return UserData(
       uid: uid,
-      name: snapshot.data['firstName'] + " " + snapshot.data['lastName'],
+      firstName: snapshot.data['firstName'],
+      lastName: snapshot.data['lastName'],
       email: snapshot.data['email'],
       company: snapshot.data['company']
     );

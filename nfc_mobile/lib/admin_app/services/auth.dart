@@ -1,3 +1,4 @@
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:nfc_mobile/admin_app/services/database.dart';
 import 'package:nfc_mobile/shared/user.dart';
@@ -33,34 +34,27 @@ class AuthService {
     try {
       AuthResult result = await _auth.signInWithEmailAndPassword(email: email, password: password);
       FirebaseUser user = result.user;
-      return _userFromFirebaseUser(user); 
+      DocumentSnapshot userData = await Firestore.instance.collection("users").document(user.uid).get();
+      if(userData.exists) {
+        if(userData["isAdmin"] != false) {
+          return _userFromFirebaseUser(user); 
+        } else {
+          return null;
+        }
+      }
     } catch (e) {
       print("sign in error = " + e.toString());
       return null;
     }
   }
 
-  // register with email and password
 
-  // Future registerNewUser(String email, String password, String firstName, String lastName, String company, String rooms) async {
-  //   try {
-  //     AuthResult result = await _auth.createUserWithEmailAndPassword(email: email, password: password);
-  //     FirebaseUser user = result.user;
-  //     // create a new document for the user with the uid
-  //     await DatabaseService(uid: user.uid).updateUserData(firstName, lastName, email, company, rooms, false); 
-  //     return _userFromFirebaseUser(user); 
-  //   } catch (e) {
-  //     print("register error = " + e.toString());
-  //     return null;
-  //   }
-  // }
-
-  Future registerNewAdmin(String email, String password, String firstName, String lastName, String company, String rooms) async {
+  Future registerNewAdmin(String email, String password) async {
     try {
-      AuthResult result = await _auth.createUserWithEmailAndPassword(email: email, password: password);
+      AuthResult result = await _auth.signInWithEmailAndPassword(email: email, password: password);
       FirebaseUser user = result.user;
       // create a new document for the user with the uid
-      await DatabaseService(userID: user.uid).updateUserData(firstName, lastName, email, company, rooms, true); 
+      await DatabaseService(adminID: user.uid).registerUserAsAdmin(); 
       return _userFromFirebaseUser(user); 
     } catch (e) {
       print("register error = " + e.toString());
