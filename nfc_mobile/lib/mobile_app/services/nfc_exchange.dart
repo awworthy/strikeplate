@@ -1,35 +1,10 @@
 import 'dart:async';
-import 'dart:io';
+import 'dart:typed_data';
 import 'package:flutter/material.dart';
-import 'package:flutter_spinkit/flutter_spinkit.dart';
 import 'package:nfc_in_flutter/nfc_in_flutter.dart';
+import 'package:nfc_manager/nfc_manager.dart';
+import 'package:nfc_manager/platform_tags.dart';
 
-class RecordEditor {
-  TextEditingController mediaTypeController;
-  TextEditingController payloadController;
-
-  RecordEditor() {
-    mediaTypeController = TextEditingController();
-    payloadController = TextEditingController();
-  }
-}
-loadingScreen(context) {
-  if (Platform.isAndroid) {
-    showDialog(
-      context: context,
-      builder: (context) =>
-        AlertDialog(
-          title: const Text("Loading..."),
-          actions: <Widget>[
-            SpinKitFadingCube(
-              size: 100,
-              color: Colors.orangeAccent,
-            ),
-          ],
-        ),
-    );
-  }
-}
 
 /// Initialize an NFCReader object within a widget to obtain the widget's
 /// context.
@@ -37,73 +12,46 @@ loadingScreen(context) {
 /// on Android devices as it operates.
 class NFCReader {
   bool _supportsNFC = false;
-  bool _reading = false;
-  StreamSubscription<NDEFMessage> _stream;
-  List<RecordEditor> _records = [];
-  BuildContext _context;
+  String result;
+  /* IMPORTANT: Format of instruction as follows:
+      00 A4 0400 07 F0001234567890 7F
+        A4 = select instruction
+        0400 and 07 = Parameters
+        F0001234567890 = Applet ID of the reader
+        7F = expected response length
+   */
+  static const String INSTRUCTION = "00A4040007F00012345678907F";
 
-  NFCReader(BuildContext context) {
-    this._context = context;
+  NFCReader() {
     NFC.isNDEFSupported
         .then((bool isSupported){
           this._supportsNFC = isSupported;
     });
   }
 
-  get isReading {
-    return _reading;
-  }
-
   get supportsNFC {
     return _supportsNFC;
   }
 
-  _stopReading() {
-    _reading = false;
-    _stream?.cancel();
-    _stream = null;
-  }
-
   String listen() {
-    String payload;
-    if (this._supportsNFC) {
-      _reading = true;
-      // Start reading using NFC.readNDEF()
-      _stream = NFC.readNDEF(
-      once: true,
-      throwOnUserCancel: false,
-      ).listen((NDEFMessage message) {
-      payload = message.payload;
-      }, onError: (e) {
-      print(e);
-      });
-      _stopReading();
-    }
-    print ("Error: NFC not supported");
-    return payload;
-  }
-
-  send(String payload) {
-    if (this._supportsNFC) {
-      _reading = true;
-      List<NDEFRecord> records = _records.map((record) {
-      return NDEFRecord.type(
-      "text/plain",
-      payload,
-      );
-      }).toList();
-      NDEFMessage newMessage = NDEFMessage.withRecords(records);
-      Stream<NDEFTag> stream = NFC.writeNDEF(newMessage);
-
-      stream.listen((NDEFTag tag) {
-      print("Tag written successfully");
-      }, onError: (e) {
-      print("Error writing to tag");
-      print(e);
-      });
-      records = [];
-    } else {
-      print("Error: NFC not supported");
-    }
+    NfcManager.instance.startTagSession(onDiscovered: (NfcTag tag) {
+      IsoDep isoDep = IsoDep.fromTag(tag);
+      if (isoDep == null) {
+        result = 'Error: IsoDep tag resolves to null';
+        NfcManager.instance.stopSession();
+        return;
+      }
+      Uint8List data = new Uint8List.fromList(INSTRUCTION.codeUnits);
+      try {
+        isoDep.transceive(data).then((value) {
+          result = new String.fromCharCodes(value);
+        });
+      } catch (e) {
+        result = e;
+      }
+      NfcManager.instance.stopSession();
+      return;
+    });
+    return result;
   }
 }

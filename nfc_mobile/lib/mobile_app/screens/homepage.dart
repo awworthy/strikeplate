@@ -35,7 +35,7 @@ class _HomePageState extends State<HomePage> {
 
   @override
   Widget build(BuildContext context) {
-    _nfcReader = NFCReader(context);
+    _nfcReader = NFCReader();
     User user = Provider.of<User>(context);
     return Scaffold(
         appBar: CustomAppBar(title: 'Strikeplate',),
