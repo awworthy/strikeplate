@@ -33,8 +33,8 @@ class NFCReader {
     return _supportsNFC;
   }
 
-  String listen() {
-    NfcManager.instance.startTagSession(onDiscovered: (NfcTag tag) {
+  Future<String> listen() async {
+    await NfcManager.instance.startTagSession(onDiscovered: (NfcTag tag) {
       IsoDep isoDep = IsoDep.fromTag(tag);
       if (isoDep == null) {
         result = 'Error: IsoDep tag resolves to null';

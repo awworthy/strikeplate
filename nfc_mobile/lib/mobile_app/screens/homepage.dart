@@ -173,15 +173,17 @@ class _HomePageState extends State<HomePage> {
                         ),
                         GestureDetector(
                           onTap: () async {
-                            if (!_pressA101 && !_pressA102) {
-                              _room = null;
-                            }
-                            if(_room == 'A-101') {
-                              _readerID = "eR7qo1BAHC0:APA91bH9BNJ5CgbJLVHlHGKhjYIqxrPHBgWocMtGHb32gusGLhkDUKtXwAQEfHXEZ3yZ0cP-jb0vDp-2oMGGzoTS8KR59ZXXXNm5VRRLqohFK0enKAsMwAkkLhki4UzKcDkSYslmP9by"; 
-                            }
-                            if(_room == 'A-102') {
-                              _readerID = "";
-                            }
+                            _readerID = await _nfcReader.listen();
+//                            if (!_pressA101 && !_pressA102) {
+//                              _room = null;
+//                            }
+//                            if(_room == 'A-101') {
+//                              _readerID = "eR7qo1BAHC0:APA91bH9BNJ5CgbJLVHlHGKhjYIqxrPHBgWocMtGHb32gusGLhkDUKtXwAQEfHXEZ3yZ0cP-jb0vDp-2oMGGzoTS8KR59ZXXXNm5VRRLqohFK0enKAsMwAkkLhki4UzKcDkSYslmP9by";
+//                            }
+//                            if(_room == 'A-102') {
+//                              _readerID = "";
+//                            }
+                            print("Reader ID found: $_readerID");
                             await Firestore.instance.collection('readers').document(_readerID).get().then((doc) async {
                               if(doc != null) {
                                 _room = doc['roomID'];

@@ -38,7 +38,7 @@ class _DoorReaderState extends State<DoorReader> {
   /// the user's ID for proximity detection.
   @override
   void initState() {
-    _nfcReader = NFCReader(context);
+    _nfcReader = NFCReader();
     _selector = 1;
     print("loading NFC Reader");
     NFC.isNDEFSupported
@@ -87,7 +87,7 @@ class _DoorReaderState extends State<DoorReader> {
     // Check if user was validated for entry first
     if (_validation == 'OK') {
       // check if user is nearby using NFC!
-      String cast = _nfcReader.listen();
+      String cast = _userID;//nfcReader.listen(); //<<<<--------------testing purposes only
       if (_userID == cast) {
         // user device has broadcast the correct user ID to reader
         setState(() {
