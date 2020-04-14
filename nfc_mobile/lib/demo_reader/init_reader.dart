@@ -2,12 +2,14 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_messaging/firebase_messaging.dart';
 import 'package:flutter/material.dart';
 import 'package:nfc_mobile/demo_reader/hce_reader.dart';
+import 'package:nfc_mobile/mobile_app/services/nfc_exchange.dart';
 import 'package:nfc_mobile/mobile_app/services/storage.dart';
 import 'package:nfc_mobile/mobile_app/shared_mobile/storage_provider.dart';
 
 class InitReader extends StatelessWidget {
   Storage _storage;
   String _readerID;
+  bool _loading = true;
   final FirebaseMessaging _fcm = FirebaseMessaging();
   final Firestore _db = Firestore.instance;
 
@@ -21,6 +23,11 @@ class InitReader extends StatelessWidget {
         _readerID = value;
       }
     });
+/*
+    if (_loading == true) {
+      return loadingScreen(context);
+    }
+ */
     return HCEReader();
   }
 
@@ -29,17 +36,22 @@ class InitReader extends StatelessWidget {
 
     // save device token to Firestore
     if (fcmToken != null) {
-      DocumentReference tokens = _db
-          .collection('readers')
-          .document()
-          .collection('tokens')
-          .document(fcmToken);
+      CollectionReference readers = _db
+          .collection('readers');
 
-      await tokens.setData({
-        'token': fcmToken,
-        'created': FieldValue.serverTimestamp(),
+      readers.document(fcmToken).get().then((snapshot) async {
+        if (!snapshot.exists) {
+          await readers.document(fcmToken).setData({
+            'buildingID': '',
+            'roomID': '',
+            'token': fcmToken,
+            'created': FieldValue.serverTimestamp(),
+          });
+        }
       });
-      _readerID = tokens.documentID;
+
+      print("Generating Reader ID");
+      _readerID = fcmToken;
     }
   }
 }
