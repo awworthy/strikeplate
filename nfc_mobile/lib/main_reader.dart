@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:nfc_mobile/demo_reader/init_reader.dart';
 import 'package:nfc_mobile/demo_reader/message_handler.dart';
 import 'package:nfc_mobile/mobile_app/services/storagetest.dart';
 import 'package:nfc_mobile/mobile_app/shared_mobile/rsa_provider.dart';
@@ -33,8 +34,8 @@ class NFCApp extends StatelessWidget {
         ),
         //home: AdminAddUser(),
         //home: Loading(),
-        //home: HomePage(),
-        home: DoorReader(false),
+        //home: HomePage(),6hb mta
+        home: InitReader(),
     );
   }
 }
