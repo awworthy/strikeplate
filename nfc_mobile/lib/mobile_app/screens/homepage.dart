@@ -26,7 +26,9 @@ class HomePage extends StatefulWidget {
 class _HomePageState extends State<HomePage> {
   int _selector = 1;
   String _room;
+  String _building;
   String accessData = "";
+  String _readerID;
   bool _pressA101 = false;
   bool _pressA102 = false;
   NFCReader _nfcReader; // context provided in widget
@@ -174,49 +176,62 @@ class _HomePageState extends State<HomePage> {
                             if (!_pressA101 && !_pressA102) {
                               _room = null;
                             }
-                            // _room = _nfcReader.listen();
-                            dynamic result = await DatabaseService(uid: user.uid, buildingID: 'building01', roomID: _room).getRoomAccessData();
-                            if(result != null) {
-                              RoomAccess roomAccess = result;
-                              if(roomAccess.locked == false && roomAccess.users.contains(user.uid) && _selector == 1) {
-                                // send userID to server
-                                String status = await _makePostRequest(context, user.uid);
-                                // submit log entry for user with room
-                                if (status == "true") {
-                                  DatabaseService(uid: user.uid, buildingID: 'building01', roomID: _room).enterRoom(Timestamp.now());
-                                  setState(() {
-                                    _selector = 2;
-                                    accessData = "";
+                            if(_room == 'A-101') {
+                              _readerID = "eR7qo1BAHC0:APA91bH9BNJ5CgbJLVHlHGKhjYIqxrPHBgWocMtGHb32gusGLhkDUKtXwAQEfHXEZ3yZ0cP-jb0vDp-2oMGGzoTS8KR59ZXXXNm5VRRLqohFK0enKAsMwAkkLhki4UzKcDkSYslmP9by"; 
+                            }
+                            if(_room == 'A-102') {
+                              _readerID = "";
+                            }
+                            await Firestore.instance.collection('readers').document(_readerID).get().then((doc) async {
+                              if(doc != null) {
+                                _room = doc['roomID'];
+                                _building = doc['buildingID'];
+                                // _room = _nfcReader.listen();
+                                dynamic result = await DatabaseService(uid: user.uid, buildingID: _building, roomID: _room).getRoomAccessData();
+                                if(result != null) {
+                                  RoomAccess roomAccess = result;
+                                  if(roomAccess.locked == false && roomAccess.users.contains(user.uid) && _selector == 1) {
+                                    // send userID to server
+                                    String status = await _makePostRequest(context, user.uid, _readerID);
+                                    // submit log entry for user with room
+                                    if (status == "true") {
+                                      DatabaseService(uid: user.uid, buildingID: _building, roomID: _room).enterRoom(Timestamp.now());
+                                      setState(() {
+                                        _selector = 2;
+                                        accessData = "";
+                                      });
+                                    } else {
+                                      setState(() {
+                                        accessData = status;
+                                      });
+                                    }
+                                  } else {
+                                    setState(() {
+                                      _selector = 3;
+                                    });
+                                  }
+                                  Timer(Duration(seconds: 2), () {
+                                    setState(() {
+                                      _room = null;
+                                      if(_pressA101) {
+                                        _pressA101 = false;
+                                      }
+                                      if(_pressA102) {
+                                        _pressA102 = false;
+                                      }
+                                      if(accessData.length > 0) {
+                                        accessData = "";
+                                      }
+                                      _selector = 1;
+                                    });
                                   });
                                 } else {
-                                  setState(() {
-                                    accessData = status;
-                                  });
+                                  Text('error');
                                 }
-                              } else {
-                                setState(() {
-                                  _selector = 3;
-                                });
                               }
-                              Timer(Duration(seconds: 2), () {
-                                setState(() {
-                                  _room = null;
-                                  if(_pressA101) {
-                                    _pressA101 = false;
-                                  }
-                                  if(_pressA102) {
-                                    _pressA102 = false;
-                                  }
-                                  if(accessData.length > 0) {
-                                    accessData = "";
-                                  }
-                                  _selector = 1;
-                                });
-                              });
-                            } else {
-                              Text('error');
-                            }
+                            });
                           },
+
                           child:  ConstrainedBox(
                               constraints: BoxConstraints(maxWidth: 240.0),
                               child: getImage(_selector)
@@ -242,7 +257,7 @@ Image getImage(int selector) {
   }
 }
 
-Future<String> _makePostRequest(BuildContext context, String uid) async {  // set up POST request arguments
+Future<String> _makePostRequest(BuildContext context, String uid, String readerID) async {  // set up POST request arguments
   var client = http.Client();
   String url = 'https://us-central1-strikeplate-app.cloudfunctions.net/postUserID';
   Map<String, String> headers = {"Content-type": "application/json"};
@@ -266,7 +281,7 @@ Future<String> _makePostRequest(BuildContext context, String uid) async {  // se
         }
         ac.RSAPrivateKey _pKey = _keyHelper.parsePrivateFromString(_privateKey);
         String signature = _keyHelper.sign(challenge, _pKey);
-        json = '{"FunctionType" : "2", "userID": "$uid", "signature": "$signature", "nonceID": "$nonceID"}';
+        json = '{"FunctionType" : "2", "userID": "$uid", "signature": "$signature", "nonceID": "$nonceID", "readerID" : "$readerID"}';
         response = await client.post(url, headers: headers, body: json);
         body = response.body;
         parsedJson = jsonDecode(body);
