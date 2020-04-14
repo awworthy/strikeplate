@@ -78,6 +78,7 @@ class _DoorReaderState extends State<DoorReader> {
           child: RaisedButton(
             child: const Text("Your device does not support NFC"),
             onPressed: null,
+            color: Colors.yellowAccent,
           ),
         )
       );

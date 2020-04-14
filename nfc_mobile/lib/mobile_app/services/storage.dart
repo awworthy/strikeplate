@@ -32,8 +32,9 @@ class Storage {
     return value;
   }
 
-  saveReader(String value) async {
+  Future<int> saveReader(String value) async {
     SharedPreferences prefs = await SharedPreferences.getInstance();
     prefs.setString('reader', value);
+    return 1;
   }
 }
