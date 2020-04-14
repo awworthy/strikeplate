@@ -30,6 +30,7 @@ export const postUserID = functions.https.onRequest(async (req, res) => {
         nonceID: nonceIDVal
       })
     } else if (req.body.FunctionType ==="2") {
+      console.log(req.body.readerID);
       const docSnap = await db.collection("users").doc(req.body.userID).get()  
       .then(doc => {
         if (!doc.exists) {
@@ -72,10 +73,30 @@ export const postUserID = functions.https.onRequest(async (req, res) => {
         return false;
       });
       if(!set) {
+        const payload = { notification : { title: 'NO', body : req.body.userID.toString()}}
+        const response = await admin.messaging().sendToDevice(req.body.readerID, payload);
+        response.results.forEach((result, index) => {
+          const error = result.error;
+          if (error) {
+            console.log('Failure sending notification to reader', error);
+          } else {
+            console.log('NO message sent to reader')
+          }
+        })
         return res.status(500).json({
           message: "Error writing challenge document 2"
         })
       } else {
+        const payload = { notification : { title : 'OK', body : req.body.userID.toString()}}
+        const response = await admin.messaging().sendToDevice(req.body.readerID, payload);
+        response.results.forEach((result, index) => {
+          const error = result.error;
+          if (error) {
+            console.log('Failure sending notification to reader', error);
+          } else {
+            console.log('OK Message sent to reader')
+          }
+        })
         return res.status(200).json({
           message: "Dirty bit set to 0",
           status: verified
