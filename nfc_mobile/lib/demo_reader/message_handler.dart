@@ -85,7 +85,6 @@ class _DoorReaderState extends State<DoorReader> {
     }
 
     // Check if user was validated for entry first
-    print("Rebuilt with updated validation");
     if (_validation == 'OK') {
       // check if user is nearby using NFC!
       String cast = _nfcReader.listen();
@@ -114,7 +113,7 @@ class _DoorReaderState extends State<DoorReader> {
         });
       });
     }
-    print("Preparing to validate..");
+    print("Preparing Host Card Emulation...");
     return Scaffold(
         appBar: CustomAppBar(title: 'Reader',),
         body: Container(

@@ -28,6 +28,7 @@ class _InitReaderState extends State<InitReader> {
         List<Widget> children;
 
         if (snapshot.hasData) {
+          print("Reader ID loaded from storage");
           return HCEReader(snapshot.data);
         } else if (snapshot.hasError) {
           children = <Widget>[

@@ -50,6 +50,7 @@ class HostCardEmulatorService : HostApduService() {
         if (hexCommandApdu.substring(10, 24) == AID)  {
             val prefs: SharedPreferences = PreferenceManager.getDefaultSharedPreferences(this)
             val response = prefs.getString("reader", "NULL")
+            print("Reader preparing to broadcast: $response")
             if (!response.equals("NULL")) {
                 forwardTheResult()
                 return Utils.hexStringToByteArray(response!!)
