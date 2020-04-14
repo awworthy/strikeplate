@@ -1,4 +1,5 @@
 import 'dart:async';
+import 'dart:convert';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_messaging/firebase_messaging.dart';
 import 'package:flutter/material.dart';
@@ -53,9 +54,11 @@ class _DoorReaderState extends State<DoorReader> {
       _fcm.configure(
           onMessage: (Map<String, dynamic> message) async {
             setState(() {
-              _validation = message['notification']['validation'];
-              _userID = message['notification']['userID'];
+              _validation = message['notification']['title'];
+              _userID = message['notification']['body'];
               print("Message received");
+              print("validation: $_validation");
+              print("user: $_userID");
             });
           }
       );

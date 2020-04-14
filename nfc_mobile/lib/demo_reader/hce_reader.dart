@@ -27,6 +27,6 @@ class _HCEReaderState extends State<HCEReader> {
   }
   @override
   Widget build(BuildContext context) {
-    return DoorReader(true);
+    return DoorReader(_hasRead);
   }
 }
