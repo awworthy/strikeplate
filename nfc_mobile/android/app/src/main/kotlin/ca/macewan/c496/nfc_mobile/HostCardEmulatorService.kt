@@ -64,7 +64,7 @@ class HostCardEmulatorService : HostApduService() {
 
     private fun forwardTheResult(){
         print("Pushing result")
-        Log.d("TAG", "Pushing Result")
+        Log.d(TAG, "Pushing Result")
         startActivity(
             Intent(this, MainActivity::class.java)
                 .apply {

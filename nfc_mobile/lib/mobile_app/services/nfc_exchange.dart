@@ -14,13 +14,14 @@ class NFCReader {
   bool _supportsNFC = false;
   String result;
   /* IMPORTANT: Format of instruction as follows:
-      00 A4 0400 07 F0001234567890 7F
+      00 A4 0400 07 F0010203040506 7F
         A4 = select instruction
         0400 and 07 = Parameters
         F0001234567890 = Applet ID of the reader
         7F = expected response length
    */
-  static const String INSTRUCTION = "00A4040007F00012345678907F";
+  static const String AID = "F0010203040506";
+  static const String INSTRUCTION = "00A4040007" + AID + "7F";
 
   NFCReader() {
     NFC.isNDEFSupported

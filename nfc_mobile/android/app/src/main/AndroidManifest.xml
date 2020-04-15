@@ -22,7 +22,7 @@
 
             <meta-data
                 android:name="android.nfc.cardemulation.host_apdu_service"
-                android:resource="@xml/apduservice" />
+            android:resource="@xml/apduservice" />
         </service>
         <activity
             android:name=".MainActivity"
