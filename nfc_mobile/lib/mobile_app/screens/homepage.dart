@@ -180,7 +180,7 @@ class _HomePageState extends State<HomePage> {
                               _readerID = "eR7qo1BAHC0:APA91bH9BNJ5CgbJLVHlHGKhjYIqxrPHBgWocMtGHb32gusGLhkDUKtXwAQEfHXEZ3yZ0cP-jb0vDp-2oMGGzoTS8KR59ZXXXNm5VRRLqohFK0enKAsMwAkkLhki4UzKcDkSYslmP9by"; 
                             }
                             if(_room == 'A-102') {
-                              _readerID = "";
+                              _readerID = "ewR81pflgUI:APA91bGdlGn5ULwhSSQ_PRW-zNnHfc0_hxliSmpwcwVByzpkUX9A63aUm0-jcL7Y9YJX3vSgzT1-sI3Ok7mHrWkhqL3Ra8cRSQ3_5YoHVhPDGX0hR7PIgoSUxMpmskbp1k20th3d1OOY";
                             }
                             await Firestore.instance.collection('readers').document(_readerID).get().then((doc) async {
                               if(doc != null) {

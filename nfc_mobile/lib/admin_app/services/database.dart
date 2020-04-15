@@ -149,15 +149,19 @@ class DatabaseService {
   }
 
   Future<void> addBuildingtoBuildings(String buildingID) async {
-    List<String> rooms;
-    return await roomCollection.document(buildingID).setData({
-      'buildingID' : buildingID,
-      'rooms' : rooms
+    userCollection.document(adminID).get().then((value) async {
+      return await roomCollection.document(buildingID).setData({
+        'buildingID' : buildingID,
+        'company' : value.data['company'],
+        'rooms' : []
+      });
     });
+
   }
 
   Future<void> addBuildingtoAdmin(String buildingID) async {
     return await userCollection.document(adminID).setData({
+      'buildingList' : FieldValue.arrayUnion([buildingID]),
       'buildings' : {buildingID: {'rooms' : []}}
     }, merge: true);
   }
@@ -170,6 +174,7 @@ class DatabaseService {
   Future<void> addRoomtoBuilding(String buildingID, String roomID) async {
     return await roomCollection.document(buildingID).collection('rooms').document(roomID).setData({
       'usersWithAccess' : FieldValue.arrayUnion([adminID]),
+      'readerID' : "",
       'locked' : false
     }, merge: true);
   }
@@ -280,6 +285,7 @@ class DatabaseService {
 
   Future<void> registerUserAsAdmin() async { // test with new admin registration
     String company;
+    userCollection.document(adminID).setData({'isAdmin' : true, 'users' : { adminID : { 'valid' : true }}}, merge: true);
     userCollection.document(adminID).get().then((user) {
       company = user["company"];
       Firestore.instance.collection("buildings").where("company", isEqualTo: user["company"]).getDocuments().then((snapshot) {
@@ -290,12 +296,14 @@ class DatabaseService {
           buildingList[i] = buildingSnapshot;
           i++;
         }
-        buildingList.forEach((element) {
+        buildingList.forEach((element) async {
           userCollection.document(adminID).setData({
-            'isAdmin' : true,
             'buildingList' : FieldValue.arrayUnion([element.buildingID]),
             'buildings' : { element.buildingID : { 'rooms' : FieldValue.arrayUnion(element.rooms)}}
           }, merge: true);
+          element.rooms.forEach((room) async {
+            roomCollection.document(element.buildingID).collection("rooms").document(room).setData({"usersWithAccess" : FieldValue.arrayUnion([adminID])}, merge: true);
+          });
         });
       });
       userCollection.where("company", isEqualTo: company).getDocuments().then((snapshot) {

@@ -5,6 +5,7 @@ import 'package:nfc_mobile/shared/constants.dart';
 import 'package:nfc_mobile/shared/rooms.dart';
 import 'package:nfc_mobile/shared/user.dart';
 import 'package:provider/provider.dart';
+import 'package:intl/intl.dart';
 
 
 class Rooms extends StatefulWidget {
@@ -27,6 +28,7 @@ class _RoomsState extends State<Rooms> {
   String _roomNoReader;
   String _roomInput;
   String _reader;
+  String _error = "";
   DateTime _date = DateTime.now();
   String _dateID;  
   bool buildingInput = false;
@@ -105,7 +107,7 @@ class _RoomsState extends State<Rooms> {
                               return Padding(
                                 padding: const EdgeInsets.all(8.0),
                                 child: SizedBox(
-                                    width:140,
+                                    width:200,
                                     height:35,
                                     child: Container(
                                       decoration: BoxDecoration(
@@ -151,7 +153,7 @@ class _RoomsState extends State<Rooms> {
                                 padding: EdgeInsets.all(8),
                                 child: SizedBox(
                                   height: 35,
-                                  width: 140,
+                                  width: 200,
                                   child: Container(
                                     decoration: BoxDecoration(
                                       color: Colors.white,
@@ -201,6 +203,7 @@ class _RoomsState extends State<Rooms> {
                             child: TextFormField(
                               style: TextStyle(
                                 fontSize: 16,
+                                color: Colors.white
                                 ),
                                 decoration: textInputDecoration.copyWith(
                                   contentPadding: new EdgeInsets.all(8),
@@ -251,7 +254,7 @@ class _RoomsState extends State<Rooms> {
                               return Padding(
                                 padding: const EdgeInsets.all(8.0),
                                 child: SizedBox(
-                                  width: 140,
+                                  width: 200,
                                   height: 35,
                                   child: Center(
                                     child: Text(
@@ -271,7 +274,7 @@ class _RoomsState extends State<Rooms> {
                             return Padding(
                               padding: const EdgeInsets.all(8.0),
                               child: SizedBox(
-                                width: 140,
+                                width: 200,
                                 height: 35,
                                 child: Container(
                                   decoration: BoxDecoration(
@@ -329,10 +332,9 @@ class _RoomsState extends State<Rooms> {
                           child: Text('Delete'),
                           onPressed: () { 
                             if(_building != null && _room != null) {
-                              print("Building = " + _building.toString() + ", Room = " + _room.toString());
                               DatabaseService(buildingID: _building, roomID: _room).deleteRoom();
                             } else {
-                            print("Please input a room and a building");
+                            _error = "Please select a building";
                             }
                           }
                         )
@@ -348,6 +350,7 @@ class _RoomsState extends State<Rooms> {
                             child: TextFormField(
                               style: TextStyle(
                                 fontSize: 16,
+                                color: Colors.white
                                 ),
                                 decoration: textInputDecoration.copyWith(
                                   contentPadding: new EdgeInsets.all(8),
@@ -371,8 +374,12 @@ class _RoomsState extends State<Rooms> {
                             child: Text('Enter'),
                             onPressed: () { 
                               if (_formKey.currentState.validate()) {
-                                DatabaseService(adminID: user.uid).addRoom(_building, _roomInput);
-                                setState(() => roomInput = false);
+                                if(_building != null) {
+                                  DatabaseService(adminID: user.uid).addRoom(_building, _roomInput);
+                                  setState(() => roomInput = false);
+                                } else {
+                                  _error = "Please select a building";
+                                }
                               }
                             }
                           ),
@@ -380,6 +387,16 @@ class _RoomsState extends State<Rooms> {
                       ],
                     ) : 
                     Container(),
+                    _error.length > 0 ?
+                    Padding(
+                      padding: EdgeInsets.all(8),
+                      child: Text(_error,
+                        style: TextStyle(
+                          fontSize: 14,
+                          color: Colors.yellow
+                        ),
+                      ), 
+                    ) :
                     SizedBox(height: 25,),
                     Text('Reader Management',
                     style: TextStyle(
@@ -399,8 +416,16 @@ class _RoomsState extends State<Rooms> {
                             QuerySnapshot documents = snapshot.data;
                             _readers = new List(documents.documents.length);
                             int i = 0;
+                            documents.documents.sort((a,b) {
+                              var aDate = a["created"];
+                              var bDate = b["created"];
+                              return aDate.compareTo(bDate);
+                            });
                             documents.documents.forEach((element) {
-                              _readers[i] = element.documentID.toString();
+                              var created = element.data["created"].toDate();
+                              var formatter = new DateFormat('MMM-dd, H:m:s');
+                              String formatted = formatter.format(created);
+                              _readers[i] = formatted + " -- ID: " + element.data["token"].toString().substring(0,8);
                               i++;
                             });
                             return Padding(
@@ -487,7 +512,7 @@ class _RoomsState extends State<Rooms> {
                               return Padding(
                                 padding: const EdgeInsets.all(8.0),
                                 child: SizedBox(
-                                    width:140,
+                                    width:200,
                                     height:35,
                                     child: Container(
                                       decoration: BoxDecoration(
@@ -533,7 +558,7 @@ class _RoomsState extends State<Rooms> {
                                 padding: EdgeInsets.all(8),
                                 child: SizedBox(
                                   height: 35,
-                                  width: 140,
+                                  width: 200,
                                   child: Container(
                                     decoration: BoxDecoration(
                                       color: Colors.white,
@@ -564,7 +589,7 @@ class _RoomsState extends State<Rooms> {
                               return Padding(
                                 padding: const EdgeInsets.all(8.0),
                                 child: SizedBox(
-                                    width:140,
+                                    width:200,
                                     height: 35,
                                     child: Container(
                                       decoration: BoxDecoration(
@@ -610,7 +635,7 @@ class _RoomsState extends State<Rooms> {
                               return Padding(
                                 padding: const EdgeInsets.all(8.0),
                                 child: SizedBox(
-                                    width:140,
+                                    width:200,
                                     height: 35,
                                     child: Container(
                                       decoration: BoxDecoration(
