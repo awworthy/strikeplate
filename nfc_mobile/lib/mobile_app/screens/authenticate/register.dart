@@ -283,15 +283,11 @@ class _RegAdminState extends State<RegAdmin> {
                           if(snapshot.hasData){
                             QuerySnapshot querySnapshot = snapshot.data;
                             companies = new List(querySnapshot.documents.length);
-                            print(querySnapshot.documents.length.toString() + " " + companies.length.toString());
                             int i = 0;
                             querySnapshot.documents.forEach((element) {
-                              print(element['Name'].toString());
                               companies[i] = element["Name"].toString();
                               i++;
                             });
-                            companies.forEach((element) {print(element);});
-                            print(_company.toString());
                             return Padding(
                               padding: const EdgeInsets.all(8.0),
                               child: SizedBox(

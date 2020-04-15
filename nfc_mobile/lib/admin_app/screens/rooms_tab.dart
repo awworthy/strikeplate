@@ -28,6 +28,7 @@ class _RoomsState extends State<Rooms> {
   String _roomNoReader;
   String _roomInput;
   String _reader;
+  String _error = "";
   DateTime _date = DateTime.now();
   String _dateID;  
   bool buildingInput = false;
@@ -106,7 +107,7 @@ class _RoomsState extends State<Rooms> {
                               return Padding(
                                 padding: const EdgeInsets.all(8.0),
                                 child: SizedBox(
-                                    width:140,
+                                    width:200,
                                     height:35,
                                     child: Container(
                                       decoration: BoxDecoration(
@@ -152,7 +153,7 @@ class _RoomsState extends State<Rooms> {
                                 padding: EdgeInsets.all(8),
                                 child: SizedBox(
                                   height: 35,
-                                  width: 140,
+                                  width: 200,
                                   child: Container(
                                     decoration: BoxDecoration(
                                       color: Colors.white,
@@ -253,7 +254,7 @@ class _RoomsState extends State<Rooms> {
                               return Padding(
                                 padding: const EdgeInsets.all(8.0),
                                 child: SizedBox(
-                                  width: 140,
+                                  width: 200,
                                   height: 35,
                                   child: Center(
                                     child: Text(
@@ -273,7 +274,7 @@ class _RoomsState extends State<Rooms> {
                             return Padding(
                               padding: const EdgeInsets.all(8.0),
                               child: SizedBox(
-                                width: 140,
+                                width: 200,
                                 height: 35,
                                 child: Container(
                                   decoration: BoxDecoration(
@@ -331,10 +332,9 @@ class _RoomsState extends State<Rooms> {
                           child: Text('Delete'),
                           onPressed: () { 
                             if(_building != null && _room != null) {
-                              print("Building = " + _building.toString() + ", Room = " + _room.toString());
                               DatabaseService(buildingID: _building, roomID: _room).deleteRoom();
                             } else {
-                            print("Please input a room and a building");
+                            _error = "Please select a building";
                             }
                           }
                         )
@@ -374,8 +374,12 @@ class _RoomsState extends State<Rooms> {
                             child: Text('Enter'),
                             onPressed: () { 
                               if (_formKey.currentState.validate()) {
-                                DatabaseService(adminID: user.uid).addRoom(_building, _roomInput);
-                                setState(() => roomInput = false);
+                                if(_building != null) {
+                                  DatabaseService(adminID: user.uid).addRoom(_building, _roomInput);
+                                  setState(() => roomInput = false);
+                                } else {
+                                  _error = "Please select a building";
+                                }
                               }
                             }
                           ),
@@ -383,6 +387,16 @@ class _RoomsState extends State<Rooms> {
                       ],
                     ) : 
                     Container(),
+                    _error.length > 0 ?
+                    Padding(
+                      padding: EdgeInsets.all(8),
+                      child: Text(_error,
+                        style: TextStyle(
+                          fontSize: 14,
+                          color: Colors.yellow
+                        ),
+                      ), 
+                    ) :
                     SizedBox(height: 25,),
                     Text('Reader Management',
                     style: TextStyle(
@@ -498,7 +512,7 @@ class _RoomsState extends State<Rooms> {
                               return Padding(
                                 padding: const EdgeInsets.all(8.0),
                                 child: SizedBox(
-                                    width:140,
+                                    width:200,
                                     height:35,
                                     child: Container(
                                       decoration: BoxDecoration(
@@ -544,7 +558,7 @@ class _RoomsState extends State<Rooms> {
                                 padding: EdgeInsets.all(8),
                                 child: SizedBox(
                                   height: 35,
-                                  width: 140,
+                                  width: 200,
                                   child: Container(
                                     decoration: BoxDecoration(
                                       color: Colors.white,
@@ -575,7 +589,7 @@ class _RoomsState extends State<Rooms> {
                               return Padding(
                                 padding: const EdgeInsets.all(8.0),
                                 child: SizedBox(
-                                    width:140,
+                                    width:200,
                                     height: 35,
                                     child: Container(
                                       decoration: BoxDecoration(
@@ -621,7 +635,7 @@ class _RoomsState extends State<Rooms> {
                               return Padding(
                                 padding: const EdgeInsets.all(8.0),
                                 child: SizedBox(
-                                    width:140,
+                                    width:200,
                                     height: 35,
                                     child: Container(
                                       decoration: BoxDecoration(

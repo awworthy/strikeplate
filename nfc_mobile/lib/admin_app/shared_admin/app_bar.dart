@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:nfc_mobile/admin_app/screens/admin_adduser.dart';
+import 'package:nfc_mobile/admin_app/screens/new_users.dart';
 import 'package:nfc_mobile/admin_app/screens/rooms_tab.dart';
 import 'package:nfc_mobile/admin_app/services/auth.dart';
 import 'package:nfc_mobile/shared/constants.dart';
@@ -68,14 +69,7 @@ class CustomAppBar extends StatelessWidget implements PreferredSizeWidget {
           ),
           body: TabBarView(
             children: [
-              Container(
-                decoration: BoxDecoration(
-                  gradient: backgroundGradient
-                ),
-                child: Icon(Icons.notifications,
-                  color: Colors.white
-                ),
-              ),
+              NewUsers(),
               AdminAddUser(),
               Rooms()
             ]),
@@ -101,4 +95,15 @@ class LogoIcon extends StatelessWidget {
     );
   }
 }
+
+// TabBarView(
+//             children: [
+//               Container(
+//                 decoration: BoxDecoration(
+//                   gradient: backgroundGradient
+//                 ),
+//                 child: Icon(Icons.notifications,
+//                   color: Colors.white
+//                 ),
+//               ),
 

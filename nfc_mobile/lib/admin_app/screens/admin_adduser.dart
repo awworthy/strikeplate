@@ -1,5 +1,4 @@
 import 'dart:async';
-
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:nfc_mobile/admin_app/services/database.dart';
@@ -97,11 +96,13 @@ class _AdminAddUserState extends State<AdminAddUser> {
                                         builder: (context, snapshot) {
                                           if (snapshot.hasData) {
                                             AdminData adminData = snapshot.data;
-                                            _userNames = new List(adminData.users.length);
+                                            _userNames = new List();
                                             int i = 0;
                                             adminData.users.forEach((key, value) {
-                                              _userNames[i] = value["lastName"].toString() + ", " + value["firstName"].toString();
-                                              i++;
+                                              if(value["valid"] == true) {
+                                                _userNames.add(value["lastName"].toString() + ", " + value["firstName"].toString());
+                                                i++;
+                                              }
                                             });
                                             _userNames.sort();
                                             return Padding(
@@ -330,7 +331,7 @@ class _AdminAddUserState extends State<AdminAddUser> {
                                                     return Padding(
                                                       padding: const EdgeInsets.all(8.0),
                                                       child: SizedBox(
-                                                          width:155,
+                                                          width:200,
                                                           height: 35,
                                                           child: Container(
                                                             decoration:BoxDecoration(
@@ -376,7 +377,7 @@ class _AdminAddUserState extends State<AdminAddUser> {
                                                     return Padding(
                                                       padding: const EdgeInsets.all(8.0),
                                                       child: SizedBox(
-                                                          width:155,
+                                                          width:200,
                                                           height: 35,
                                                           child: Container(
                                                             decoration:BoxDecoration(
@@ -409,7 +410,7 @@ class _AdminAddUserState extends State<AdminAddUser> {
                                                 builder: (context, snapshot) {
                                                   if (!snapshot.hasData) {
                                                     return SizedBox(
-                                                      width: 172,
+                                                      width: 217,
                                                       child: Text(
                                                         "Choose Building        ",
                                                         style: TextStyle(
@@ -425,7 +426,7 @@ class _AdminAddUserState extends State<AdminAddUser> {
                                                   return Padding(
                                                     padding: const EdgeInsets.all(8.0),
                                                     child: SizedBox(
-                                                      width: 155,
+                                                      width: 200,
                                                       height: 35,
                                                       child: Container(
                                                         decoration: BoxDecoration(

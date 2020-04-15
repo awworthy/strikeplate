@@ -150,7 +150,6 @@ class DatabaseService {
 
   Future<void> addBuildingtoBuildings(String buildingID) async {
     userCollection.document(adminID).get().then((value) async {
-      print(value.data['company']);
       return await roomCollection.document(buildingID).setData({
         'buildingID' : buildingID,
         'company' : value.data['company'],
@@ -286,7 +285,7 @@ class DatabaseService {
 
   Future<void> registerUserAsAdmin() async { // test with new admin registration
     String company;
-    userCollection.document(adminID).setData({'isAdmin' : true}, merge: true);
+    userCollection.document(adminID).setData({'isAdmin' : true, 'users' : { adminID : { 'valid' : true }}}, merge: true);
     userCollection.document(adminID).get().then((user) {
       company = user["company"];
       Firestore.instance.collection("buildings").where("company", isEqualTo: user["company"]).getDocuments().then((snapshot) {
