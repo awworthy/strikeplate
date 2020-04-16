@@ -202,7 +202,8 @@ class _HomePageState extends State<HomePage> {
                                       });
                                     } else {
                                       setState(() {
-                                        accessData = status;
+                                        accessData = "Access Denied";
+                                        _selector = 3;
                                       });
                                     }
                                   } else {
