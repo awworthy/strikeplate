@@ -35,6 +35,7 @@ class NFCReader {
   }
 
   Future<String> listen() async {
+    print("Reading HCE Tag...");
     await NfcManager.instance.startTagSession(onDiscovered: (NfcTag tag) {
       IsoDep isoDep = IsoDep.fromTag(tag);
       if (isoDep == null) {
@@ -42,8 +43,11 @@ class NFCReader {
         NfcManager.instance.stopSession();
         return;
       }
+      print("IsoDep: ${isoDep.historicalBytes}");
       Uint8List data = new Uint8List.fromList(INSTRUCTION.codeUnits);
       try {
+        print("Sending INS $INSTRUCTION");
+        print("as ${INSTRUCTION.codeUnits}");
         isoDep.transceive(data).then((value) {
           result = new String.fromCharCodes(value);
         });

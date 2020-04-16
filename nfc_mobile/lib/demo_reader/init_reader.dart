@@ -38,7 +38,7 @@ class _InitReaderState extends State<InitReader> {
               size: 60,
             ),
             Padding(
-              padding: const EdgeInsets.only(top: 16),
+              padding: const EdgeInsets.only(top: 16, left: 20, right: 20),
               child: Text("Error: ${snapshot.error}"),
             )
           ];

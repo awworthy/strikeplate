@@ -49,7 +49,7 @@ dependencies:
   # For push notification to device token
     # This is necessary for the "reader" to be notified from the server that it
     # is OK to open the door
-  firebase_messaging: ^5.0.2
+  firebase_messaging: ^6.0.13
 
 dev_dependencies:
   flutter_test:

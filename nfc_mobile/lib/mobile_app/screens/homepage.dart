@@ -173,7 +173,11 @@ class _HomePageState extends State<HomePage> {
                         ),
                         GestureDetector(
                           onTap: () async {
-                            _readerID = await _nfcReader.listen();
+
+                            _nfcReader.listen().then((value) {
+                              print("Reader ID found: $value");
+                              _readerID = value;
+                            });
 //                            if (!_pressA101 && !_pressA102) {
 //                              _room = null;
 //                            }
@@ -183,7 +187,8 @@ class _HomePageState extends State<HomePage> {
 //                            if(_room == 'A-102') {
 //                              _readerID = "";
 //                            }
-                            print("Reader ID found: $_readerID");
+
+                            /*
                             await Firestore.instance.collection('readers').document(_readerID).get().then((doc) async {
                               if(doc != null) {
                                 _room = doc['roomID'];
@@ -232,6 +237,8 @@ class _HomePageState extends State<HomePage> {
                                 }
                               }
                             });
+                             */
+
                           },
 
                           child:  ConstrainedBox(
